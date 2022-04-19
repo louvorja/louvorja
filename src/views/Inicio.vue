@@ -5,7 +5,7 @@
     </div>
 
     <div style="background:#FFF;">
-      <pre>{{this.$root.baixar}}..</pre>
+      <pre>{{this.$root.baixar}}...</pre>
       <pre>{{progress}}</pre>
       <pre>{{$data}}</pre>
     </div>
