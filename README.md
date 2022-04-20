@@ -1,6 +1,6 @@
-# lja
+# LouvorJA
 
-## Project setup
+## Instalação do Projeto
 ```
 npm install
 ```
