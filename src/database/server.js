@@ -7,10 +7,8 @@ var cors = require('cors');
 
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(cors({ origins: true, credentials: true }))
 
@@ -57,7 +55,7 @@ app.post('/hinario', (req, res) => {
             INNER JOIN CATEGORIAS_ALBUNS CAA ON CAA.ID_CATEGORIA=CAT.ID_CATEGORIA
             INNER JOIN ALBUNS_MUSICAS ALM ON ALM.ID_ALBUM=CAA.ID_ALBUM
             INNER JOIN MUSICAS MUS ON MUS.ID_MUSICA=ALM.ID_MUSICA
-            WHERE CAT.SLUG = 'hinario' AND MUS.IDIOMA='`+lang+`'
+            WHERE CAT.SLUG = 'hinario' AND MUS.IDIOMA='`+ lang + `'
             ORDER BY ALM.FAIXA,MUS.TITULO`;
 
     dbCon.all(sql, res);
@@ -74,7 +72,12 @@ app.get('/create/', (req, res) => {
 
 app.post('/sql', (req, res) => {
     const sql = req.body.data;
-    dbCon.run(sql, res);
+    if (sql == '') {
+        ret = { status: true };
+        res.send(ret);
+    } else {
+        dbCon.run(sql, res);
+    }
 })
 
 

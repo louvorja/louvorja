@@ -285,7 +285,7 @@ new Vue({
         return false;
       }
     },
-    downloadDB: async function () {
+    downloadDB: async function (filtros) {
       console.log("Rotina de Download do Banco de Dados")
       this.progress.text = 'Baixando dados do servidor...';
       this.progress.value = -1;
@@ -296,13 +296,15 @@ new Vue({
         var db = self.config_web.db[item];
         if (db.processado !== true && db.download == true) {
           db.processado = true;
-          if (self.data.db[item] == undefined || self.data.db[item] !== db.versao) {
+          if (self.data.db[item] == undefined || self.data.db[item] !== db.versao || filtros) {
+            let filtro = filtros || Object.assign({}, this.data.downloads.baixados,  {datahora: self.data.db[item]});
             // SOLICITA DADOS DA WEB
             var urlapi = db.url || item;
             console.log("DB", item, self.data.db[item], db)
             console.log('URL', urlapi)
+            console.log('FILTROS', filtro)
 
-            let data = await self.getApiData(urlapi, db.get_param, this.data.downloads.baixados);
+            let data = await self.getApiData(urlapi, db.get_param, filtro);
             if (data.sql !== undefined) {
               var t_url = 'sql';
               var t_data = data.sql;
