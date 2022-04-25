@@ -13,8 +13,8 @@ export default {
   },
   components: {
     ico: () => import(`@/components/Icone`),
-    geral: () => import(`@/layout/Sidebars/Geral`),
-    cronometro: () => import(`@/layout/Sidebars/CronometroSidebar`),
+    geral: () => import(`@/layout/sidebars/GeralSidebar`),
+    cronometro: () => import(`@/layout/sidebars/CronometroSidebar`),
   },
 };
 </script>

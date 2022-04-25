@@ -75,12 +75,13 @@ export default {
   },
   methods: {
     closeTab: function (page) {
-      if (this.tabs_dot.indexOf(page) >= 0){
-      this.dialog.show = true;
-      this.dialog.title = "Tarefa em andamento";
-      this.dialog.text = "Existe uma tarefa em andamento nesta aba! Encerre a tarefa primeiro.";
-      this.dialog.buttons = [{ text: "Ok", value: "ok" }];
-      this.dialog.value = '';
+      if (this.tabs_dot.indexOf(page) >= 0) {
+        this.dialog.show = true;
+        this.dialog.title = "Tarefa em andamento";
+        this.dialog.text =
+          "Existe uma tarefa em andamento nesta aba! Encerre a tarefa primeiro.";
+        this.dialog.buttons = [{ text: "Ok", value: "ok" }];
+        this.dialog.value = "";
         return;
       }
       var open = false;
@@ -104,16 +105,16 @@ export default {
   watch: {
     openpages: {
       handler: function () {
-        this.$session.set("openpages",this.openpages);
+        this.$session.set("openpages", this.openpages);
       },
-      deep: true
+      deep: true,
     },
   },
   mounted() {
-    if (this.$session.get("openpages") !== undefined){
+    if (this.$session.get("openpages") !== undefined) {
       this.openpages = this.$session.get("openpages");
     }
-  }
+  },
   /*beforeRouteUpdate(to, from, next){
   console.log(to, from);
   next();

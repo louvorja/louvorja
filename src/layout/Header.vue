@@ -199,7 +199,7 @@ export default {
   },
   components: {
     lButton: () => import(`@/components/Button`),
-    cronometro: () => import(`@/layout/HeaderTabs/CronometroTab`),
+    cronometro: () => import(`@/layout/headertabs/CronometroTab`),
     ico: () => import(`@/components/Icone`),
   },
 };
