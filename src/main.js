@@ -76,6 +76,9 @@ new Vue({
         text: null,
         type: '',
         timeout: 5000,
+      },
+      store: {
+        show: false,
       }
     }
   },

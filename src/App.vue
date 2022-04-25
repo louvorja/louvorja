@@ -2,6 +2,7 @@
   <v-app :dark="$root.data.layout.dark">
     <app-side-bar />
     <app-dialog />
+    <app-store />
     <app-alert />
     <div class="d-flex flex-column flex-fill" style="height: 100vh">
       <app-header />
@@ -26,6 +27,7 @@ export default {
     AppTabs: () => import('@/layout/TabsPages'),
     AppSideBar: () => import('@/layout/SideBar'),
     AppDialog: () => import('@/layout/Dialog'),
+    AppStore: () => import('@/layout/Store'),
     AppAlert: () => import('@/layout/Alert'),
   },
   created() {

@@ -11,8 +11,11 @@
         <v-btn
           v-for="(btn, index) in dialog.buttons"
           :key="index"
-          :color="(btn.color?btn.color:data.layout.color)"
-          @click="dialog.value = btn.value;dialog.show = false"
+          :color="btn.color ? btn.color : layout.color"
+          @click="
+            dialog.value = btn.value;
+            dialog.show = false;
+          "
           text
         >
           {{ btn.text }}
@@ -25,8 +28,13 @@
 
 <script>
 export default {
-  data() {
-    return this.$root.$data;
+  computed: {
+    dialog: function () {
+      return this.$root.$data.dialog;
+    },
+    layout: function () {
+      return this.$root.$data.data.layout;
+    },
   },
 };
 </script>
