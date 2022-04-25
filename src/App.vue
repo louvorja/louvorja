@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app :dark="$root.data.layout.dark">
     <app-side-bar />
     <app-dialog />
     <app-alert />
