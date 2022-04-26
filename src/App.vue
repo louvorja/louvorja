@@ -4,7 +4,7 @@
     <app-dialog />
     <app-store />
     <app-alert />
-    <div class="d-flex flex-column flex-fill" style="height: 100vh">
+    <v-layout column fill-height style="height: 100vh">
       <app-header />
       <app-tabs />
       <v-main style="overflow: auto; flex: auto">
@@ -14,7 +14,7 @@
       </v-main>
       <app-progress />
       <app-footer />
-    </div>
+    </v-layout>
   </v-app>
 </template>
 
