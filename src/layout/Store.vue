@@ -42,17 +42,29 @@
             <v-tab-item v-for="t in tabs" :key="t.tab">
               <v-container fluid>
                 <v-layout wrap justify-space-around>
-                  <v-flex v-for="item in items" :key="item.id" class="pa-1">
-                    <v-card class="mx-auto" style="width: 300px">
-                      <v-img :src="item.imagem" height="200px"></v-img>
+                  <v-flex
+                    v-for="item in items"
+                    :key="item.id"
+                    class="d-flex pa-1"
+                    style="justify-content: center"
+                  >
+                    <v-card
+                      class="d-flex flex-column"
+                      style="width: 100%; max-width: 160px; height: 100%"
+                    >
+                      <div>
+                        <v-img :src="item.imagem" height="150px"></v-img>
 
-                      <v-card-title>{{ item.titulo }}</v-card-title>
+                        <h5 class="px-3 pt-2">{{ item.titulo }}</h5>
 
-                      <v-card-subtitle> 1,000 miles of wonder </v-card-subtitle>
-
-                      <v-card-actions>
-                        <v-btn color="orange lighten-2" text> Explore </v-btn>
-                      </v-card-actions>
+                        <p class="px-3 pt-1 caption">1,000 miles of wonder</p>
+                      </div>
+                      <div class="flex-grow-1"></div>
+                      <div>
+                        <v-card-actions>
+                          <v-btn color="orange lighten-2" text> Explore </v-btn>
+                        </v-card-actions>
+                      </div>
                     </v-card>
                   </v-flex>
                 </v-layout>
