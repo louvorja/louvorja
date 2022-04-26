@@ -50,19 +50,27 @@
                   >
                     <v-card
                       class="d-flex flex-column"
-                      style="width: 100%; max-width: 160px; height: 100%"
+                      style="width: 100%; max-width: 150px; height: 100%"
                     >
                       <div>
                         <v-img :src="item.imagem" height="150px"></v-img>
-
-                        <h5 class="px-3 pt-2">{{ item.titulo }}</h5>
-
-                        <p class="px-3 pt-1 caption">1,000 miles of wonder</p>
+                        <v-card-title
+                          style="font-size: 0.9rem; word-break: initial;line-height: initial;"
+                          >{{ item.titulo }}</v-card-title
+                        >
+                        <v-card-subtitle class="pt-2" style="line-height: initial;">
+                          1,000 miles of wonder
+                        </v-card-subtitle>
                       </div>
                       <div class="flex-grow-1"></div>
                       <div>
                         <v-card-actions>
-                          <v-btn color="orange lighten-2" text> Explore </v-btn>
+                          <v-spacer></v-spacer>
+                          <v-btn icon>
+                            <v-icon color="info" @click="baixaStore()">
+                              mdi-download
+                            </v-icon>
+                          </v-btn>
                         </v-card-actions>
                       </div>
                     </v-card>
