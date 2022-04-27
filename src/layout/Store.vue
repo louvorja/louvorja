@@ -22,12 +22,11 @@
             grow
           >
             <v-tab
-              v-for="(t, index) in tabs"
-              :key="t.tab"
-              style="justify-content: start"
+              v-for="(categoria, index) in categorias"
+              :key="categoria.id_categoria"
               :data-id="index"
             >
-              {{ t.tab }}
+              {{ categoria.titulo }}
             </v-tab>
           </v-tabs>
           <v-progress-linear
@@ -39,12 +38,15 @@
         </div>
         <div class="flex-grow-1" style="overflow: auto; flex: auto">
           <v-tabs-items v-model="tab">
-            <v-tab-item v-for="t in tabs" :key="t.tab">
+            <v-tab-item
+              v-for="categoria in categorias"
+              :key="categoria.id_categoria"
+            >
               <v-container fluid>
                 <v-layout wrap justify-space-around>
                   <v-flex
-                    v-for="item in items"
-                    :key="item.id"
+                    v-for="(item, index) in albuns(categoria.id_categoria)"
+                    :key="index"
                     class="d-flex pa-1"
                     style="justify-content: center"
                   >
@@ -55,11 +57,19 @@
                       <div>
                         <v-img :src="item.imagem" height="150px"></v-img>
                         <v-card-title
-                          style="font-size: 0.9rem; word-break: initial;line-height: initial;"
-                          >{{ item.titulo }}</v-card-title
+                          style="
+                            font-size: 0.9rem;
+                            word-break: initial;
+                            line-height: initial;
+                          "
                         >
-                        <v-card-subtitle class="pt-2" style="line-height: initial;">
-                          1,000 miles of wonder
+                          {{ item.titulo }}
+                        </v-card-title>
+                        <v-card-subtitle
+                          class="pt-2"
+                          style="line-height: initial"
+                        >
+                          {{ item.subtitulo }}
                         </v-card-subtitle>
                       </div>
                       <div class="flex-grow-1"></div>
@@ -83,7 +93,7 @@
         <div class="flex-grow-0">
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn> fff </v-btn>
+            <v-btn text :color="$root.data.layout.color" @click="fechaStore()">Fechar</v-btn>
           </v-card-actions>
         </div>
       </v-layout>
@@ -98,14 +108,8 @@ export default {
     return {
       tab: null,
       carregando: true,
+      categorias: null,
       items: null,
-      tabs: [
-        { tab: "Todos os Álbuns" },
-        { tab: "Hinário" },
-        { tab: "Temas Anuais" },
-        { tab: "Álbuns Diversos" },
-        { tab: "Bíblias" },
-      ],
     };
   },
   computed: {
@@ -113,15 +117,39 @@ export default {
       return this.$root.$data.store;
     },
   },
+  watch: {
+    store: {
+      handler: function () {
+        if (this.store.show) {
+          this.baixaStore();
+        }
+      },
+      deep: true,
+    },
+  },
   mounted: async function () {
-    this.baixaStore();
+    //this.baixaStore();
   },
   methods: {
     baixaStore: async function () {
       this.carregando = true;
-      let data = await this.$root.getData("store");
-      this.items = data;
+        console.log("Baixando categorias");
+        let data = await this.$root.getData("store");
+        this.categorias = data.categorias;
+
+
+        console.log("Baixando items");
+        this.items = data.albuns;
+
       this.carregando = false;
+    },
+    fechaStore: function(){
+      this.store.show = false;
+    },
+    albuns: function (id_categoria) {
+      return this.items
+        ? this.items.filter((items) => items.id_categoria === id_categoria)
+        : [];
     },
   },
 };
