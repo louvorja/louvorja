@@ -79,10 +79,11 @@ new Vue({
             ipcRenderer.send('save_json', 'config', d, 'db');
 
             //inicia o processo de download e atualização do banco de dados
-            console.log('Atualizando Banco de Dados')
+            console.log('%cAtualizando Banco de Dados','color:blue')
             await self.downloadDB();
-            console.log('Banco de Dados atualizado!')
+            console.log('%cBanco de Dados atualizado!','color:blue')
           }
+          await self.checkDownloads();
         }
 
 

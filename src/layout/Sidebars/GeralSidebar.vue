@@ -14,7 +14,7 @@
       :dark="$root.data.layout.dark"
     >
       <v-tab
-        v-for="(m, index) in menu"
+        v-for="(m, index) in menu_list"
         :key="m.tab"
         style="justify-content: start"
         :data-id="index"
@@ -51,7 +51,7 @@ export default {
           tab: "Configurações",
           icon: "mdi-account",
           component: "config",
-          width: "95%",
+          //width: "95%",
         },
         {
           tab: "Aparência",
@@ -68,6 +68,7 @@ export default {
           tab: "Loja",
           icon: "mdi-store",
           click: "this.store()",
+          desktop: true,
         },
         {
           tab: "Loja 2",
@@ -81,6 +82,14 @@ export default {
       return this.menu[this.active_menu].component
         ? this.menu[this.active_menu].width || this.width_menu_open
         : this.width_menu_min;
+    },
+    desktop: function(){
+      return this.$root.desktop;
+    },
+    menu_list: function (id_categoria) {
+      return this.desktop
+        ? this.menu
+        : this.menu.filter((menu) => !menu.desktop);
     },
   },
   components: {

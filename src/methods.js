@@ -18,7 +18,7 @@ export default {
         this.dialog.show = true;
         this.dialog.title = "Restaurar formatação";
         this.dialog.text = "A formatação será restaurada para o padrão do programa. Esta opção não pode ser desfeita!";
-        this.dialog.buttons = [{ text: "Cancelar", color: "red", value: "cancel" }, { text: "Restaurar", value: "ok" }];
+        this.dialog.buttons = [{ text: "Cancelar", color: "error", value: "cancel" }, { text: "Restaurar", color: "info", value: "ok" }];
         this.dialog.value = '';
 
         var self = this;
@@ -80,7 +80,7 @@ export default {
             }
         ).catch(err => {
             this.msgAlert("erro", "Erro ao estabelecer conexão com o servidor!")
-            console.log(err)
+            console.log('%c' + err, 'color:red')
             return false;
         });
         if (response.ok) {
@@ -111,7 +111,7 @@ export default {
             }
         ).catch(err => {
             this.msgAlert("erro", "Erro ao estabelecer conexão com o banco de dados!")
-            console.log(err)
+            console.log('%c' + err, 'color:red')
             return false;
         });
         //this.progress.active = false;
@@ -139,7 +139,7 @@ export default {
             }
         ).catch(err => {
             this.msgAlert("erro", "Erro ao estabelecer conexão com o banco de dados!")
-            console.log(err)
+            console.log('%c' + err, 'color:red')
             return false;
         });
         if (response.ok) {
@@ -163,12 +163,13 @@ export default {
         var self = this;
         for (var item in self.config_web.db) {
             var db = self.config_web.db[item];
-            if (db.processado !== true && db.download == true) {
+            if (db.download == true && (db.processado !== true || filtros && db.tipo == 'dml')) {
                 db.processado = true;
                 if (self.data.db[item] == undefined || self.data.db[item] !== db.versao || filtros) {
                     let filtro = filtros || Object.assign({}, this.data.downloads.baixados, { datahora: self.data.db[item] });
                     // SOLICITA DADOS DA WEB
                     var urlapi = db.url || item;
+                    console.log("%cDownload banco de dados", "color:orange")
                     console.log("DB", item, self.data.db[item], db)
                     console.log('URL', urlapi)
                     console.log('FILTROS', filtro)
@@ -188,12 +189,14 @@ export default {
                         let ret = await this.sendDBData(t_url, sql);
                         if (ret == false) {
                             this.progress.active = false;
-                            console.log('SQL: ', sql);
+                            console.log('%c' + sql, 'color:yellow');
                             return;
                         }
                     }
                     self.data.db[item] = db.versao;
                     self.save_data = true;
+
+                    console.log("%cFim download do banco de dados", "color:orange")
                 } else {
                     console.log("DB Não processado ", item)
                 }
@@ -202,8 +205,30 @@ export default {
 
         this.progress.active = false;
     },
+    checkDownloads: async function () {
+        if (this.progress.active) {
+            console.log('%cFila de Downloads ocupada!', 'color:red')
+            return false;
+        }
+        console.log('%cVerificando Downloads na fila', 'color:blue')
+        console.log('%cFila de dowloads', 'color:green', this.baixar)
+
+        let baixar = [];
+        if (this.baixar.albuns.length > 0) {
+            baixar = { albuns: [this.baixar.albuns[0]] };
+            console.log('Processando fila', baixar, this.baixar)
+            await this.downloadDB(baixar)
+
+            this.data.downloads.baixados.albuns.push(this.baixar.albuns[0]);
+            console.log('%cFila processada - checa se fila possui novos dados', 'color:blue')
+            this.checkDownloads();
+            return;
+        }
+
+        console.log('%cFila processada', 'color:blue')
+    },
     msgAlert: function (type, msg) {
-        console.error('Erro do Sistema: ', type, ' - ', msg);
+        console.log('%cErro do Sistema: ' + type + ' - ' + msg, 'color:red');
         if (this.alert.show && this.alert.type === type) {
             if (typeof this.alert.text === 'string') {
                 this.alert.text = [this.alert.text];
