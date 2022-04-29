@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog.show" max-width="450">
+  <v-dialog v-model="dialog.show" max-width="450" persistent>
     <v-card>
       <v-card-title v-if="dialog.title">{{ dialog.title }}</v-card-title>
       <v-spacer></v-spacer>

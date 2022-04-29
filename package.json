@@ -1,6 +1,8 @@
 {
-  "name": "lja",
+  "name": "louvorja",
   "version": "0.1.0",
+  "author": "Mayco Rolbuche",
+  "description": "LouvorJA",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

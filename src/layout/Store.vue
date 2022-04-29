@@ -54,7 +54,7 @@
                   <v-expansion-panel v-for="(p, index) in panels" :key="index">
                     <v-expansion-panel-header>
                       {{ p.titulo }} &nbsp;
-                      <span style="font-weight:bold;">
+                      <span style="font-weight: bold">
                         {{ albuns(categoria.id_categoria, p.baixados).length }}
                       </span>
                     </v-expansion-panel-header>
@@ -128,7 +128,13 @@ export default {
       handler: function () {
         if (this.store.show) {
           this.panel = 0;
-          this.baixaStore();
+
+          if (sessionStorage.getItem("store")) {
+            console.log("Carregado do sessionStorage")
+            this.items = JSON.parse(sessionStorage.getItem("store"));
+          } else {
+            this.baixaStore();
+          }
         }
       },
       deep: true,
@@ -149,6 +155,7 @@ export default {
 
       console.log("Baixando items");
       this.items = data.albuns;
+      sessionStorage.setItem("store", JSON.stringify(this.items));
 
       this.carregando = false;
     },
