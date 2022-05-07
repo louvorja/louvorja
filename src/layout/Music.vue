@@ -35,9 +35,11 @@
 
 <script>
 export default {
+  components: {
+    
+  },
   data() {
     return this.$root.$data;
   },
-  components: {},
 };
 </script>

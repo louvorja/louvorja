@@ -23,7 +23,7 @@
         dense
       >
       <template v-slot:[`item.opcoes`]="{ item }">
-        {{item}}
+        <opc-musica v-bind="item"/>
       </template>      
       </v-data-table>
     </div>
@@ -35,6 +35,7 @@ export default {
   name: "hinario",
   components: {
     lInput: () => import(`@/components/Input`),
+    OpcMusica: () => import("@/components/OpcMusica"),
   },
   data() {
     return {
