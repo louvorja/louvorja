@@ -12,6 +12,16 @@ module.exports = {
       maximize: true,
       //monitor: 0,
 
+      media: {
+        active: false,
+        playlist: [],
+        drawer: true,
+        musica: [
+          { title: "Home", icon: "mdi-home-city" },
+          { title: "My Account", icon: "mdi-account" },
+          { title: "Users", icon: "mdi-account-group-outline" },
+        ],
+      },
       progress: {
         active: false,
         value: 0,
@@ -27,6 +37,9 @@ module.exports = {
             albuns: [],
             musicas: [],
           },
+        },
+        media: {
+          mini: false,
         },
         fav: [],
         layout: { id: 1, color: "#29569b", dark: false },

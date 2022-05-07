@@ -22,6 +22,9 @@
         loading-text="Carregando..."
         dense
       >
+      <template v-slot:[`item.opcoes`]="{ item }">
+        {{item}}
+      </template>      
       </v-data-table>
     </div>
   </div>
@@ -45,6 +48,7 @@ export default {
           align: "end",
         },
         { text: "Titulo", value: "titulo" },
+        { text: "", value: "opcoes" },
       ],
     };
   },

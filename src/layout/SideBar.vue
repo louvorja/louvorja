@@ -12,7 +12,6 @@ export default {
     return this.$root.$data;
   },
   components: {
-    ico: () => import(`@/components/Icone`),
     geral: () => import(`@/layout/sidebars/GeralSidebar`),
     cronometro: () => import(`@/layout/sidebars/CronometroSidebar`),
   },

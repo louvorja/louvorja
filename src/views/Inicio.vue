@@ -4,6 +4,8 @@
       <ico src="louvorja" size="100"/>
     </div>
 
+    <a href="javascript:" @click="media.active=!media.active">MUSICA</a>
+
     <div style="background:#FFF;">
       <pre>{{this.$root.baixar}}...</pre>
       <pre>{{this.$root.data.downloads}}...</pre>
