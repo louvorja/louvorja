@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="px-2" v-if="skins">
-      <div v-for="list in skins" :key="list.title">
-        <div class="text-h7 pt-3 pb-2">{{ list.title }}</div>
+      <div v-for="list in skins" :key="list.title" class="mb-3">
+        <h4>{{ list.title }}</h4>
         <v-btn
           icon
           v-for="skin in list.list"

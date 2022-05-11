@@ -71,8 +71,10 @@ export default {
           desktop: true,
         },
         {
-          tab: "Loja 2",
-          icon: "mdi-access-point",
+          tab: "Banco de Dados",
+          icon: "mdi-database",
+          component: "bd",
+          desktop: true,
         },
       ],
     };
@@ -95,6 +97,7 @@ export default {
   components: {
     config: () => import(`./partials/Config`),
     temas: () => import(`./partials/Temas`),
+    bd: () => import(`./partials/BD`),
   },
   methods: {
     action: function (item) {
