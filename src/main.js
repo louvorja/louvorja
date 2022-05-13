@@ -3,8 +3,6 @@ import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
 
-import $ from 'jquery'
-
 import VueSessionStorage from "vue-sessionstorage";
 Vue.use(VueSessionStorage);
 
@@ -126,7 +124,7 @@ new Vue({
     }, 1000);
 
     setTimeout(function () {
-      $("#preload").hide();
+      document.getElementById("preload").style.display = 'none'
     }, 1000);
 
   }

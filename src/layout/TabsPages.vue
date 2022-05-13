@@ -62,7 +62,6 @@
 </style>
 
 <script>
-import $ from "jquery";
 import draggable from "vuedraggable";
 
 export default {
@@ -96,7 +95,7 @@ export default {
         if (this.$root.openpages.length <= 0) {
           this.$router.push("/");
         } else {
-          var r = $(this.$root.openpages).get(0);
+          var r = this.$root.openpages[0];
           this.$router.push(r.path);
         }
       }
