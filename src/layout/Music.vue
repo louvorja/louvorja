@@ -17,7 +17,7 @@
         <v-divider></v-divider>
 
         <v-list dense>
-          <v-list-item v-for="item in media.musica" :key="item.title" link>
+          <v-list-item v-for="item in media.music" :key="item.title" link>
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>

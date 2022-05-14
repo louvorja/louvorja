@@ -3,7 +3,7 @@
     <v-spacer />
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn icon color="pink" v-on="on">
+        <v-btn icon color="pink" v-on="on" @click="openMusic">
           <v-icon>mdi-play-box-multiple</v-icon>
         </v-btn>
       </template>
@@ -58,5 +58,10 @@
 export default {
   inheritAttrs: false,
   //props: ['route','icon','label','to','icon-class'],
+  methods: {
+    openMusic: function (evt) {
+      this.$root.media.active = !this.$root.media.active
+    },
+  }
 };
 </script>

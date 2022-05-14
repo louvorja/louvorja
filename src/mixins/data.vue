@@ -16,7 +16,7 @@ module.exports = {
         active: false,
         playlist: [],
         drawer: true,
-        musica: [
+        music: [
           { title: "Home", icon: "mdi-home-city" },
           { title: "My Account", icon: "mdi-account" },
           { title: "Users", icon: "mdi-account-group-outline" },
