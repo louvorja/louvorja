@@ -6,8 +6,29 @@
         v-model="search"
         label="Digite o nome ou número do hino"
         append-icon="mdi-magnify"
-        :error="!carregando && pagination.itemsLength === 0"
+        :error="!carregando && hinos.length > 0 && pagination.itemsLength === 0"
       />
+    </div>
+    <div v-if="!carregando && hinos.length <= 0">
+      <v-alert
+        border="bottom"
+        colored-border
+        type="warning"
+        elevation="2"
+        class="mx-4"
+      >
+        O hinário não foi baixado em seu programa. Acesse a loja e faça o
+        download do hinário!
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="warning" @click="loadData">
+            Atualizar Página
+          </v-btn>
+          <v-btn color="info" @click="$root.$data.store.show = true">
+            Acessar Loja
+          </v-btn>
+        </v-card-actions>
+      </v-alert>
     </div>
     <div
       id="content_scroll"
@@ -99,16 +120,36 @@ export default {
         }, 10);
       }
     },
-    filterPerfectMatch(value, search) {
+    filterPerfectMatch: function (value, search) {
       if (isNaN(search)) {
         if (value !== undefined && isNaN(value)) {
-          return value.toLowerCase().indexOf(search.toLowerCase()) > -1;
+          return (
+            value
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .indexOf(
+                search
+                  .toLowerCase()
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "")
+              ) > -1
+          );
         } else {
           return false;
         }
       } else {
         return value != null && value == search;
       }
+    },
+    loadData: async function () {
+      let data = await this.$root.getData("hinario");
+      this.hinos = data;
+      this.carregando = false;
+      const self = this;
+      setTimeout(function () {
+        self.calcItemsPage();
+      }, 10);
     },
   },
   created() {
@@ -120,13 +161,7 @@ export default {
   },
   mounted: async function () {
     //console.log("MOUNTED", this.hinos.length);
-    let data = await this.$root.getData("hinario");
-    this.hinos = data;
-    this.carregando = false;
-    const self = this;
-    setTimeout(function () {
-      self.calcItemsPage();
-    }, 10);
+    await this.loadData();
   },
 };
 </script>

@@ -7,7 +7,7 @@
     <a href="javascript:" @click="media.active=!media.active">MUSICA</a>
 
     <div style="background:#FFF;">
-      <pre>{{this.$root.data.db}}...</pre>
+      <pre>{{this.$root.path}}...</pre>
       <pre>{{progress}}</pre>
       <pre>{{$data}}</pre>
     </div>

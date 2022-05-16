@@ -44,6 +44,9 @@ new Vue({
       ipcRenderer.on('platform', (event, data) => {
         self.platform = data;
       });
+      ipcRenderer.on('path', (event, data) => {
+        self.path = data;
+      });
       ipcRenderer.on('maximize', (event, data) => {
         self.maximize = data;
       });
@@ -74,7 +77,7 @@ new Vue({
           let d = await self.getApiData('config');
           if (d) {
             self.config_web = d;
-            ipcRenderer.send('save_json', 'config', d, 'db');
+            ipcRenderer.send('save_json', 'config', d, 'filedir');
 
             //inicia o processo de download e atualização do banco de dados
             console.log('%cAtualizando Banco de Dados','color:blue')
@@ -87,7 +90,7 @@ new Vue({
 
         /*self.getApiData('config', function (d) {
           self.config_web = d;
-          ipcRenderer.send('save_json', 'config', d, 'db');
+          ipcRenderer.send('save_json', 'config', d, 'filedir');
           console.log("rotina de downloadddd")
           self.downloadDB();
         });*/

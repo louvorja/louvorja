@@ -130,7 +130,7 @@ export default {
           this.panel = 0;
 
           if (sessionStorage.getItem("store")) {
-            console.log("Carregado do sessionStorage")
+            console.log("Carregado do sessionStorage");
             this.items = JSON.parse(sessionStorage.getItem("store"));
           } else {
             this.baixaStore();

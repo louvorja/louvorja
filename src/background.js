@@ -22,13 +22,13 @@ async function activeWindow() {
   createWindow(0);
 }
 
-async function createWindow(i,route) { 
-  route = (route == undefined?"":route);
+async function createWindow(i, route) {
+  route = (route == undefined ? "" : route);
 
   var create = false;
 
-  console.log('JANELA',i,route)
-  if (win[i] == undefined){
+  console.log('JANELA', i, route)
+  if (win[i] == undefined) {
     create = true;
     win[i] = new BrowserWindow({
       width: 800,
@@ -53,27 +53,27 @@ async function createWindow(i,route) {
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    await win[i].loadURL(process.env.WEBPACK_DEV_SERVER_URL+route)
+    await win[i].loadURL(process.env.WEBPACK_DEV_SERVER_URL + route)
     if (!process.env.IS_TEST) win[i].webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
-    win[i].loadURL('app://./index.html'+route)
+    win[i].loadURL('app://./index.html' + route)
     win[i].webContents.openDevTools()
   }
-  
-  console.log("create",create)
-  if (create){
+
+  console.log("create", create)
+  if (create) {
     console.log("ok")
     win[i].maximize()
     win[i].show()
 
     win[i].on('resize', function () {
-      win[i].webContents.send('maximize',BrowserWindow.getFocusedWindow().isMaximized());
+      win[i].webContents.send('maximize', BrowserWindow.getFocusedWindow().isMaximized());
     });
 
   }
-  
+
 }
 
 // Quit when all windows are closed.
@@ -96,12 +96,12 @@ app.on('activate', () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   //if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      await installExtension(VUEJS_DEVTOOLS)
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
-    }
+  // Install Vue Devtools
+  try {
+    await installExtension(VUEJS_DEVTOOLS)
+  } catch (e) {
+    console.error('Vue Devtools failed to install:', e.toString())
+  }
   //}
   activeWindow()
 })
@@ -137,9 +137,9 @@ function ipc(){
 
     }else if(data == 'saveApiData'){
       var str = array2jsonfile(params);
-      var path = getAppDatabasePath()+params2+'.json';
+      var path = getAppFilesPath()+params2+'.json';
       fs.writeFileSync(path, str);
-      console.log('salvando... ',getAppDatabasePath()+'config.json',params,params2);
+      console.log('salvando... ',getAppFilesPath()+'config.json',params,params2);
       //win[0].webContents.send(params2,getJSONFile(path));
 
     }else if(data == 'openWindow'){
@@ -210,52 +210,54 @@ ipcMain.on('close', () => {
 ipcMain.on('config', (event) => {
   const ip = require("ip")
 
-  event.reply('displays',screen.getAllDisplays());
-  event.reply('ip',ip.address());
-  event.reply('platform',process.platform);
-  event.reply('data',getJSONFile(getAppBasePath('config.json')));
+  event.reply('displays', screen.getAllDisplays());
+  event.reply('ip', ip.address());
+  event.reply('platform', process.platform);
+  event.reply('data', getJSONFile(getAppBasePath('config.json')));
+  event.reply('path', { base: getAppBasePath(), files: getAppFilesPath() });
 })
 
 ipcMain.on('config_web', (event) => {
   var data = null;
-  if (fs.existsSync(getAppDatabasePath('config.json'))){
-    data = getJSONFile(getAppDatabasePath('config.json'));
+  if (fs.existsSync(getAppFilesPath('config.json'))) {
+    data = getJSONFile(getAppFilesPath('config.json'));
   }
-  
-  event.reply('config_web',data);
+
+  event.reply('config_web', data);
 })
 
-ipcMain.on('get_json', (event,filename) => {
+ipcMain.on('get_json', (event, filename) => {
   var data = null;
-  if (fs.existsSync(getAppDatabasePath(filename+'.json'))){
-    data = getJSONFile(getAppDatabasePath(filename+'.json'));
+  if (fs.existsSync(getAppFilesPath(filename + '.json'))) {
+    data = getJSONFile(getAppFilesPath(filename + '.json'));
   }
-  
-  event.reply('get_json',data);
+
+  event.reply('get_json', data);
 })
 
-ipcMain.on('save_json', (event,filename,data,dir) => {
+ipcMain.on('save_json', (event, filename, data, dir) => {
   var str = array2jsonfile(data);
-  if (dir == 'db'){
-    dir = getAppDatabasePath()
-  }else{
+  if (dir == 'filedir') {
+    dir = getAppFilesPath()
+  } else {
     dir = getAppBasePath()
   }
-  fs.writeFileSync(dir+filename+'.json', str);
+  fs.writeFileSync(dir + filename + '.json', str);
 })
 
-ipcMain.on('save_data', (event,data) => {
+ipcMain.on('save_data', (event, data) => {
   var str = array2jsonfile(data);
-  fs.writeFileSync(getAppBasePath()+'config.json', str);
+  fs.writeFileSync(getAppBasePath() + 'config.json', str);
   event.reply('save_data');
 })
 
 
 
-function getAppBasePath(p){
+function getAppBasePath(p) {
   //dev
   //if (process.env.RUN_ENV === 'development') return './'
-  var path = "";
+  //var path = "";
+  /*
   if (!process.platform || !['win32', 'darwin'].includes(process.platform)) {
     console.error(`Unsupported OS: ${process.platform}`)
     path = './'
@@ -266,52 +268,58 @@ function getAppBasePath(p){
     //console.log('Windows OS detected')
     path = `${process.env.APPDATA}\\${APP_NAME}\\`
   }
-  if (p != undefined){
-    path = path+p;
+  */
+  var path = app.getAppPath() + '\\data\\';
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path);
+    console.log("Diretório criado", fs.existsSync(path), path);
+  }
+  if (p != undefined) {
+    path = path + p;
   }
   //console.log('Diretório Local: ',path)
   return path;
 }
-console.log('Diretório Local: ',getAppBasePath())
+console.log('Diretório Local: ', getAppBasePath())
 
-function getAppDatabasePath(p){
-  var path = getAppBasePath()+"database\\";
-  if (!fs.existsSync(path)){
+function getAppFilesPath(p) {
+  var path = getAppBasePath() + "files\\";
+  if (!fs.existsSync(path)) {
     fs.mkdirSync(path);
-    console.log("EXISTE PATH",fs.existsSync(path));
+    console.log("Diretório criado", fs.existsSync(path), path);
   }
-  path = path+"pt\\";
-  if (!fs.existsSync(path)){
+  path = path + "pt\\";
+  if (!fs.existsSync(path)) {
     fs.mkdirSync(path);
-    console.log("EXISTE PATH",fs.existsSync(path));
+    console.log("Diretório criado", fs.existsSync(path), path);
   }
-  if (p != undefined){
-    path = path+p;
+  if (p != undefined) {
+    path = path + p;
   }
   return path;
 }
 
-function getJSONFile(file){
+function getJSONFile(file) {
   try {
     var data = fs.readFileSync(file, 'utf8');
     return JSON.parse(data);
   }
   catch (e) {
     return {}
- }
+  }
 }
 
-function array2jsonfile(params){
+function array2jsonfile(params) {
   var str1 = JSON.stringify(params);
   var str2 = "";
   var chr = "";
-  for(var i = 0; i < str1.length; i++){
-      if (str1[i].match(/[^\x00-\x7F]/)){
-          chr = "\\u" + ("000" + str1[i].charCodeAt(0).toString(16)).substr(-4);
-      }else{
-          chr = str1[i];
-      }
-      str2 = str2 + chr;
+  for (var i = 0; i < str1.length; i++) {
+    if (str1[i].match(/[^\x00-\x7F]/)) {
+      chr = "\\u" + ("000" + str1[i].charCodeAt(0).toString(16)).substr(-4);
+    } else {
+      chr = str1[i];
+    }
+    str2 = str2 + chr;
   }
   return str2;
 }
