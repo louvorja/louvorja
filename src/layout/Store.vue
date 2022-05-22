@@ -82,7 +82,7 @@
             <v-btn text color="info" v-if="items" @click="downloadItemAll()">
               Baixar Tudo
             </v-btn>
-            <v-btn text color="error" @click="fechaStore()">Fechar</v-btn>
+            <v-btn text color="error" @click="closeStore()">Fechar</v-btn>
           </v-card-actions>
         </div>
       </v-layout>
@@ -159,7 +159,7 @@ export default {
 
       this.carregando = false;
     },
-    fechaStore: function () {
+    closeStore: function () {
       this.store.show = false;
     },
     albuns: function (id_categoria, baixado) {

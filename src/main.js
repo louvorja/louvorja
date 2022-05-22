@@ -56,11 +56,27 @@ new Vue({
 
       // OBTEM CONFIGURAÇÕES SALVAS NA MAQUINA
       ipcRenderer.on('data', function (event, data) {
-        self.data = Object.assign({}, self.data, data);
-        //self.mergeData(self.data, data);
-        console.log('Obteve dados locais. Solicita dados da web!')
-        ipcRenderer.send('config_web');
+        //self.data = Object.assign({}, self.data, data);
+        self.mergeData(self.data, data);
+        self.db_port = self.data.db.port;
+        console.log('Obteve dados locais. Inicia conexão com o banco de dados')
+        ipcRenderer.send('start_db', self.data.db.port);
       });
+
+      ipcRenderer.on('start_db', function (event, status, port, message) {
+        self.db_port = port;
+        if (status == "true" || status == true) {
+          console.log('Conectou ao Banco de Dados. Obtém dados da web')
+          ipcRenderer.send('config_web');
+        } else {
+          self.dialog.show = true;
+          self.dialog.title = "Erro ao conectar no Banco de Dados!";
+          self.dialog.text = `<span class='error--text'>${message}</span><br><br>Seu programa não irá funcionar corretamente. Tente reiniciar o programa.`;
+          self.dialog.buttons = [{ text: "Fechar", color: "error", value: "cancel" }];
+          self.dialog.value = '';
+        }
+
+      })
 
       ipcRenderer.on('save_data', function (event) {
         self.save_data = false;
@@ -80,9 +96,9 @@ new Vue({
             ipcRenderer.send('save_json', 'config', d, 'filedir');
 
             //inicia o processo de download e atualização do banco de dados
-            console.log('%cAtualizando Banco de Dados','color:blue')
+            console.log('%cAtualizando Banco de Dados', 'color:blue')
             await self.downloadDB();
-            console.log('%cBanco de Dados atualizado!','color:blue')
+            console.log('%cBanco de Dados atualizado!', 'color:blue')
           }
           await self.checkDownloads();
         }
@@ -108,8 +124,8 @@ new Vue({
         var c = JSON.parse(localStorage.data);
         if (c !== '' && c !== null && c !== undefined) {
           console.log("JSON", c)
-          this.data = Object.assign({}, this.data, c);
-          //this.mergeData(this.data, c);
+          //this.data = Object.assign({}, this.data, c);
+          this.mergeData(this.data, c);
         } else {
           this.saveData();
         }

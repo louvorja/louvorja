@@ -60,7 +60,7 @@ export default {
     getData: async function (url) {
         if (this.desktop) {
             let data = await this.getDBData(url);
-            return data.model;
+            return data;
         } else {
             let data = await this.getApiData(url);
             return data;
@@ -100,7 +100,7 @@ export default {
         //this.progress.text = 'Conectando ao banco de dados...';
         //this.progress.value = -1;
         //this.progress.active = true;
-        var url = 'http://localhost:3000/' + url;
+        var url = `http://localhost:${this.$root.db_port}/${url}`;
         console.log('getDBData', url)
         let response = await fetch(url,
             {
@@ -128,7 +128,7 @@ export default {
         }
     },
     sendDBData: async function (u, data) {
-        var url = 'http://localhost:3000/' + u;
+        var url = `http://localhost:${this.$root.db_port}/${u}`;
         console.log('sendDBData', url)
         let response = await fetch(url,
             {
@@ -241,5 +241,20 @@ export default {
             this.alert.type = type;
             this.alert.timeout = 5000;
         }
+    },
+
+
+
+    openMusic: function (obj) {
+        //let data = await this.$root.getData("hinario");
+        alert(obj.id_musica)
+        this.$root.media.active = !this.$root.media.active
+    },
+    openLetterMusic: async function (obj) {
+        this.$root.letter.show = true;
+        this.$root.letter.loading = true;
+        let data = await this.$root.getData(`musica/${obj.id_musica}`);
+        this.$root.letter.music = data;
+        this.$root.letter.loading = false;
     },
 }

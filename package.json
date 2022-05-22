@@ -18,6 +18,7 @@
     "axios": "^0.26.1",
     "core-js": "^3.8.3",
     "cors": "^2.8.5",
+    "electron-browser-storage": "^1.0.7",
     "express": "^4.17.3",
     "sqlite3": "^5.0.3",
     "vue": "^2.6.14",

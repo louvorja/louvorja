@@ -11,6 +11,7 @@ module.exports = {
       //server: {status: false},
       platform: "",
       maximize: true,
+      db_port: 0,
       //monitor: 0,
 
       media: {
@@ -30,7 +31,7 @@ module.exports = {
       },
 
       data: {
-        db: {},
+        db: {port: 7770},
         downloads: {
           albuns: [],
           musicas: [],
@@ -89,6 +90,13 @@ module.exports = {
       },
       store: {
         show: false,
+      },
+      letter: {
+        show: false,
+        loading: false,
+        music: {
+          titulo: ""
+        },
       },
     };
   },

@@ -1,3 +1,5 @@
+const { localStorage } = require('electron-browser-storage');
+
 const sqlite3 = require('sqlite3').verbose();
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -35,11 +37,15 @@ class dbConnection {
             }
         })
     }
-    all(sql, res) {
+    all(sql, res, callback) {
         this.db.all(sql, [], (err, rows) => {
             if (err) { console.log(err.message) };
 
-            res.json({ model: rows });
+            if (callback) {
+                callback(rows);
+            } else {
+                res.json(rows);
+            }
         })
     }
 }
@@ -47,7 +53,7 @@ class dbConnection {
 const dbCon = new dbConnection();
 
 app.post('/hinario', (req, res) => {
-    var lang = req.body.lang.toUpperCase() || 'PT';
+    let lang = req.body.lang.toUpperCase() || 'PT';
     const sql = `SELECT
                 ALM.FAIXA,
                 MUS.*
@@ -55,11 +61,34 @@ app.post('/hinario', (req, res) => {
             INNER JOIN CATEGORIAS_ALBUNS CAA ON CAA.ID_CATEGORIA=CAT.ID_CATEGORIA
             INNER JOIN ALBUNS_MUSICAS ALM ON ALM.ID_ALBUM=CAA.ID_ALBUM
             INNER JOIN MUSICAS MUS ON MUS.ID_MUSICA=ALM.ID_MUSICA
-            WHERE CAT.SLUG = 'hinario' AND MUS.IDIOMA='`+ lang + `'
+            WHERE CAT.SLUG = 'hinario' AND MUS.IDIOMA='${lang}'
             ORDER BY ALM.FAIXA,MUS.TITULO`;
 
     dbCon.all(sql, res);
 })
+
+app.post('/musica/:id', (req, res) => {
+    let { id } = req.params;
+    let sql = `SELECT * FROM MUSICAS WHERE ID_MUSICA=${id}`;
+    let data;
+    dbCon.all(sql, res, function (rows) {
+        data = rows[0];
+        let sql = `SELECT * FROM LETRAS WHERE ID_MUSICA=${id} ORDER BY ORDEM`;
+        dbCon.all(sql, res, function (rows) {
+            data["letra"] = rows;
+            res.json(data);
+        });
+    });
+})
+/*
+function musica($id){
+    $sql = "SELECT * FROM LETRAS WHERE ID_MUSICA=? ORDER BY ORDEM";
+    $param = ["i"=>$id];
+    $r = query($sql,$param);
+    $data["letra"] = @$r;
+    return $data;
+}
+*/
 /*app.get('/', (req, res) => {
     const sql = 'SELECT * FROM DADOS;'
     dbCon.all(sql, res);
@@ -90,8 +119,26 @@ app.get('/', (req, res) => {
     res.send(ret);
 })
 
-
-
-app.listen(3000, () => {
-    console.log('conectado a porta 3000');
-})
+async function conectaServer() {
+    let port = await localStorage.getItem("db-port") || 7770
+    await localStorage.setItem("db-port", port);
+    console.log('Tentando conectar BD à porta: ', port);
+    try {
+        app.listen(port, async (err) => {
+            if (err) {
+                console.log("Erro ao conectar no BD: ", err)
+                await localStorage.setItem("db-message", err);
+                await localStorage.setItem("db-status", false);
+            }
+            console.log('BD Conectado à porta: ', port);
+            await localStorage.setItem("db-message", "");
+            await localStorage.setItem("db-status", true);
+        })
+    } catch (e) {
+        // Do with the error e as you see fit
+        console.log('Erro ao conectar no BD:', e);
+        await localStorage.setItem("db-message", e);
+        await localStorage.setItem("db-status", false);
+    }
+}
+conectaServer();

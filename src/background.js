@@ -1,7 +1,9 @@
 import { app, protocol, BrowserWindow, screen, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
-const db = require("./database/server");
+
+const http = require('http')
+const { localStorage } = require('electron-browser-storage');
 
 var fs = require('fs');
 
@@ -215,6 +217,33 @@ ipcMain.on('config', (event) => {
   event.reply('platform', process.platform);
   event.reply('data', getJSONFile(getAppBasePath('config.json')));
   event.reply('path', { base: getAppBasePath(), files: getAppFilesPath() });
+})
+
+ipcMain.on('start_db', async (event, port) => {
+  await localStorage.setItem("db-port", port);
+  await localStorage.setItem("db-status", "pending");
+  var dbStatus = setInterval(async function () {
+    let status = await localStorage.getItem("db-status");
+    port = await localStorage.getItem("db-port");
+    let message = await localStorage.getItem("db-message");
+    console.log("Tentando conectar.... Status: ", status, " - Porta: ", port, " - Mensagem: ", message)
+    if (status !== "pending") {
+      event.reply('start_db', status, port, message);
+      clearInterval(dbStatus);
+    } else {
+      //Não teve retorno, verifica se está no ar mesmo assim
+      const url = `http://localhost:${port}/`;
+      console.log("Verifica se BD está no ar", url)
+      http.get(url, res => {
+        console.log("BD no ar!")
+        event.reply('start_db', true, port, "");
+        clearInterval(dbStatus);
+      }).on('error', err => {
+        console.log("BD fora do ar!", err.nessage)
+      })
+    }
+  }, 1000);
+  const db = require("./database/server");
 })
 
 ipcMain.on('config_web', (event) => {
