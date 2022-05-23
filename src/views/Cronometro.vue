@@ -10,7 +10,7 @@
       <v-card
         transition="fab-transition"
         v-if="content.cronometro_list.length > 0"
-        style="overflow: auto;"
+        style="overflow: auto"
       >
         <v-list-item>
           <v-list-item-content>
@@ -34,9 +34,9 @@
                 <span class="ps-1" style="font-weight: bold"
                   >{{ index + 1 }}.</span
                 >
-                <span class="ps-3">{{
-                  item | timer(data.cronometro.mask)
-                }}</span>
+                <span class="ps-3">
+                  {{ item | timer(data.cronometro.mask) }}
+                </span>
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import filters from '@/filters'
+import filters from "@/filters";
 export default {
   name: "cronometro",
   filters,

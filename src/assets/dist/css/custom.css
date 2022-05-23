@@ -10,6 +10,11 @@ body {
     display: none;
 }
 
+
+.text-block {
+    white-space: pre;
+}
+
 /*:root{
     --primary: #29569b !important;
     --primary-hover: #275291 !important;

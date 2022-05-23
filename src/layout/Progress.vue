@@ -1,9 +1,9 @@
 <template>
-  <div v-if="progress.active">
+  <div v-if="progress.show">
     <div style="min-height: 4px">
       <v-progress-linear
         v-model="progress.value"
-        :active="progress.active"
+        :active="progress.show"
         :indeterminate="progress.value == -1"
       ></v-progress-linear>
     </div>

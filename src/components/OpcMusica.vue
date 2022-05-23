@@ -11,7 +11,7 @@
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn icon color="info" v-on="on">
+        <v-btn icon color="info" v-on="on" @click="$root.openMusic($attrs)">
           <v-icon>mdi-play-box-multiple-outline</v-icon>
         </v-btn>
       </template>
@@ -57,9 +57,5 @@
 <script>
 export default {
   inheritAttrs: false,
-  //props: ['route','icon','label','to','icon-class'],
-  methods: {
-
-  }
 };
 </script>

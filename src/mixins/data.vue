@@ -15,17 +15,13 @@ module.exports = {
       //monitor: 0,
 
       media: {
-        active: false,
+        show: false,
+        loading: false,
         playlist: [],
-        drawer: true,
-        music: [
-          { title: "Home", icon: "mdi-home-city" },
-          { title: "My Account", icon: "mdi-account" },
-          { title: "Users", icon: "mdi-account-group-outline" },
-        ],
+        music: [],
       },
       progress: {
-        active: false,
+        show: false,
         value: 0,
         text: "",
       },

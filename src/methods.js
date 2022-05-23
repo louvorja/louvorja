@@ -99,7 +99,7 @@ export default {
         url = url || '';
         //this.progress.text = 'Conectando ao banco de dados...';
         //this.progress.value = -1;
-        //this.progress.active = true;
+        //this.progress.show = true;
         var url = `http://localhost:${this.$root.db_port}/${url}`;
         console.log('getDBData', url)
         let response = await fetch(url,
@@ -114,7 +114,7 @@ export default {
             console.log('%c' + err, 'color:red')
             return false;
         });
-        //this.progress.active = false;
+        //this.progress.show = false;
         if (response.ok) {
             let data = await response.json();
             if (data.erro != undefined && data.erro != '') {
@@ -158,7 +158,7 @@ export default {
         console.log("Rotina de Download do Banco de Dados")
         this.progress.text = 'Baixando dados do servidor...';
         this.progress.value = -1;
-        this.progress.active = true;
+        this.progress.show = true;
 
         var self = this;
         for (var item in self.config_web.db) {
@@ -188,7 +188,7 @@ export default {
                         var sql = sql_arr[indx];
                         let ret = await this.sendDBData(t_url, sql);
                         if (ret == false) {
-                            this.progress.active = false;
+                            this.progress.show = false;
                             console.log('%c' + sql, 'color:yellow');
                             return;
                         }
@@ -203,10 +203,10 @@ export default {
             }
         }
 
-        this.progress.active = false;
+        this.progress.show = false;
     },
     checkDownloads: async function () {
-        if (this.progress.active) {
+        if (this.progress.show) {
             console.log('%cFila de Downloads ocupada!', 'color:red')
             return false;
         }
@@ -243,12 +243,20 @@ export default {
         }
     },
 
+    lineBreak: function (str) {
+        if (!str) {
+            return str;
+        }
+        return str.replaceAll("a", "<br>");
+    },
 
 
-    openMusic: function (obj) {
-        //let data = await this.$root.getData("hinario");
-        alert(obj.id_musica)
-        this.$root.media.active = !this.$root.media.active
+    openMusic: async function (obj) {
+        this.$root.media.show = true;
+        this.$root.media.loading = true;
+        let data = await this.$root.getData(`musica/${obj.id_musica}`);
+        this.$root.media.music = data;
+        this.$root.media.loading = false;
     },
     openLetterMusic: async function (obj) {
         this.$root.letter.show = true;
