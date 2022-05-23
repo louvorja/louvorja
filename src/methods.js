@@ -31,7 +31,7 @@ export default {
             }
         }, 100);
     },
-    mergeData: function ($ori, $adic) {
+    /*mergeData: function ($ori, $adic) {
         for (var prop in $adic) {
             if (!isNaN(prop)) {
                 eval("$ori[" + prop + "]=$adic[" + prop + "]");
@@ -44,7 +44,7 @@ export default {
                 eval("$ori." + prop + "=$adic." + prop);
             }
         }
-    },
+    },*/
     /*openWindow: function(route){
       if (this.desktop){
         var d = [];

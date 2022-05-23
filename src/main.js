@@ -2,9 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
+import deepAssign from 'simple-deep-assign';
 
 import VueSessionStorage from "vue-sessionstorage";
 Vue.use(VueSessionStorage);
+
+import JSONView from 'vue-json-component';
+Vue.use(JSONView);
 
 import './assets/dist/css/custom.css';
 
@@ -56,8 +60,7 @@ new Vue({
 
       // OBTEM CONFIGURAÇÕES SALVAS NA MAQUINA
       ipcRenderer.on('data', function (event, data) {
-        //self.data = Object.assign({}, self.data, data);
-        self.mergeData(self.data, data);
+        deepAssign(self.data, data)
         self.db_port = self.data.db.port;
         console.log('Obteve dados locais. Inicia conexão com o banco de dados')
         ipcRenderer.send('start_db', self.data.db.port);
@@ -124,8 +127,7 @@ new Vue({
         var c = JSON.parse(localStorage.data);
         if (c !== '' && c !== null && c !== undefined) {
           console.log("JSON", c)
-          //this.data = Object.assign({}, this.data, c);
-          this.mergeData(this.data, c);
+          deepAssign(this.data,c)
         } else {
           this.saveData();
         }
