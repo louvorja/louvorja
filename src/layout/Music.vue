@@ -22,29 +22,45 @@
           </div>
 
           <div class="flex-grow-1" style="overflow: auto; flex: auto">
-            <v-skeleton-loader v-if="media.loading" type="list-item-two-line@3" class="px-3"></v-skeleton-loader>
+            <div
+              style="height: 150px"
+              class="black d-flex align-center justify-center"
+            >
+              <div v-if="!media.loading" class="text-center">
+                <span class="white--text text-block">{{ text }}</span>
+              </div>
+            </div>
+            <v-skeleton-loader
+              v-if="media.loading"
+              type="list-item-two-line@3"
+              class="px-3"
+            >
+            </v-skeleton-loader>
 
-            <v-list dense v-else>
-              <v-list-item
-                v-for="(item, index) in slides"
-                :key="index"
-                link
-                class="pa-0"
-              >
-                <v-list-item-avatar>
-                  {{ index + 1 }}
-                </v-list-item-avatar>
+            <div v-else>
+              <v-list dense>
+                <v-list-item
+                  v-for="(item, index) in slides"
+                  :key="index"
+                  link
+                  class="pa-0"
+                  :class="{'v-item--active v-list-item--active':index==slideIndex}"
+                >
+                  <v-list-item-avatar>
+                    {{ index + 1 }}
+                  </v-list-item-avatar>
 
-                <v-list-item-content>
-                  <v-list-item-title v-if="item.titulo">
-                    <h3 class="text-block">{{ item.titulo }}</h3>
-                  </v-list-item-title>
-                  <v-list-item-subtitle v-else>
-                    <span class="text-block">{{ item.letra }}</span>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+                  <v-list-item-content @click="$root.goToSlide(index)">
+                    <v-list-item-title v-if="item.titulo">
+                      <h3 class="text-block">{{ item.titulo }}</h3>
+                    </v-list-item-title>
+                    <v-list-item-subtitle v-else>
+                      <span class="text-block">{{ item.letra }}</span>
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </div>
           </div>
         </v-layout>
       </v-navigation-drawer>
@@ -59,6 +75,9 @@ export default {
     return this.$root.$data;
   },
   computed: {
+    slideIndex: function () {
+      return this.media.slide;
+    },
     slides: function () {
       if (this.media.music.length <= 0) {
         return [];
@@ -68,6 +87,15 @@ export default {
       slides = [slides];
       slides.push(...this.media.music.letra);
       return slides.filter((item) => item.exibe_slide === 1);
+    },
+    text: function () {
+      if (!this.slides || !this.slides[this.media.slide]) {
+        return "";
+      }
+      return (
+        this.slides[this.media.slide].letra ||
+        this.slides[this.media.slide].titulo
+      );
     },
   },
 };

@@ -254,6 +254,7 @@ export default {
     openMusic: async function (obj) {
         this.$root.media.show = true;
         this.$root.media.loading = true;
+        this.$root.media.slide = 0;
         let data = await this.$root.getData(`musica/${obj.id_musica}`);
         this.$root.media.music = data;
         this.$root.media.loading = false;
@@ -265,4 +266,7 @@ export default {
         this.$root.letter.music = data;
         this.$root.letter.loading = false;
     },
+    goToSlide: function(slide){
+        this.$root.media.slide = slide;
+    }
 }

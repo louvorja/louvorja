@@ -19,6 +19,7 @@ module.exports = {
         loading: false,
         playlist: [],
         music: [],
+        slide: 0,
       },
       progress: {
         show: false,
