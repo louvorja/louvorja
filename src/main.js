@@ -10,6 +10,9 @@ Vue.use(VueSessionStorage);
 import JSONView from 'vue-json-component';
 Vue.use(JSONView);
 
+import AudioVisual from 'vue-audio-visual'
+Vue.use(AudioVisual)
+
 import './assets/dist/css/custom.css';
 
 

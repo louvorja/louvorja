@@ -1,4 +1,15 @@
 export default {
+    dir: function(dir){
+        if (this.desktop){
+            dir = dir.replaceAll("/","\\");
+            dir = dir.replaceAll("\\\\","\\");
+        }else{
+            dir = dir.replaceAll("\\","/");
+            dir = dir.replaceAll("//","/");
+            dir = dir.replaceAll(":/","://");
+        }
+        return dir;
+    },
     saveData: function () {
         if (this.desktop) {
             // SE FOR APLICAÇÃO DESKTOP, SALVA AS CONFIGURAÇÕES NA MAQUINA DO USUARIO
@@ -258,6 +269,8 @@ export default {
         let data = await this.$root.getData(`musica/${obj.id_musica}`);
         this.$root.media.music = data;
         this.$root.media.loading = false;
+
+        document.getElementById("slide-audio").play();
     },
     openLetterMusic: async function (obj) {
         this.$root.letter.show = true;

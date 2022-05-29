@@ -21,15 +21,26 @@
             <v-divider></v-divider>
           </div>
 
-          <div class="flex-grow-1" style="overflow: auto; flex: auto">
-            <div
-              style="height: 150px"
-              class="black d-flex align-center justify-center"
-            >
-              <div v-if="!media.loading" class="text-center">
-                <span class="white--text text-block">{{ text }}</span>
-              </div>
+          {{ file_music }}
+          <audio
+            id="slide-audio"
+            v-if="!media.loading"
+            :line-width="2"
+            line-color="lime"
+            :src="file_music"
+            :autoplay="true"
+          ></audio>
+
+          <div
+            style="height: 200px"
+            class="flex-grow-0 black d-flex align-center justify-center"
+          >
+            <div v-if="!media.loading" class="text-center">
+              <span class="white--text text-block">{{ text }}</span>
             </div>
+          </div>
+
+          <div class="flex-grow-1" style="overflow: auto; flex: auto">
             <v-skeleton-loader
               v-if="media.loading"
               type="list-item-two-line@3"
@@ -44,7 +55,9 @@
                   :key="index"
                   link
                   class="pa-0"
-                  :class="{'v-item--active v-list-item--active':index==slideIndex}"
+                  :class="{
+                    'v-item--active v-list-item--active': index == slideIndex,
+                  }"
                 >
                   <v-list-item-avatar>
                     {{ index + 1 }}
@@ -95,6 +108,14 @@ export default {
       return (
         this.slides[this.media.slide].letra ||
         this.slides[this.media.slide].titulo
+      );
+    },
+    file_music: function () {
+      if (this.media.music.length <= 0) {
+        return undefined;
+      }
+      return this.$root.dir(
+        `${this.path.files}/musicas/${this.media.music.pasta}/${this.media.music.arquivo}`
       );
     },
   },

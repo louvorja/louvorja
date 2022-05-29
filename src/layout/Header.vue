@@ -78,7 +78,7 @@
               <transition>
                 <component
                   :is="item.component"
-                  v-if="item.component && item.visible == $route.name"
+                  v-show="item.component && item.visible == $route.name"
                 />
               </transition>
             </keep-alive>

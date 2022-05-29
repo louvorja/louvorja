@@ -19,6 +19,14 @@
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
+        <v-btn icon color="info" v-on="on" @click="$root.openMusic($attrs)">
+          <v-icon>mdi-checkbox-multiple-blank-outline</v-icon>
+        </v-btn>
+      </template>
+      <span>Abrir Slide Sem Áudio</span>
+    </v-tooltip>
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
         <v-btn icon color="info" v-on="on">
           <v-icon>mdi-file-music</v-icon>
         </v-btn>
