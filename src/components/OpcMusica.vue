@@ -3,7 +3,12 @@
     <v-spacer />
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn icon color="info" v-on="on" @click="$root.openMusic($attrs)">
+        <v-btn
+          icon
+          color="info"
+          v-on="on"
+          @click="$root.openMusic($attrs, { audio: 1 })"
+        >
           <v-icon>mdi-play-box-multiple</v-icon>
         </v-btn>
       </template>
@@ -11,7 +16,12 @@
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn icon color="info" v-on="on" @click="$root.openMusic($attrs)">
+        <v-btn
+          icon
+          color="info"
+          v-on="on"
+          @click="$root.openMusic($attrs, { audio: 2 })"
+        >
           <v-icon>mdi-play-box-multiple-outline</v-icon>
         </v-btn>
       </template>
@@ -19,7 +29,12 @@
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn icon color="info" v-on="on" @click="$root.openMusic($attrs)">
+        <v-btn
+          icon
+          color="info"
+          v-on="on"
+          @click="$root.openMusic($attrs, { audio: 0 })"
+        >
           <v-icon>mdi-checkbox-multiple-blank-outline</v-icon>
         </v-btn>
       </template>
@@ -43,7 +58,12 @@
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn icon color="info" v-on="on" @click="$root.openLetterMusic($attrs)">
+        <v-btn
+          icon
+          color="info"
+          v-on="on"
+          @click="$root.openLetterMusic($attrs)"
+        >
           <v-icon>mdi-text-box-outline</v-icon>
         </v-btn>
       </template>

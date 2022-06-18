@@ -1,12 +1,12 @@
 export default {
-    dir: function(dir){
-        if (this.desktop){
-            dir = dir.replaceAll("/","\\");
-            dir = dir.replaceAll("\\\\","\\");
-        }else{
-            dir = dir.replaceAll("\\","/");
-            dir = dir.replaceAll("//","/");
-            dir = dir.replaceAll(":/","://");
+    dir: function (dir) {
+        if (this.desktop) {
+            dir = dir.replaceAll("/", "\\");
+            dir = dir.replaceAll("\\\\", "\\");
+        } else {
+            dir = dir.replaceAll("\\", "/");
+            dir = dir.replaceAll("//", "/");
+            dir = dir.replaceAll(":/", "://");
         }
         return dir;
     },
@@ -254,32 +254,55 @@ export default {
         }
     },
 
-    lineBreak: function (str) {
-        if (!str) {
-            return str;
+    openMusic: async function (obj, options = {}) {
+        let id_musica = obj;
+        if (typeof (obj) === "object") {
+            id_musica = obj.id_musica;
         }
-        return str.replaceAll("a", "<br>");
-    },
+        this.$root.media.audio = (options.audio || 0);
+        /*
+        options.audio:
+        0 = sem audio
+        1 = cantado
+        2 = playback
+        */
 
+        var audio = document.getElementById('slide-audio');
+        if (audio.duration > 0) {
+            document.getElementById("slide-audio").pause();
+            document.getElementById("slide-audio").currentTime = 0;
+        }
 
-    openMusic: async function (obj) {
         this.$root.media.show = true;
         this.$root.media.loading = true;
         this.$root.media.slide = 0;
-        let data = await this.$root.getData(`musica/${obj.id_musica}`);
+        this.$root.media.id_musica = id_musica;
+        let data = await this.$root.getData(`musica/${id_musica}`);
+        if (this.$root.media.audio == 1) {
+            this.$root.media.file = data.arquivo;
+            data.letra.map(item => { item.time = item.tempo || 0 });
+        } else if (this.$root.media.audio == 2) {
+            this.$root.media.file = data.arquivo_pb;
+            data.letra.map(item => { item.time = item.tempo_pb || item.tempo || 0 });
+        } else {
+            this.$root.media.file = "";
+        }
         this.$root.media.music = data;
         this.$root.media.loading = false;
 
-        document.getElementById("slide-audio").play();
+        if (audio.duration > 0 && audio.paused && this.$root.media.file !== "") {
+            document.getElementById("slide-audio").play();
+        }
     },
     openLetterMusic: async function (obj) {
+        let id_musica = obj;
+        if (typeof (obj) === "object") {
+            id_musica = obj.id_musica;
+        }
         this.$root.letter.show = true;
         this.$root.letter.loading = true;
-        let data = await this.$root.getData(`musica/${obj.id_musica}`);
+        let data = await this.$root.getData(`musica/${id_musica}`);
         this.$root.letter.music = data;
         this.$root.letter.loading = false;
     },
-    goToSlide: function(slide){
-        this.$root.media.slide = slide;
-    }
 }
