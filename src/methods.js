@@ -269,8 +269,8 @@ export default {
 
         var audio = document.getElementById('slide-audio');
         if (audio.duration > 0) {
-            document.getElementById("slide-audio").pause();
-            document.getElementById("slide-audio").currentTime = 0;
+            audio.pause();
+            audio.currentTime = 0;
         }
 
         this.$root.media.show = true;
@@ -291,7 +291,7 @@ export default {
         this.$root.media.loading = false;
 
         if (audio.duration > 0 && audio.paused && this.$root.media.file !== "") {
-            document.getElementById("slide-audio").play();
+            audio.play();
         }
     },
     openLetterMusic: async function (obj) {

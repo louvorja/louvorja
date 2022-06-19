@@ -3,25 +3,17 @@
     <v-card v-show="media.show" style="border-radius: 0 !important">
       <v-navigation-drawer :mini-variant.sync="data.media.mini" permanent>
         <v-layout column fill-height>
-          <!--
           <div class="flex-grow-0">
             <v-list-item class="px-2">
-              <v-list-item-avatar>
-                <v-img
-                  src="https://randomuser.me/api/portraits/men/85.jpg"
-                ></v-img>
-              </v-list-item-avatar>
+              <v-list-item-title>{{ media.music.titulo }}</v-list-item-title>
 
-              <v-list-item-title>John Leider</v-list-item-title>
-
-              <v-btn icon @click.stop="data.media.mini = !data.media.mini">
-                <v-icon>mdi-chevron-left</v-icon>
+              <v-btn icon @click.stop="close()">
+                <v-icon>mdi-close</v-icon>
               </v-btn>
             </v-list-item>
 
             <v-divider></v-divider>
           </div>
-          -->
 
           <audio
             id="slide-audio"
@@ -52,7 +44,7 @@
             ></v-progress-linear>
           </div>
 
-          <div class="text-center">
+          <div class="text-center" v-if="!media.loading">
             <v-btn icon color="info" @click="first()">
               <v-icon>mdi-page-first</v-icon>
             </v-btn>
@@ -84,10 +76,24 @@
 
             <v-menu offset-y>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn text small color="info" v-bind="attrs" v-on="on" v-if="media.audio === 1">
+                <v-btn
+                  text
+                  small
+                  color="info"
+                  v-bind="attrs"
+                  v-on="on"
+                  v-if="media.audio === 1"
+                >
                   CT
                 </v-btn>
-                <v-btn text small color="success" v-bind="attrs" v-on="on" v-else-if="media.audio === 2">
+                <v-btn
+                  text
+                  small
+                  color="success"
+                  v-bind="attrs"
+                  v-on="on"
+                  v-else-if="media.audio === 2"
+                >
                   PB
                 </v-btn>
                 <v-btn text small color="error" v-bind="attrs" v-on="on" v-else>
@@ -96,17 +102,25 @@
               </template>
 
               <v-list>
-                <v-list-item v-if="media.music.arquivo !== ''">
-                  <a @click="$root.openMusic(media.id_musica, { audio: 1 })">Cantado</a>
+                <v-list-item
+                  v-if="media.music.arquivo !== ''"
+                  @click="$root.openMusic(media.id_musica, { audio: 1 })"
+                >
+                  Cantado
                 </v-list-item>
-                <v-list-item v-if="media.music.arquivo_pb !== ''">
-                  <a @click="$root.openMusic(media.id_musica, { audio: 2 })">Playback</a>
+                <v-list-item
+                  v-if="media.music.arquivo_pb !== ''"
+                  @click="$root.openMusic(media.id_musica, { audio: 2 })"
+                >
+                  Playback
                 </v-list-item>
-                <v-list-item>
-                  <a @click="$root.openMusic(media.id_musica, { audio: 0 })">Sem áudio</a>
+                <v-list-item
+                  @click="$root.openMusic(media.id_musica, { audio: 0 })"
+                >
+                  Sem áudio
                 </v-list-item>
-                <v-list-item>
-                  <a @click="$root.openLetterMusic(media.id_musica)">Letra</a>
+                <v-list-item @click="$root.openLetterMusic(media.id_musica)">
+                  Letra
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -255,11 +269,23 @@ export default {
 
       this.scroll(slide);
     },
+    close: function (time) {
+        if (this.el.duration > 0) {
+            this.el.pause();
+            this.el.currentTime = 0;
+        }
+        this.media.show = false;
+        this.media.id_musica = 0;
+    },
     scroll: function (slide) {
       if (this.media.music.length <= 0) {
         return;
       }
-      if (document.getElementById("slide-scroll").getElementsByClassName("slide-" + slide)[0] == undefined){
+      if (
+        document
+          .getElementById("slide-scroll")
+          .getElementsByClassName("slide-" + slide)[0] == undefined
+      ) {
         return;
       }
       let parentPos = document
