@@ -37,5 +37,15 @@ module.exports = {
         });
         return t;
 
+    },
+
+    formatSecond: function (num) {
+        if (isNaN(num)){
+            num = 0;
+        }
+        num = parseInt(num)
+        var minutes = "0" + Math.floor(num / 60);
+        var seconds = "0" + (num - minutes * 60);
+        return minutes.substr(-2) + ":" + seconds.substr(-2);
     }
 };

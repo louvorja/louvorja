@@ -18,8 +18,6 @@
           <audio
             id="slide-audio"
             v-show="!media.loading && media.file !== ''"
-            :line-width="2"
-            line-color="lime"
             :src="file_music"
             :autoplay="true"
           ></audio>
@@ -312,15 +310,17 @@ export default {
       });
     },
     timeUpdate: function () {
-      let currentTime = this.el.currentTime;
-      let duration = this.el.duration;
+      this.media.current_time = this.el.currentTime;
+      this.player.duration = this.el.duration;
 
-      this.media.progress = (currentTime / duration) * 100;
+      this.media.progress =
+        (this.media.current_time / this.player.duration) * 100;
       this.media.is_paused = this.el.paused;
 
       let slide =
-        this.slides.filter((item) => (item.time || 0) <= currentTime).length -
-        1;
+        this.slides.filter(
+          (item) => (item.time || 0) <= this.media.current_time
+        ).length - 1;
 
       if (this.media.slide !== slide) {
         this.media.slide = slide;
@@ -330,13 +330,14 @@ export default {
       let min = this.slide.time || 0;
       let max =
         this.slide_index + 1 >= this.slides.length
-          ? this.el.duration
+          ? this.player.duration
           : this.slides[this.slide_index + 1].time;
 
-      this.progress_slide = ((this.el.currentTime - min) * 100) / (max - min);
+      this.progress_slide =
+        ((this.media.current_time - min) * 100) / (max - min);
     },
     changeProgress: function (val) {
-      let time = (this.el.duration * val) / 100;
+      let time = (this.player.duration * val) / 100;
       this.goTo(time);
     },
   },

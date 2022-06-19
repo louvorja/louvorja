@@ -294,6 +294,43 @@ export default {
             audio.play();
         }
     },
+    openPlayer: async function (obj, options = {}) {
+        let id_musica = obj;
+        if (typeof (obj) === "object") {
+            id_musica = obj.id_musica;
+        }
+        this.$root.player.audio = (options.audio || 0);
+        /*
+        options.audio:
+        1 = cantado
+        2 = playback
+        */
+
+        var audio = document.getElementById('player-media');
+        if (audio.duration > 0) {
+            audio.pause();
+            audio.currentTime = 0;
+        }
+
+        this.$root.player.show = true;
+        this.$root.player.loading = true;
+        this.$root.player.id_musica = id_musica;
+        let data = await this.$root.getData(`musica/${id_musica}`);
+        if (this.$root.player.audio == 1) {
+            this.$root.player.file = data.arquivo;
+        } else if (this.$root.player.audio == 2) {
+            this.$root.player.file = data.arquivo_pb;
+        } else {
+            this.$root.player.file = "";
+        }
+        this.$root.player.titulo = data.titulo;
+        this.$root.player.music = data;
+        this.$root.player.loading = false;
+
+        if (audio.duration > 0 && audio.paused && this.$root.player.file !== "") {
+            audio.play();
+        }
+    },
     openLetterMusic: async function (obj) {
         let id_musica = obj;
         if (typeof (obj) === "object") {

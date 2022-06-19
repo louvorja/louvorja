@@ -12,7 +12,7 @@
           <v-icon>mdi-play-box-multiple</v-icon>
         </v-btn>
       </template>
-      <span>Abrir Slide</span>
+      <span>Slide</span>
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
@@ -25,7 +25,7 @@
           <v-icon>mdi-play-box-multiple-outline</v-icon>
         </v-btn>
       </template>
-      <span>Abrir Slide Playback</span>
+      <span>Slide Playback</span>
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
@@ -38,23 +38,33 @@
           <v-icon>mdi-checkbox-multiple-blank-outline</v-icon>
         </v-btn>
       </template>
-      <span>Abrir Slide Sem Áudio</span>
+      <span>Slide Sem Áudio</span>
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn icon color="info" v-on="on">
+        <v-btn
+          icon
+          color="info"
+          v-on="on"
+          @click="$root.openPlayer($attrs, { audio: 1 })"
+        >
           <v-icon>mdi-file-music</v-icon>
         </v-btn>
       </template>
-      <span>Abrir Arquivo</span>
+      <span>Ouvir Música</span>
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn icon color="info" v-on="on">
+        <v-btn
+          icon
+          color="info"
+          v-on="on"
+          @click="$root.openPlayer($attrs, { audio: 2 })"
+        >
           <v-icon>mdi-file-music-outline</v-icon>
         </v-btn>
       </template>
-      <span>Abrir Arquivo Playback</span>
+      <span>Ouvir Playback</span>
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">

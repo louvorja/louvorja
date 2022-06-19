@@ -16,6 +16,7 @@
           </keep-alive>
         </v-main>
         <app-progress />
+        <app-player />
         <app-footer />
       </v-layout>
       <app-music-bar />
@@ -37,6 +38,7 @@ export default {
     AppStore: () => import("@/layout/Store"),
     AppAlert: () => import("@/layout/Alert"),
     AppLetter: () => import("@/layout/Letter"),
+    AppPlayer: () => import("@/layout/Player"),
   },
   created() {
     document.title = "Louvor JA";
