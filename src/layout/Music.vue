@@ -141,6 +141,7 @@
             <div v-else>
               <v-list dense>
                 <v-list-item
+                  @click="goToSlide(index)"
                   v-for="(item, index) in slides"
                   :key="index"
                   link
@@ -157,7 +158,7 @@
                     {{ index + 1 }}
                   </v-list-item-avatar>
 
-                  <v-list-item-content @click="goToSlide(index)">
+                  <v-list-item-content>
                     <v-list-item-title v-if="item.titulo">
                       <h3 class="text-block">{{ item.titulo }}</h3>
                     </v-list-item-title>
@@ -270,12 +271,12 @@ export default {
       this.scroll(slide);
     },
     close: function (time) {
-        if (this.el.duration > 0) {
-            this.el.pause();
-            this.el.currentTime = 0;
-        }
-        this.media.show = false;
-        this.media.id_musica = 0;
+      if (this.el.duration > 0) {
+        this.el.pause();
+        this.el.currentTime = 0;
+      }
+      this.media.show = false;
+      this.media.id_musica = 0;
     },
     scroll: function (slide) {
       if (this.media.music.length <= 0) {
