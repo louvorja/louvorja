@@ -15,6 +15,14 @@ body {
     white-space: pre;
 }
 
+
+.slide-show .slide-text *{
+    font-family: din-condensed-bold !important;
+    text-transform: uppercase !important;
+}
+.slide-show .slide-text{
+    padding: 2px 6px;
+}
 /*:root{
     --primary: #29569b !important;
     --primary-hover: #275291 !important;

@@ -1,6 +1,11 @@
 <template>
   <v-expand-transition>
-    <v-card v-show="player.show" style="border-radius: 0 !important">
+    <v-card
+      dark
+      :color="$root.data.layout.color"
+      v-show="player.show"
+      style="border-radius: 0 !important"
+    >
       <v-layout column fill-height>
         <div class="flex-grow-0">
           <v-list-item class="px-2">
@@ -29,31 +34,31 @@
           @change="changeProgress"
         ></v-progress-linear>
 
-        <v-toolbar flat v-if="!player.loading">
+        <v-toolbar dark :color="$root.data.layout.color" flat>
           <v-spacer></v-spacer>
-          <v-btn icon color="info" @click="restart()">
+          <v-btn :disabled="player.loading" icon @click="restart()">
             <v-icon>mdi-restart</v-icon>
           </v-btn>
-          <v-btn icon color="info" @click="back()">
+          <v-btn :disabled="player.loading" icon @click="back()">
             <v-icon>mdi-rewind-10</v-icon>
           </v-btn>
           <v-btn
+            :disabled="player.loading"
             icon
-            color="info"
             @click="play()"
             v-if="player.is_paused && player.file !== ''"
           >
             <v-icon>mdi-play</v-icon>
           </v-btn>
           <v-btn
+            :disabled="player.loading"
             icon
-            color="info"
             @click="pause()"
             v-if="!player.is_paused && player.file !== ''"
           >
             <v-icon>mdi-pause</v-icon>
           </v-btn>
-          <v-btn icon color="info" @click="go()">
+          <v-btn :disabled="player.loading" icon @click="go()">
             <v-icon>mdi-fast-forward-10</v-icon>
           </v-btn>
 
@@ -168,6 +173,13 @@ export default {
 
       this.player.progress =
         (this.player.current_time / this.player.duration) * 100;
+
+      if (
+        !this.player.is_paused &&
+        this.player.current_time >= this.player.duration
+      ) {
+        this.close();
+      }
       this.player.is_paused = this.el.paused;
     },
     changeProgress: function (val) {

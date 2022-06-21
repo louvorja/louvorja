@@ -79,6 +79,7 @@
       </template>
       <span>Letra da Música</span>
     </v-tooltip>
+    <!--
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
         <v-btn icon color="info" v-on="on">
@@ -87,6 +88,7 @@
       </template>
       <span>Adicionar à Playlist</span>
     </v-tooltip>
+    -->
 
     <!--{{ $attrs }}-->
   </div>

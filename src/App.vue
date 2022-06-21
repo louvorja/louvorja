@@ -21,7 +21,6 @@
       </v-layout>
       <app-music-bar />
     </v-layout>
-  
   </v-app>
 </template>
 
@@ -52,3 +51,10 @@ export default {
   },
 };
 </script>
+
+<style>
+@font-face {
+  font-family: din-condensed-bold;
+  src: url("~@/assets/fonts/din-condensed-bold.ttf");
+}
+</style>

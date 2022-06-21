@@ -6,7 +6,6 @@
           <div class="flex-grow-0">
             <v-list-item class="px-2">
               <v-list-item-title>{{ media.music.titulo }}</v-list-item-title>
-
               <v-btn icon @click.stop="close()">
                 <v-icon>mdi-close</v-icon>
               </v-btn>
@@ -26,8 +25,22 @@
             style="height: 200px; min-height: 200px; max-height: 200px"
             class="layout column"
           >
-            <div class="flex-grow-1 black d-flex align-center justify-center">
-              <div v-if="!media.loading" class="text-center">
+            <div
+              class="
+                slide-show
+                flex-grow-1
+                black
+                d-flex
+                align-center
+                justify-center
+              "
+              :style="style_bg"
+            >
+              <div
+                v-if="!media.loading && media.show && text"
+                class="slide-text text-center"
+                :style="style_txt"
+              >
                 <span class="white--text text-block">{{ text }}</span>
               </div>
             </div>
@@ -42,14 +55,15 @@
             ></v-progress-linear>
           </div>
 
-          <div class="text-center" v-if="!media.loading">
-            <v-btn icon color="info" @click="first()">
+          <div class="text-center">
+            <v-btn :disabled="media.loading" icon color="info" @click="first()">
               <v-icon>mdi-page-first</v-icon>
             </v-btn>
-            <v-btn icon color="info" @click="prev()">
+            <v-btn :disabled="media.loading" icon color="info" @click="prev()">
               <v-icon>mdi-chevron-left</v-icon>
             </v-btn>
             <v-btn
+              :disabled="media.loading"
               icon
               color="info"
               @click="play()"
@@ -58,6 +72,7 @@
               <v-icon>mdi-play</v-icon>
             </v-btn>
             <v-btn
+              :disabled="media.loading"
               icon
               color="info"
               @click="pause()"
@@ -65,10 +80,10 @@
             >
               <v-icon>mdi-pause</v-icon>
             </v-btn>
-            <v-btn icon color="info" @click="next()">
+            <v-btn :disabled="media.loading" icon color="info" @click="next()">
               <v-icon>mdi-chevron-right</v-icon>
             </v-btn>
-            <v-btn icon color="info" @click="last()">
+            <v-btn :disabled="media.loading" icon color="info" @click="last()">
               <v-icon>mdi-page-last</v-icon>
             </v-btn>
 
@@ -205,6 +220,14 @@ export default {
       delete slides.letra;
       slides = [slides];
       slides.push(...this.media.music.letra);
+      let img = "";
+      slides.map((item) => {
+        item.imagem = item.imagem || img;
+        if (item.imagem) {
+          img = item.imagem;
+        }
+        return item;
+      });
       return slides.filter((item) => item.exibe_slide === 1);
     },
     text: function () {
@@ -227,6 +250,29 @@ export default {
       return this.$root.dir(
         `${this.path.files}/musicas/${this.media.music.pasta}/${this.media.file}`
       );
+    },
+    style_bg: function () {
+      if (this.media.show && this.slide) {
+        let backgroundImage = this.$root.dir(
+          `${this.path.files}/imagens/${this.slide.imagem}`
+        );
+        return Object.assign({
+          backgroundSize: "cover",
+          backgroundImage: `url(${backgroundImage})`,
+        });
+      } else {
+        return {};
+      }
+    },
+    style_txt: function () {
+      if (this.media.show && this.slide) {
+        return Object.assign({
+          backgroundColor: "rgba(0, 0, 0, 0.75)",
+          fontSize: "20px",
+        });
+      } else {
+        return {};
+      }
     },
   },
   methods: {
@@ -310,11 +356,23 @@ export default {
       });
     },
     timeUpdate: function () {
+      if (this.slides.length <= 0) {
+        return;
+      }
+
       this.media.current_time = this.el.currentTime;
-      this.player.duration = this.el.duration;
+      this.media.duration = this.el.duration;
 
       this.media.progress =
-        (this.media.current_time / this.player.duration) * 100;
+        (this.media.current_time / this.media.duration) * 100;
+
+      if (
+        !this.media.is_paused &&
+        this.media.current_time >= this.media.duration &&
+        this.media.duration > 0
+      ) {
+        this.close();
+      }
       this.media.is_paused = this.el.paused;
 
       let slide =
@@ -330,14 +388,14 @@ export default {
       let min = this.slide.time || 0;
       let max =
         this.slide_index + 1 >= this.slides.length
-          ? this.player.duration
+          ? this.media.duration
           : this.slides[this.slide_index + 1].time;
 
       this.progress_slide =
         ((this.media.current_time - min) * 100) / (max - min);
     },
     changeProgress: function (val) {
-      let time = (this.player.duration * val) / 100;
+      let time = (this.media.duration * val) / 100;
       this.goTo(time);
     },
   },
