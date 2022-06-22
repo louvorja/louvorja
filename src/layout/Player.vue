@@ -9,8 +9,14 @@
       <v-layout column fill-height>
         <div class="flex-grow-0">
           <v-list-item class="px-2">
-            <v-list-item-title>{{ player.titulo }}</v-list-item-title>
-
+            <v-list-item-content>
+              <v-list-item-title>{{ player.titulo }}</v-list-item-title>
+              <v-list-item-subtitle>
+                <span v-if="player.album">{{ player.album }}</span>
+                <span v-if="player.audio == 2"> | PB</span>
+                <span v-if="player.faixa"> | faixa {{ player.faixa }}</span>
+                </v-list-item-subtitle>
+            </v-list-item-content>
             <v-btn icon @click.stop="close()">
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -94,17 +100,17 @@
             <v-list>
               <v-list-item
                 v-if="player.music.arquivo !== ''"
-                @click="$root.openPlayer(player.id_musica, { audio: 1 })"
+                @click="$root.openPlayer(obj_musica, { audio: 1 })"
               >
                 Cantado
               </v-list-item>
               <v-list-item
                 v-if="player.music.arquivo_pb !== ''"
-                @click="$root.openPlayer(player.id_musica, { audio: 2 })"
+                @click="$root.openPlayer(obj_musica, { audio: 2 })"
               >
                 Playback
               </v-list-item>
-              <v-list-item @click="$root.openLetterMusic(player.id_musica)">
+              <v-list-item @click="$root.openLetterMusic(obj_musica)">
                 Letra
               </v-list-item>
             </v-list>
@@ -138,6 +144,13 @@ export default {
       return this.$root.dir(
         `${this.path.files}/musicas/${this.player.music.pasta}/${this.player.file}`
       );
+    },
+    obj_musica: function () {
+      return {
+        id_musica: this.player.id_musica,
+        album: this.player.album,
+        faixa: this.player.faixa,
+      };
     },
   },
   methods: {

@@ -27,6 +27,8 @@ module.exports = {
         id_musica: 0,
         current_time: 0,
         duration: 0,
+        album: '',
+        faixa: 0,
       },
       player: {
         show: false,
@@ -40,6 +42,8 @@ module.exports = {
         titulo: '',
         current_time: 0,
         duration: 0,
+        album: '',
+        faixa: 0,
       },
       progress: {
         show: false,
@@ -114,6 +118,8 @@ module.exports = {
         music: {
           titulo: ""
         },
+        album: '',
+        faixa: 0,
       },
     };
   },

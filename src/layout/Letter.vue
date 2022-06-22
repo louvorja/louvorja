@@ -7,6 +7,10 @@
             <v-skeleton-loader v-if="letter.loading" width="100%" type="heading"></v-skeleton-loader>
             <span v-else>{{letter.music.titulo}}</span>
           </v-card-title>
+          <v-card-subtitle v-if="!letter.loading && letter.album">
+            <span>{{letter.album}}</span>
+            <span v-if="letter.faixa"> | faixa {{ letter.faixa }}</span>
+          </v-card-subtitle>
         </div>
         <div class="flex-grow-1 px-4 pb-4" style="overflow: auto; flex: auto">
           <v-skeleton-loader v-if="letter.loading" type="text@5"></v-skeleton-loader>

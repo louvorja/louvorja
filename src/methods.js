@@ -256,8 +256,12 @@ export default {
 
     openMusic: async function (obj, options = {}) {
         let id_musica = obj;
+        this.$root.media.album = '';
+        this.$root.media.faixa = 0;
         if (typeof (obj) === "object") {
             id_musica = obj.id_musica;
+            this.$root.media.album = obj.album || '';
+            this.$root.media.faixa = obj.faixa || 0;
         }
         this.$root.media.audio = (options.audio || 0);
         /*
@@ -296,8 +300,12 @@ export default {
     },
     openPlayer: async function (obj, options = {}) {
         let id_musica = obj;
+        this.$root.player.album = '';
+        this.$root.player.faixa = 0;
         if (typeof (obj) === "object") {
             id_musica = obj.id_musica;
+            this.$root.player.album = obj.album || '';
+            this.$root.player.faixa = obj.faixa || 0;
         }
         this.$root.player.audio = (options.audio || 0);
         /*
@@ -333,8 +341,12 @@ export default {
     },
     openLetterMusic: async function (obj) {
         let id_musica = obj;
+        this.$root.letter.album = '';
+        this.$root.letter.faixa = 0;
         if (typeof (obj) === "object") {
             id_musica = obj.id_musica;
+            this.$root.letter.album = obj.album || '';
+            this.$root.letter.faixa = obj.faixa || 0;
         }
         this.$root.letter.show = true;
         this.$root.letter.loading = true;

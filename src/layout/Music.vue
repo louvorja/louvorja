@@ -5,7 +5,14 @@
         <v-layout column fill-height>
           <div class="flex-grow-0">
             <v-list-item class="px-2">
-              <v-list-item-title>{{ media.music.titulo }}</v-list-item-title>
+              <v-list-item-content>
+                <v-list-item-title>{{ media.music.titulo }}</v-list-item-title>
+                <v-list-item-subtitle>
+                  <span v-if="media.album">{{ media.album }}</span>
+                  <span v-if="media.audio == 2"> | PB</span>
+                  <span v-if="media.faixa"> | faixa {{ media.faixa }}</span>
+                </v-list-item-subtitle>
+              </v-list-item-content>
               <v-btn icon @click.stop="close()">
                 <v-icon>mdi-close</v-icon>
               </v-btn>
@@ -117,22 +124,20 @@
               <v-list>
                 <v-list-item
                   v-if="media.music.arquivo !== ''"
-                  @click="$root.openMusic(media.id_musica, { audio: 1 })"
+                  @click="$root.openMusic(obj_musica, { audio: 1 })"
                 >
                   Cantado
                 </v-list-item>
                 <v-list-item
                   v-if="media.music.arquivo_pb !== ''"
-                  @click="$root.openMusic(media.id_musica, { audio: 2 })"
+                  @click="$root.openMusic(obj_musica, { audio: 2 })"
                 >
                   Playback
                 </v-list-item>
-                <v-list-item
-                  @click="$root.openMusic(media.id_musica, { audio: 0 })"
-                >
+                <v-list-item @click="$root.openMusic(obj_musica, { audio: 0 })">
                   Sem áudio
                 </v-list-item>
-                <v-list-item @click="$root.openLetterMusic(media.id_musica)">
+                <v-list-item @click="$root.openLetterMusic(obj_musica)">
                   Letra
                 </v-list-item>
               </v-list>
@@ -273,6 +278,13 @@ export default {
       } else {
         return {};
       }
+    },
+    obj_musica: function () {
+      return {
+        id_musica: this.player.id_musica,
+        album: this.player.album,
+        faixa: this.player.faixa,
+      };
     },
   },
   methods: {

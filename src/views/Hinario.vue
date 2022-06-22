@@ -21,9 +21,7 @@
         download do hinário!
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="warning" @click="loadData">
-            Atualizar Página
-          </v-btn>
+          <v-btn color="warning" @click="loadData"> Atualizar Página </v-btn>
           <v-btn color="info" @click="$root.$data.store.show = true">
             Acessar Loja
           </v-btn>
@@ -51,7 +49,10 @@
         @pagination="pagination = $event"
       >
         <template v-slot:[`item.opcoes`]="{ item }">
-          <opc-musica v-bind="item" v-if="true" />
+          <opc-musica
+            v-bind="{ ...item, album: 'Hinário Adventista' }"
+            v-if="true"
+          />
         </template>
       </v-data-table>
     </div>
@@ -153,14 +154,9 @@ export default {
     },
   },
   created() {
-    //console.log("CREATED");
     window.addEventListener("scroll", this.handleScroll);
   },
-  destroyed() {
-    //console.log("DESTROY");
-  },
   mounted: async function () {
-    //console.log("MOUNTED", this.hinos.length);
     await this.loadData();
   },
 };
