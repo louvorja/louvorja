@@ -28,7 +28,8 @@
     "vue-router": "^3.5.1",
     "vue-sessionstorage": "^1.0.0",
     "vuedraggable": "^2.24.3",
-    "vuetify": "^2.6.0"
+    "vuetify": "^2.6.0",
+    "vuetify-loader": "^1.8.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
@@ -43,8 +44,7 @@
     "sass-loader": "^10.0.0",
     "vue-cli-plugin-electron-builder": "~2.1.1",
     "vue-cli-plugin-vuetify": "~2.4.8",
-    "vue-template-compiler": "^2.6.14",
-    "vuetify-loader": "^1.7.0"
+    "vue-template-compiler": "^2.6.14"
   },
   "browserslist": [
     "> 1%",
