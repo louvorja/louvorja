@@ -26,7 +26,7 @@ const routes = [
     title: 'Localizar Músicas',
     tab: true,
     icon: "magnifying-glass",
-    component: () => import('@/views/ItensAgendados.vue')
+    component: () => import('@/views/LocalizarMusicas.vue')
   },
   {
     path: '/videos-online',

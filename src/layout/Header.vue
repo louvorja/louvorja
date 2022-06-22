@@ -70,7 +70,7 @@
       <v-tabs-items
         v-model="$root.active_header_tab"
         :dark="$root.data.layout.dark"
-        style="min-height:72px"
+        style="min-height: 72px"
       >
         <v-tab-item v-for="item in items" :key="item.tab">
           <v-slide-group show-arrows>
@@ -139,10 +139,7 @@ export default {
         {
           tab: "Coletâneas",
           content: [
-            [
-              { type: "button", route: "hinario" },
-              { type: "button", route: "hinario" },
-            ],
+            [{ type: "button", route: "hinario" }],
             [{ type: "button", route: "localizar-musicas" }],
           ],
         },
