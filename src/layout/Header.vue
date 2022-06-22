@@ -60,7 +60,7 @@
       >
         <v-tab
           v-for="(item, index) in items_tabs"
-          :key="item.tab"
+          :key="index"
           :class="item.visible ? 'active_header_tab' : ''"
           :data-id="index"
         >
@@ -72,7 +72,7 @@
         :dark="$root.data.layout.dark"
         style="min-height: 72px"
       >
-        <v-tab-item v-for="item in items" :key="item.tab">
+        <v-tab-item v-for="(item,index) in items_tabs" :key="index">
           <v-slide-group show-arrows>
             <keep-alive :include="tabs">
               <transition>
@@ -171,6 +171,11 @@ export default {
           visible: "cronometro",
           component: "cronometro",
         },
+        {
+          tab: "Localizar Músicas",
+          visible: "localizar-musicas",
+          component: "localizarmusicas",
+        },
       ],
     };
   },
@@ -197,6 +202,7 @@ export default {
   components: {
     lButton: () => import(`@/components/Button`),
     cronometro: () => import(`@/layout/headertabs/CronometroTab`),
+    localizarmusicas: () => import(`@/layout/headertabs/LocalizarMusicasTab`),
     ico: () => import(`@/components/Icone`),
   },
 };

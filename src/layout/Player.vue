@@ -32,7 +32,6 @@
         ></audio>
 
         <v-progress-linear
-          v-if="player.file"
           v-model="player.progress"
           :indeterminate="player.loading"
           :height="10"
@@ -42,29 +41,29 @@
 
         <v-toolbar dark :color="$root.data.layout.color" flat>
           <v-spacer></v-spacer>
-          <v-btn :disabled="player.loading" icon @click="restart()">
+          <v-btn :disabled="player.loading || !player.file" icon @click="restart()">
             <v-icon>mdi-restart</v-icon>
           </v-btn>
-          <v-btn :disabled="player.loading" icon @click="back()">
+          <v-btn :disabled="player.loading || !player.file" icon @click="back()">
             <v-icon>mdi-rewind-10</v-icon>
           </v-btn>
           <v-btn
-            :disabled="player.loading"
+            :disabled="player.loading || !player.file"
             icon
             @click="play()"
-            v-if="player.is_paused && player.file !== ''"
+            v-if="player.is_paused"
           >
             <v-icon>mdi-play</v-icon>
           </v-btn>
           <v-btn
-            :disabled="player.loading"
+            :disabled="player.loading || !player.file"
             icon
             @click="pause()"
-            v-if="!player.is_paused && player.file !== ''"
+            v-if="!player.is_paused"
           >
             <v-icon>mdi-pause</v-icon>
           </v-btn>
-          <v-btn :disabled="player.loading" icon @click="go()">
+          <v-btn :disabled="player.loading || !player.file" icon @click="go()">
             <v-icon>mdi-fast-forward-10</v-icon>
           </v-btn>
 

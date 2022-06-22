@@ -8,6 +8,7 @@
           color="info"
           v-on="on"
           @click="$root.openMusic($attrs, { audio: 1 })"
+          :disabled="!$attrs.arquivo"
         >
           <v-icon>mdi-play-box-multiple</v-icon>
         </v-btn>
@@ -21,6 +22,7 @@
           color="info"
           v-on="on"
           @click="$root.openMusic($attrs, { audio: 2 })"
+          :disabled="!$attrs.arquivo_pb"
         >
           <v-icon>mdi-play-box-multiple-outline</v-icon>
         </v-btn>
@@ -47,6 +49,7 @@
           color="info"
           v-on="on"
           @click="$root.openPlayer($attrs, { audio: 1 })"
+          :disabled="!$attrs.arquivo"
         >
           <v-icon>mdi-file-music</v-icon>
         </v-btn>
@@ -60,6 +63,7 @@
           color="info"
           v-on="on"
           @click="$root.openPlayer($attrs, { audio: 2 })"
+          :disabled="!$attrs.arquivo_pb"
         >
           <v-icon>mdi-file-music-outline</v-icon>
         </v-btn>

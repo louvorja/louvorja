@@ -17,8 +17,8 @@
         elevation="2"
         class="mx-4"
       >
-        O hinário não foi baixado em seu programa. Acesse a loja e faça o
-        download do hinário!
+        Nenhuma música foi baixada em seu programa. Acesse a loja e faça o
+        download das músicas!
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="warning" @click="loadData"> Atualizar Página </v-btn>
@@ -50,7 +50,7 @@
       >
         <template v-slot:[`item.opcoes`]="{ item }">
           <opc-musica
-            v-bind="{ ...item, album: 'Hinário Adventista' }"
+            v-bind="item"
             v-if="true"
           />
         </template>
@@ -80,7 +80,7 @@ export default {
         { text: "Titulo", value: "titulo" },
         { text: "", value: "opcoes" },
       ],
-      items_page: 5,
+      items_page: 10,
       pagination: {
         itemsLength: -1,
       },
@@ -114,7 +114,7 @@ export default {
           document.getElementById("content_scroll").clientHeight &&
         this.pagination.itemsPerPage < this.pagination.itemsLength
       ) {
-        this.items_page = this.items_page + 5;
+        this.items_page = this.items_page + 10;
         const self = this;
         setTimeout(function () {
           self.calcItemsPage();
@@ -144,7 +144,7 @@ export default {
       }
     },
     loadData: async function () {
-      let data = await this.$root.getData("hinario");
+      let data = await this.$root.getData("musicas");
       this.hinos = data;
       this.carregando = false;
       const self = this;

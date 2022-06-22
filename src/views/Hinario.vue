@@ -80,7 +80,7 @@ export default {
         { text: "Titulo", value: "titulo" },
         { text: "", value: "opcoes" },
       ],
-      items_page: 5,
+      items_page: 10,
       pagination: {
         itemsLength: -1,
       },
@@ -114,7 +114,7 @@ export default {
           document.getElementById("content_scroll").clientHeight &&
         this.pagination.itemsPerPage < this.pagination.itemsLength
       ) {
-        this.items_page = this.items_page + 5;
+        this.items_page = this.items_page + 10;
         const self = this;
         setTimeout(function () {
           self.calcItemsPage();
