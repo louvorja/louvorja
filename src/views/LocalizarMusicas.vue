@@ -6,10 +6,10 @@
         v-model="search"
         label="Digite o nome ou número do hino"
         append-icon="mdi-magnify"
-        :error="!carregando && hinos.length > 0 && pagination.itemsLength === 0"
+        :error="!carregando && musicas.length > 0 && pagination.itemsLength === 0"
       />
     </div>
-    <div v-if="!carregando && hinos.length <= 0">
+    <div v-if="!carregando && musicas.length <= 0">
       <v-alert
         border="bottom"
         colored-border
@@ -36,7 +36,7 @@
     >
       <v-data-table
         :headers="fields"
-        :items="hinos"
+        :items="musicas_albuns"
         :items-per-page="items_page"
         :search="search"
         :custom-filter="filterPerfectMatch"
@@ -48,11 +48,12 @@
         dense
         @pagination="pagination = $event"
       >
+        <template v-slot:[`item.albuns`]="{ item }">
+          {{item}}
+        </template>
+
         <template v-slot:[`item.opcoes`]="{ item }">
-          <opc-musica
-            v-bind="item"
-            v-if="true"
-          />
+          <opc-musica v-bind="item" v-if="true" />
         </template>
       </v-data-table>
     </div>
@@ -66,18 +67,21 @@ export default {
     lInput: () => import(`@/components/Input`),
     OpcMusica: () => import("@/components/OpcMusica"),
   },
+  computed: {
+    musicas_albuns: function () {
+      return this.musicas;
+    },
+  },
   data() {
     return {
       search: null,
       carregando: true,
-      hinos: [],
+      musicas: [],
+      albuns_musicas: [],
+      albuns: [],
       fields: [
-        {
-          text: "Número",
-          value: "faixa",
-          align: "end",
-        },
         { text: "Titulo", value: "titulo" },
+        { text: "Álbuns", value: "albuns" },
         { text: "", value: "opcoes" },
       ],
       items_page: 10,
@@ -145,12 +149,15 @@ export default {
     },
     loadData: async function () {
       let data = await this.$root.getData("musicas");
-      this.hinos = data;
+      this.musicas = data;
       this.carregando = false;
       const self = this;
       setTimeout(function () {
         self.calcItemsPage();
       }, 10);
+
+      this.albuns_musicas = await this.$root.getData("albuns_musicas");
+      this.albuns = await this.$root.getData("albuns");
     },
   },
   created() {
