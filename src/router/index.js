@@ -17,7 +17,8 @@ const routes = [
     name: 'hinario',
     title: 'Hinário Adventista',
     tab: true,
-    icon: "book-open-cover",
+    //icon: "book-open-cover",
+    icon: "hasd",
     component: () => import('@/views/Hinario.vue')
   },
   {

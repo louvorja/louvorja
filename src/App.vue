@@ -15,8 +15,8 @@
             <router-view />
           </keep-alive>
         </v-main>
-        <app-progress />
         <app-player />
+        <app-progress />
         <app-footer />
       </v-layout>
       <app-music-bar />

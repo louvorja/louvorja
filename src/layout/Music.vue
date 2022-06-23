@@ -7,7 +7,7 @@
             <v-list-item class="px-2">
               <v-list-item-content>
                 <v-list-item-title>{{ media.music.titulo }}</v-list-item-title>
-                <v-list-item-subtitle>
+                <v-list-item-subtitle v-if="!media.loading">
                   <span v-if="media.album">{{ media.album }}</span>
                   <span v-if="media.audio == 2"> | PB</span>
                   <span v-if="media.faixa"> | faixa {{ media.faixa }}</span>
@@ -281,9 +281,9 @@ export default {
     },
     obj_musica: function () {
       return {
-        id_musica: this.player.id_musica,
-        album: this.player.album,
-        faixa: this.player.faixa,
+        id_musica: this.media.id_musica,
+        album: this.media.album,
+        faixa: this.media.faixa,
       };
     },
   },
