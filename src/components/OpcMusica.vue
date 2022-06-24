@@ -5,7 +5,7 @@
       <template v-slot:activator="{ on }">
         <v-btn
           icon
-          color="info"
+          :color="$root.data.layout.color"
           v-on="on"
           @click="$root.openMusic($attrs, { audio: 1 })"
           :disabled="!$attrs.arquivo"
@@ -19,7 +19,7 @@
       <template v-slot:activator="{ on }">
         <v-btn
           icon
-          color="info"
+          :color="$root.data.layout.color"
           v-on="on"
           @click="$root.openMusic($attrs, { audio: 2 })"
           :disabled="!$attrs.arquivo_pb"
@@ -33,7 +33,7 @@
       <template v-slot:activator="{ on }">
         <v-btn
           icon
-          color="info"
+          :color="$root.data.layout.color"
           v-on="on"
           @click="$root.openMusic($attrs, { audio: 0 })"
         >
@@ -46,7 +46,7 @@
       <template v-slot:activator="{ on }">
         <v-btn
           icon
-          color="info"
+          :color="$root.data.layout.color"
           v-on="on"
           @click="$root.openPlayer($attrs, { audio: 1 })"
           :disabled="!$attrs.arquivo"
@@ -60,7 +60,7 @@
       <template v-slot:activator="{ on }">
         <v-btn
           icon
-          color="info"
+          :color="$root.data.layout.color"
           v-on="on"
           @click="$root.openPlayer($attrs, { audio: 2 })"
           :disabled="!$attrs.arquivo_pb"
@@ -74,7 +74,7 @@
       <template v-slot:activator="{ on }">
         <v-btn
           icon
-          color="info"
+          :color="$root.data.layout.color"
           v-on="on"
           @click="$root.openLetterMusic($attrs)"
         >
@@ -86,7 +86,7 @@
     <!--
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn icon color="info" v-on="on">
+        <v-btn icon :color="$root.data.layout.color" v-on="on">
           <v-icon>mdi-playlist-music</v-icon>
         </v-btn>
       </template>

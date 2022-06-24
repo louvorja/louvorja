@@ -4,9 +4,11 @@
       <l-input
         type="text"
         v-model="search"
-        label="Digite o nome ou número do hino"
+        label="Digite o nome da música"
         append-icon="mdi-magnify"
-        :error="!carregando && musicas.length > 0 && pagination.itemsLength === 0"
+        :error="
+          !carregando && musicas.length > 0 && pagination.itemsLength === 0
+        "
       />
     </div>
     <div v-if="!carregando && musicas.length <= 0">
@@ -36,7 +38,7 @@
     >
       <v-data-table
         :headers="fields"
-        :items="musicas_albuns"
+        :items="musicas"
         :items-per-page="items_page"
         :search="search"
         :custom-filter="filterPerfectMatch"
@@ -49,7 +51,16 @@
         @pagination="pagination = $event"
       >
         <template v-slot:[`item.albuns`]="{ item }">
-          {{item}}
+          <v-chip
+            v-for="album in item.albuns"
+            :key="album.id_album"
+            small
+            outlined
+            class="mx-2"
+            :color="$root.data.layout.color"
+          >
+            {{ album.titulo }}
+          </v-chip>
         </template>
 
         <template v-slot:[`item.opcoes`]="{ item }">
@@ -67,18 +78,11 @@ export default {
     lInput: () => import(`@/components/Input`),
     OpcMusica: () => import("@/components/OpcMusica"),
   },
-  computed: {
-    musicas_albuns: function () {
-      return this.musicas;
-    },
-  },
   data() {
     return {
       search: null,
       carregando: true,
       musicas: [],
-      albuns_musicas: [],
-      albuns: [],
       fields: [
         { text: "Titulo", value: "titulo" },
         { text: "Álbuns", value: "albuns" },
@@ -127,7 +131,7 @@ export default {
     },
     filterPerfectMatch: function (value, search) {
       if (isNaN(search)) {
-        if (value !== undefined && isNaN(value)) {
+        if (value !== undefined && isNaN(value) && typeof value !== "object") {
           return (
             value
               .toLowerCase()
@@ -149,15 +153,31 @@ export default {
     },
     loadData: async function () {
       let data = await this.$root.getData("musicas");
+      let albuns_musicas = await this.$root.getData("albuns_musicas");
+      let albuns = await this.$root.getData("albuns");
+
+      data.map((musica) => {
+        return (musica.albuns = albuns_musicas
+          .filter((album_musica) => {
+            return album_musica.id_musica == musica.id_musica;
+          })
+          .map((album_musica) => {
+            album_musica.album = albuns.filter((album) => {
+              return album.id_album == album_musica.id_album;
+            });
+            return album_musica;
+          })
+          .map((item) => {
+            return item.album[0];
+          }));
+      });
+
       this.musicas = data;
       this.carregando = false;
       const self = this;
       setTimeout(function () {
         self.calcItemsPage();
       }, 10);
-
-      this.albuns_musicas = await this.$root.getData("albuns_musicas");
-      this.albuns = await this.$root.getData("albuns");
     },
   },
   created() {
