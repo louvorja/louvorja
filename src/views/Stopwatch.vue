@@ -2,14 +2,14 @@
   <div class="d-flex" style="height: 100%; width: 100%">
     <div class="d-flex" :style="styleBg">
       <span :style="styleTxt">
-        {{ content.cronometro | timer(data.cronometro.mask) }}
+        {{ content.stopwatch | timer(data.stopwatch.mask) }}
       </span>
     </div>
 
     <v-expand-x-transition>
       <v-card
         transition="fab-transition"
-        v-if="content.cronometro_list.length > 0"
+        v-if="content.stopwatch_list.length > 0"
         style="overflow: auto"
       >
         <v-list-item>
@@ -24,7 +24,7 @@
 
         <v-list dense nav>
           <v-list-item
-            v-for="(item, index) in content.cronometro_list"
+            v-for="(item, index) in content.stopwatch_list"
             :key="index"
             link
           >
@@ -35,7 +35,7 @@
                   >{{ index + 1 }}.</span
                 >
                 <span class="ps-3">
-                  {{ item | timer(data.cronometro.mask) }}
+                  {{ item | timer(data.stopwatch.mask) }}
                 </span>
               </v-list-item-title>
             </v-list-item-content>
@@ -43,7 +43,7 @@
         </v-list>
 
         <div class="pa-3">
-          <v-btn block color="error" @click="content.cronometro_list = []">
+          <v-btn block color="error" @click="content.stopwatch_list = []">
             Limpar
           </v-btn>
         </div>
@@ -55,7 +55,7 @@
 <script>
 import filters from "@/filters";
 export default {
-  name: "cronometro",
+  name: "stopwatch",
   filters,
   data() {
     return this.$root.$data;
@@ -67,18 +67,18 @@ export default {
           height: "100%",
           overflow: "hidden",
           flex: "auto",
-          alignItems: this.data.cronometro.text.positionV,
-          justifyContent: this.data.cronometro.text.positionH,
-          backgroundColor: this.data.cronometro.bg.color,
-          backgroundPosition: this.data.cronometro.bg.position,
+          alignItems: this.data.stopwatch.text.positionV,
+          justifyContent: this.data.stopwatch.text.positionH,
+          backgroundColor: this.data.stopwatch.bg.color,
+          backgroundPosition: this.data.stopwatch.bg.position,
           backgroundSize: "cover",
-          backgroundImage: this.data.cronometro.bg.file.url
-            ? `url(${this.data.cronometro.bg.file.url})`
+          backgroundImage: this.data.stopwatch.bg.file.url
+            ? `url(${this.data.stopwatch.bg.file.url})`
             : "initial",
         },
-        this.data.cronometro.bg.cssContent
+        this.data.stopwatch.bg.cssContent
           ? Object.fromEntries(
-              this.data.cronometro.bg.css
+              this.data.stopwatch.bg.css
                 .split(";")
                 .filter((item) => item != "")
                 .map((item) => {
@@ -91,12 +91,12 @@ export default {
     styleTxt: function () {
       return Object.assign(
         {
-          fontSize: `${this.data.cronometro.text.fontSize}vh`,
-          color: this.data.cronometro.text.color,
+          fontSize: `${this.data.stopwatch.text.fontSize}vh`,
+          color: this.data.stopwatch.text.color,
         },
-        this.data.cronometro.text.cssContent
+        this.data.stopwatch.text.cssContent
           ? Object.fromEntries(
-              this.data.cronometro.text.css
+              this.data.stopwatch.text.css
                 .split(";")
                 .filter((item) => item != "")
                 .map((item) => {

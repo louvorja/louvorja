@@ -15,7 +15,7 @@
 export default {
   data() {return this.$root.$data;},
   components: {
-    ico: () => import(`@/components/Icone`)
+    ico: () => import(`@/components/Icon`)
   }
 }
 </script>

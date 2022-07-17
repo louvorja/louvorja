@@ -139,42 +139,42 @@ export default {
         {
           tab: "Coletâneas",
           content: [
-            [{ type: "button", route: "hinario" }],
-            [{ type: "button", route: "localizar-musicas" }],
+            [{ type: "button", route: "hymnal" }],
+            [{ type: "button", route: "find-music" }],
           ],
         },
         {
           tab: "Coletâneas On-line",
-          content: [[{ type: "button", route: "videos-online" }]],
+          content: [[{ type: "button", route: "online-videos" }]],
         },
         {
           tab: "Bíblia",
-          content: [[{ type: "button", route: "biblia" }]],
+          content: [[{ type: "button", route: "bible" }]],
         },
         {
           tab: "Utilitários",
           content: [
             [
-              { type: "button", route: "liturgia" },
-              { type: "button", route: "itens-agendados" },
+              { type: "button", route: "liturgy" },
+              { type: "button", route: "scheduled-items" },
             ],
             [
-              { type: "button", route: "cronometro" },
-              { type: "button", route: "relogio" },
-              { type: "button", route: "cronometro-culto" },
+              { type: "button", route: "stopwatch" },
+              { type: "button", route: "clock" },
+              { type: "button", route: "worship-timer" },
             ],
-            [{ type: "button", route: "sorteio" }],
+            [{ type: "button", route: "sweepstake" }],
           ],
         },
         {
           tab: "Cronômetro",
-          visible: "cronometro",
-          component: "cronometro",
+          visible: "stopwatch",
+          component: "stopwatch",
         },
         {
           tab: "Localizar Músicas",
-          visible: "localizar-musicas",
-          component: "localizarmusicas",
+          visible: "find-music",
+          component: "findmusic",
         },
       ],
     };
@@ -201,9 +201,9 @@ export default {
   },
   components: {
     lButton: () => import(`@/components/Button`),
-    cronometro: () => import(`@/layout/headertabs/CronometroTab`),
-    localizarmusicas: () => import(`@/layout/headertabs/LocalizarMusicasTab`),
-    ico: () => import(`@/components/Icone`),
+    stopwatch: () => import(`@/layout/headertabs/StopwatchTab`),
+    findmusic: () => import(`@/layout/headertabs/FindMusicTab`),
+    ico: () => import(`@/components/Icon`),
   },
 };
 </script>

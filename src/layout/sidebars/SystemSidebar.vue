@@ -56,13 +56,13 @@ export default {
         {
           tab: "Aparência",
           icon: "mdi-palette",
-          component: "temas",
+          component: "themes",
         },
         {
           tab: "Transmissão",
           icon: "mdi-access-point",
           //content: "server",
-          component: "temas",
+          component: "themes",
         },
         {
           tab: "Loja",
@@ -73,7 +73,7 @@ export default {
         {
           tab: "Banco de Dados",
           icon: "mdi-database",
-          component: "bd",
+          component: "database",
           desktop: true,
         },
       ],
@@ -96,8 +96,8 @@ export default {
   },
   components: {
     config: () => import(`./partials/Config`),
-    temas: () => import(`./partials/Temas`),
-    bd: () => import(`./partials/BD`),
+    themes: () => import(`./partials/Themes`),
+    database: () => import(`./partials/DataBase`),
   },
   methods: {
     action: function (item) {

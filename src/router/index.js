@@ -6,99 +6,99 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'inicio',
+    name: 'home',
     title: "Início",
     icon: "louvorja",
     tab: false,
-    component: () => import('@/views/Inicio.vue')
+    component: () => import('@/views/Home.vue')
   },
   {
-    path: '/hinario',
-    name: 'hinario',
+    path: '/hymnal',
+    name: 'hymnal',
     title: 'Hinário Adventista',
     tab: true,
     //icon: "book-open-cover",
     icon: "hasd",
-    component: () => import('@/views/Hinario.vue')
+    component: () => import('@/views/Hymnal.vue')
   },
   {
-    path: '/localizar-musicas',
-    name: 'localizar-musicas',
+    path: '/find-music',
+    name: 'find-music',
     title: 'Localizar Músicas',
     tab: true,
     icon: "magnifying-glass",
-    component: () => import('@/views/LocalizarMusicas.vue')
+    component: () => import('@/views/FindMusic.vue')
   },
   {
-    path: '/videos-online',
-    name: 'videos-online',
+    path: '/online-videos',
+    name: 'online-videos',
     title: 'Vídeos On-line',
     tab: true,
     icon: "youtube",
-    component: () => import('@/views/ItensAgendados.vue')
+    component: () => import('@/views/ScheduledItems.vue')
   },
   {
-    path: '/biblia',
-    name: 'biblia',
+    path: '/bible',
+    name: 'bible',
     title: 'Bíblia',
     tab: true,
     icon: "book-bible",
-    component: () => import('@/views/ItensAgendados.vue')
+    component: () => import('@/views/ScheduledItems.vue')
   },
   {
-    path: '/liturgia',
-    name: 'liturgia',
+    path: '/liturgy',
+    name: 'liturgy',
     title: 'Liturgia',
     tab: true,
     icon: "list-timeline",
-    component: () => import('@/views/ItensAgendados.vue')
+    component: () => import('@/views/ScheduledItems.vue')
   },
   {
-    path: '/itens-agendados',
-    name: 'itens-agendados',
+    path: '/scheduled-items',
+    name: 'scheduled-items',
     title: 'Itens Agendados',
     tab: true,
     icon: "calendar",
-    component: () => import('@/views/ItensAgendados.vue')
+    component: () => import('@/views/ScheduledItems.vue')
   },
   {
-    path: '/cronometro',
-    name: 'cronometro',
+    path: '/stopwatch',
+    name: 'stopwatch',
     title: 'Cronômetro',
     tab: true,
     icon: "stopwatch",
-    component: () => import('@/views/Cronometro.vue')
+    component: () => import('@/views/Stopwatch.vue')
   },
   {
-    path: '/relogio',
-    name: 'relogio',
+    path: '/clock',
+    name: 'clock',
     title: 'Relógio',
     tab: true,
     icon: "clock",
-    component: () => import('@/views/Relogio.vue')
+    component: () => import('@/views/Clock.vue')
   },
   {
-    path: '/cronometro-culto',
-    name: 'cronometro-culto',
+    path: '/worship-timer',
+    name: 'worship-timer',
     title: 'Cronômetro de Culto',
     tab: true,
     icon: "alarm-clock",
-    component: () => import('@/views/Relogio.vue')
+    component: () => import('@/views/Clock.vue')
   },
   {
-    path: '/sorteio',
-    name: 'sorteio',
+    path: '/sweepstake',
+    name: 'sweepstake',
     title: 'Sorteio',
     tab: true,
     icon: "ticket",
-    component: () => import('@/views/Relogio.vue')
+    component: () => import('@/views/Clock.vue')
   },
   {
-    path: '/editor',
-    name: 'editor',
+    path: '/slide-editor',
+    name: 'slide-editor',
     title: 'Editor',
     tab: true,
-    component: () => import('@/views/Editor.vue')
+    component: () => import('@/views/SlideEditor.vue')
   },
   {
     path: '*',

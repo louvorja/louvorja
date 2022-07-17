@@ -37,7 +37,7 @@
       <l-button
         icon="pencil"
         label="Formatar"
-        @click.native="$root.sidebar.cronometro = !$root.sidebar.cronometro"
+        @click.native="$root.sidebar.stopwatch = !$root.sidebar.stopwatch"
       />
     </span>
   </v-item-group>
@@ -65,7 +65,7 @@ export default {
       var self = this;
 
       if (this.start) {
-        self.$root.tabs_dot.push("cronometro");
+        self.$root.tabs_dot.push("stopwatch");
         if (this.interval != null) {
           clearInterval(this.interval);
         }
@@ -75,10 +75,10 @@ export default {
           }
           var dh_a = new Date();
           var dh_i = self.start_time;
-          self.$root.content.cronometro = dh_a - dh_i;
+          self.$root.content.stopwatch = dh_a - dh_i;
         }, 1);
       } else {
-        self.$root.tabs_dot.splice("cronometro");
+        self.$root.tabs_dot.splice("stopwatch");
         clearInterval(this.interval);
         this.interval = null;
       }
@@ -88,7 +88,7 @@ export default {
     fn_start: function () {
       if (this.pause == true) {
         var dh = new Date();
-        this.start_time = dh - this.$root.content.cronometro;
+        this.start_time = dh - this.$root.content.stopwatch;
         this.start = true;
         this.pause == false;
       } else if (this.start !== true) {
@@ -103,10 +103,10 @@ export default {
     fn_stop: function () {
       this.start = false;
       this.pause = false;
-      this.$root.content.cronometro = 0;
+      this.$root.content.stopwatch = 0;
     },
     fn_anotar: function () {
-      this.$root.content.cronometro_list.push(this.$root.content.cronometro);
+      this.$root.content.stopwatch_list.push(this.$root.content.stopwatch);
     },
     fn_apagar: function () {
       this.$fire({
@@ -123,10 +123,10 @@ export default {
     },
   },
   created() {
-    this.$root.content.cronometro = 0;
+    this.$root.content.stopwatch = 0;
   },
   beforeDestroy() {
-    this.$root.content.cronometro = 0;
+    this.$root.content.stopwatch = 0;
   },
 };
 </script>

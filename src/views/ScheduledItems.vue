@@ -1,12 +1,13 @@
 <template>
   <div>
-    Editor
+      
+    
   </div>
 </template>
 
 <script>
 export default {
-  name: 'editor',
+  name: 'scheduled-items',
   data() {
     return {
         value_2: ['A', 'F']

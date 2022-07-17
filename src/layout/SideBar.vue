@@ -1,7 +1,7 @@
 <template>
   <div>
-    <geral/>
-    <cronometro v-if="page == 'cronometro'" />
+    <system/>
+    <stopwatch v-if="page == 'stopwatch'" />
   </div>
 </template>
 
@@ -12,8 +12,8 @@ export default {
     return this.$root.$data;
   },
   components: {
-    geral: () => import(`@/layout/sidebars/GeralSidebar`),
-    cronometro: () => import(`@/layout/sidebars/CronometroSidebar`),
+    system: () => import(`@/layout/sidebars/SystemSidebar`),
+    stopwatch: () => import(`@/layout/sidebars/StopwatchSidebar`),
   },
 };
 </script>

@@ -28,7 +28,7 @@ module.exports = {
         current_time: 0,
         duration: 0,
         album: '',
-        faixa: 0,
+        track: 0,
       },
       player: {
         show: false,
@@ -43,7 +43,7 @@ module.exports = {
         current_time: 0,
         duration: 0,
         album: '',
-        faixa: 0,
+        track: 0,
       },
       progress: {
         show: false,
@@ -66,7 +66,7 @@ module.exports = {
         },
         fav: [],
         layout: { id: 1, color: "#29569b", dark: false },
-        cronometro: {
+        stopwatch: {
           text: {
             fontSize: 14,
             color: "#000000FF",
@@ -87,8 +87,8 @@ module.exports = {
       },
       def: {},
 
-      content: { cronometro: 0, cronometro_list: [] },
-      sidebar: { geral: false, cronometro: false },
+      content: { stopwatch: 0, stopwatch_list: [] },
+      sidebar: { geral: false, stopwatch: false },
 
       save_data: false,
       openpages: [],
@@ -119,7 +119,7 @@ module.exports = {
           titulo: ""
         },
         album: '',
-        faixa: 0,
+        track: 0,
       },
     };
   },

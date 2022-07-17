@@ -1,13 +1,12 @@
 <template>
   <div>
-      
-    
+    Editor
   </div>
 </template>
 
 <script>
 export default {
-  name: 'itens-agendados',
+  name: 'slide-editor',
   data() {
     return {
         value_2: ['A', 'F']

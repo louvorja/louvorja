@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    v-model="$root.sidebar.cronometro"
+    v-model="$root.sidebar.stopwatch"
     absolute
     right
     temporary
@@ -18,7 +18,7 @@
             col="12"
             m="mb-4"
             type="slider"
-            v-model.number="$root.data.cronometro.text.fontSize"
+            v-model.number="$root.data.stopwatch.text.fontSize"
             label="Tamanho"
             :min="5"
             :max="50"
@@ -29,7 +29,7 @@
             col="12"
             m="mb-4"
             type="color"
-            v-model="$root.data.cronometro.text.color"
+            v-model="$root.data.stopwatch.text.color"
             label="Cor"
           />
         </v-row>
@@ -37,7 +37,7 @@
           <l-input
             col="12"
             type="select"
-            v-model="$root.data.cronometro.text.positionH"
+            v-model="$root.data.stopwatch.text.positionH"
             label="Alinhamento Horizontal"
             options-list="positionH"
           />
@@ -46,7 +46,7 @@
           <l-input
             col="12"
             type="select"
-            v-model="$root.data.cronometro.text.positionV"
+            v-model="$root.data.stopwatch.text.positionV"
             label="Alinhamento Vertical"
             options-list="positionV"
           />
@@ -55,22 +55,22 @@
           <l-input
             col="12"
             type="checkbox"
-            v-model="$root.data.cronometro.text.cssContent"
+            v-model="$root.data.stopwatch.text.cssContent"
             label="Formatação com CSS"
           />
         </v-row>
-        <v-row v-if="$root.data.cronometro.text.cssContent">
+        <v-row v-if="$root.data.stopwatch.text.cssContent">
           <l-input
             col="12"
             type="textarea"
-            v-model="$root.data.cronometro.text.css"
+            v-model="$root.data.stopwatch.text.css"
             label="Código CSS"
           />
         </v-row>
         <v-row align="center" justify="space-around" class="ma-5">
           <v-btn
             color="error"
-            @click="$root.restoreFormatacao('cronometro.text')"
+            @click="$root.restoreFormatacao('stopwatch.text')"
           >
             <v-icon> mdi-restore </v-icon>
             Restaurar Formatação
@@ -82,7 +82,7 @@
           <l-input
             col="12"
             type="color"
-            v-model="$root.data.cronometro.bg.color"
+            v-model="$root.data.stopwatch.bg.color"
             label="Cor de Fundo"
           />
         </v-row>
@@ -90,16 +90,16 @@
           <l-input
             col="12"
             type="file"
-            v-model="$root.data.cronometro.bg.file"
+            v-model="$root.data.stopwatch.bg.file"
             label="Imagem de Fundo"
             accept="image/*,video/*"
           />
         </v-row>
-        <v-row v-if="$root.data.cronometro.bg.file.url">
+        <v-row v-if="$root.data.stopwatch.bg.file.url">
           <l-input
             col="12"
             type="select"
-            v-model="$root.data.cronometro.bg.position"
+            v-model="$root.data.stopwatch.bg.position"
             label="Posição"
             options-list="position"
           />
@@ -108,22 +108,22 @@
           <l-input
             col="12"
             type="checkbox"
-            v-model="$root.data.cronometro.bg.cssContent"
+            v-model="$root.data.stopwatch.bg.cssContent"
             label="Formatação com CSS"
           />
         </v-row>
-        <v-row v-if="$root.data.cronometro.bg.cssContent">
+        <v-row v-if="$root.data.stopwatch.bg.cssContent">
           <l-input
             col="12"
             type="textarea"
-            v-model="$root.data.cronometro.bg.css"
+            v-model="$root.data.stopwatch.bg.css"
             label="Código CSS"
           />
         </v-row>
         <v-row align="center" justify="space-around" class="ma-5">
           <v-btn
             color="error"
-            @click="$root.restoreFormatacao('cronometro.bg')"
+            @click="$root.restoreFormatacao('stopwatch.bg')"
           >
             <v-icon> mdi-restore </v-icon>
             Restaurar Formatação
@@ -135,7 +135,7 @@
           <l-input
             col="12"
             type="range-slider"
-            v-model="$root.data.cronometro.mask"
+            v-model="$root.data.stopwatch.mask"
             label="Formato de Tempo"
             :marks="{ h: 'hora', m: 'minuto', s: 'segundo', n: 'milesimo' }"
           />
@@ -143,7 +143,7 @@
         <v-row align="center" justify="space-around" class="ma-5 mt-10">
           <v-btn
             color="error"
-            @click="$root.restoreFormatacao('cronometro.mask')"
+            @click="$root.restoreFormatacao('stopwatch.mask')"
           >
             <v-icon> mdi-restore </v-icon>
             Restaurar Formatação

@@ -4,12 +4,14 @@
       <l-input
         type="text"
         v-model="search"
-        label="Digite o nome ou número do hino"
+        label="Digite o nome da música"
         append-icon="mdi-magnify"
-        :error="!carregando && hinos.length > 0 && pagination.itemsLength === 0"
+        :error="
+          !loading && musicas.length > 0 && pagination.itemsLength === 0
+        "
       />
     </div>
-    <div v-if="!carregando && hinos.length <= 0">
+    <div v-if="!loading && musicas.length <= 0">
       <v-alert
         border="bottom"
         colored-border
@@ -17,8 +19,8 @@
         elevation="2"
         class="mx-4"
       >
-        O hinário não foi baixado em seu programa. Acesse a loja e faça o
-        download do hinário!
+        Nenhuma música foi baixada em seu programa. Acesse a loja e faça o
+        download das músicas!
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="warning" @click="loadData"> Atualizar Página </v-btn>
@@ -36,11 +38,11 @@
     >
       <v-data-table
         :headers="fields"
-        :items="hinos"
+        :items="musicas"
         :items-per-page="items_page"
         :search="search"
         :custom-filter="filterPerfectMatch"
-        :loading="carregando"
+        :loading="loading"
         :disable-pagination="false"
         no-data-text="Não há dados para serem exibidos"
         no-results-text="Nenhum resultado encontrado"
@@ -48,11 +50,21 @@
         dense
         @pagination="pagination = $event"
       >
+        <template v-slot:[`item.albuns`]="{ item }">
+          <v-chip
+            v-for="album in item.albuns"
+            :key="album.id_album"
+            small
+            outlined
+            class="mx-2"
+            :color="$root.data.layout.color"
+          >
+            {{ album.titulo }}
+          </v-chip>
+        </template>
+
         <template v-slot:[`item.opcoes`]="{ item }">
-          <opc-musica
-            v-bind="{ ...item, album: 'Hinário Adventista' }"
-            v-if="true"
-          />
+          <music-bar v-bind="item" v-if="true" />
         </template>
       </v-data-table>
     </div>
@@ -61,23 +73,19 @@
 
 <script>
 export default {
-  name: "hinario",
+  name: "localizar-musicas",
   components: {
     lInput: () => import(`@/components/Input`),
-    OpcMusica: () => import("@/components/OpcMusica"),
+    MusicBar: () => import("@/components/MusicBar"),
   },
   data() {
     return {
       search: null,
-      carregando: true,
-      hinos: [],
+      loading: true,
+      musicas: [],
       fields: [
-        {
-          text: "Número",
-          value: "faixa",
-          align: "end",
-        },
         { text: "Titulo", value: "titulo" },
+        { text: "Álbuns", value: "albuns" },
         { text: "", value: "opcoes" },
       ],
       items_page: 10,
@@ -123,7 +131,7 @@ export default {
     },
     filterPerfectMatch: function (value, search) {
       if (isNaN(search)) {
-        if (value !== undefined && isNaN(value)) {
+        if (value !== undefined && isNaN(value) && typeof value !== "object") {
           return (
             value
               .toLowerCase()
@@ -144,9 +152,28 @@ export default {
       }
     },
     loadData: async function () {
-      let data = await this.$root.getData("hinario");
-      this.hinos = data;
-      this.carregando = false;
+      let data = await this.$root.getData("musicas");
+      let albuns_musicas = await this.$root.getData("albuns_musicas");
+      let albuns = await this.$root.getData("albuns");
+
+      data.map((musica) => {
+        return (musica.albuns = albuns_musicas
+          .filter((album_musica) => {
+            return album_musica.id_musica == musica.id_musica;
+          })
+          .map((album_musica) => {
+            album_musica.album = albuns.filter((album) => {
+              return album.id_album == album_musica.id_album;
+            });
+            return album_musica;
+          })
+          .map((item) => {
+            return item.album[0];
+          }));
+      });
+
+      this.musicas = data;
+      this.loading = false;
       const self = this;
       setTimeout(function () {
         self.calcItemsPage();

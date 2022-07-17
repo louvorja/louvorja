@@ -17,7 +17,7 @@
 export default {
     props: ['route','icon','label','to','icon-class'],
     components: {
-        ico: () => import(`@/components/Icone`)
+        ico: () => import(`@/components/Icon`)
     },
     computed: {
         cico: function () {
