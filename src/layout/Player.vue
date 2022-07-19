@@ -10,12 +10,16 @@
         <div class="flex-grow-0">
           <v-list-item class="px-2">
             <v-list-item-content>
-              <v-list-item-title>{{ player.titulo }}</v-list-item-title>
-              <v-list-item-subtitle>
+              <v-skeleton-loader v-if="player.loading" type="text" class="px-3">
+              </v-skeleton-loader>
+              <v-list-item-title v-if="!player.loading">{{
+                player.name
+              }}</v-list-item-title>
+              <v-list-item-subtitle v-if="!player.loading">
                 <span v-if="player.album">{{ player.album }}</span>
                 <span v-if="player.audio == 2"> | PB</span>
-                <span v-if="player.faixa"> | faixa {{ player.faixa }}</span>
-                </v-list-item-subtitle>
+                <span v-if="player.track"> | faixa {{ player.track }}</span>
+              </v-list-item-subtitle>
             </v-list-item-content>
             <v-btn icon @click.stop="close()">
               <v-icon>mdi-close</v-icon>
@@ -41,10 +45,18 @@
 
         <v-toolbar dark :color="$root.data.layout.color" flat>
           <v-spacer></v-spacer>
-          <v-btn :disabled="player.loading || !player.file" icon @click="restart()">
+          <v-btn
+            :disabled="player.loading || !player.file"
+            icon
+            @click="restart()"
+          >
             <v-icon>mdi-restart</v-icon>
           </v-btn>
-          <v-btn :disabled="player.loading || !player.file" icon @click="back()">
+          <v-btn
+            :disabled="player.loading || !player.file"
+            icon
+            @click="back()"
+          >
             <v-icon>mdi-rewind-10</v-icon>
           </v-btn>
           <v-btn
@@ -99,17 +111,17 @@
             <v-list>
               <v-list-item
                 v-if="player.music.arquivo !== ''"
-                @click="$root.openPlayer(obj_musica, { audio: 1 })"
+                @click="$root.openPlayer(obj_music, { audio: 1 })"
               >
                 Cantado
               </v-list-item>
               <v-list-item
                 v-if="player.music.arquivo_pb !== ''"
-                @click="$root.openPlayer(obj_musica, { audio: 2 })"
+                @click="$root.openPlayer(obj_music, { audio: 2 })"
               >
                 Playback
               </v-list-item>
-              <v-list-item @click="$root.openLetterMusic(obj_musica)">
+              <v-list-item @click="$root.openLyricMusic(obj_music)">
                 Letra
               </v-list-item>
             </v-list>
@@ -141,14 +153,14 @@ export default {
         return undefined;
       }
       return this.$root.dir(
-        `${this.path.files}/musicas/${this.player.music.pasta}/${this.player.file}`
+        `${this.player.music.url_music}${this.path.files}/${this.player.music.folder}/${this.player.file}`
       );
     },
-    obj_musica: function () {
+    obj_music: function () {
       return {
-        id_musica: this.player.id_musica,
+        id_music: this.player.id_music,
         album: this.player.album,
-        faixa: this.player.faixa,
+        track: this.player.track,
       };
     },
   },

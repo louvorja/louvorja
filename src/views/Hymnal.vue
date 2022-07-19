@@ -48,7 +48,7 @@
         dense
         @pagination="pagination = $event"
       >
-        <template v-slot:[`item.opcoes`]="{ item }">
+        <template v-slot:[`item.options`]="{ item }">
           <music-bar
             v-bind="{ ...item, album: 'Hinário Adventista' }"
             v-if="true"
@@ -74,11 +74,11 @@ export default {
       fields: [
         {
           text: "Número",
-          value: "faixa",
+          value: "track",
           align: "end",
         },
-        { text: "Titulo", value: "titulo" },
-        { text: "", value: "opcoes" },
+        { text: "Titulo", value: "name" },
+        { text: "", value: "options" },
       ],
       items_page: 10,
       pagination: {
@@ -144,7 +144,9 @@ export default {
       }
     },
     loadData: async function () {
-      let data = await this.$root.getData("hinario");
+      let data = await this.$root.getData("hymnal", {
+        params: { limit: -1 },
+      });
       this.hinos = data;
       this.loading = false;
       const self = this;

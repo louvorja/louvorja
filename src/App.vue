@@ -4,7 +4,7 @@
     <app-dialog />
     <app-store />
     <app-alert />
-    <app-letter />
+    <app-lyric />
 
     <v-layout fill-height style="height: 100vh">
       <v-layout column fill-height style="height: 100vh">
@@ -36,7 +36,7 @@ export default {
     AppDialog: () => import("@/layout/Dialog"),
     AppStore: () => import("@/layout/Store"),
     AppAlert: () => import("@/layout/Alert"),
-    AppLetter: () => import("@/layout/Letter"),
+    AppLyric: () => import("@/layout/Lyric"),
     AppPlayer: () => import("@/layout/Player"),
   },
   created() {

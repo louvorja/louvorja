@@ -68,26 +68,34 @@ export default {
     send: function (acao, param) {
         ipcRenderer.send(acao);
     },
-    getData: async function (url) {
+    getData: async function (url, options = {}) {
         if (this.desktop) {
             let data = await this.getDBData(url);
             return data;
         } else {
-            let data = await this.getApiData(url);
+            let data = await this.getApiData(url, options);
             return data;
         }
     },
-    getApiData: async function (url, query_param, filtros) {
-        query_param = query_param || ''
-        filtros = filtros || []
-        url = 'https://api.louvorja.com.br/pt/' + url + '?token=fa7fef35-3bf4-4810-8a71-520e89eb00b5&' + query_param
-        console.log('getApiData', url, filtros)
+    getApiData: async function (url, options = {}) {
+        let baseurl = "";
+        if (window.location.hostname == "localhost") {
+            baseurl = "http://localhost:8000";
+        } else {
+            baseurl = "https://api.louvorja.com.br";
+        }
+        let params = "";
+        if (options.params) {
+            params = `?${this.encodeDataToURL(options.params)}`;
+        }
+        url = `${baseurl}/pt/${url}${params}`
+        console.log('getApiData', url, options)
         let response = await fetch(url,
             {
-                method: 'post',
-                body: new URLSearchParams({
-                    filtros: JSON.stringify(filtros),
-                })
+                method: 'get',
+                headers: {
+                    'Api-Token': '02@v2nFB2Dc'
+                },
             }
         ).catch(err => {
             this.msgAlert("erro", "Erro ao estabelecer conexão com o servidor!")
@@ -96,13 +104,15 @@ export default {
         });
         if (response.ok) {
             let data = await response.json();
-            if (data.erro != undefined && data.erro != '') {
-                this.msgAlert("erro", "Erro ao obter dados do servidor: " + data.erro)
+            if (data.error != undefined && data.erro != '') {
+                this.msgAlert("erro", "Erro ao obter dados do servidor: " + data.error)
                 return false;
             }
-            //console.log('getApiData',data,filtros);
-            return data;
+            //console.log('getApiData', data.data);
+            return data.data;
         } else {
+            let data = await response.json();
+            this.msgAlert("erro", "Erro ao obter dados do servidor: " + data.error)
             return false;
         }
     },
@@ -255,11 +265,11 @@ export default {
     },
 
     openMusic: async function (obj, options = {}) {
-        let id_musica = obj;
+        let id_music = obj;
         this.$root.media.album = '';
         this.$root.media.track = 0;
         if (typeof (obj) === "object") {
-            id_musica = obj.id_musica;
+            id_music = obj.id_music;
             this.$root.media.album = obj.album || '';
             this.$root.media.track = obj.track || 0;
         }
@@ -280,8 +290,8 @@ export default {
         this.$root.media.show = true;
         this.$root.media.loading = true;
         this.$root.media.slide = 0;
-        this.$root.media.id_musica = id_musica;
-        let data = await this.$root.getData(`musica/${id_musica}`);
+        this.$root.media.id_music = id_music;
+        let data = await this.$root.getData(`musica/${id_music}`);
         if (this.$root.media.audio == 1) {
             this.$root.media.file = data.arquivo;
             data.letra.map(item => { item.time = item.tempo || 0 });
@@ -299,11 +309,11 @@ export default {
         }
     },
     openPlayer: async function (obj, options = {}) {
-        let id_musica = obj;
+        let id_music = obj;
         this.$root.player.album = '';
         this.$root.player.track = 0;
         if (typeof (obj) === "object") {
-            id_musica = obj.id_musica;
+            id_music = obj.id_music;
             this.$root.player.album = obj.album || '';
             this.$root.player.track = obj.track || 0;
         }
@@ -322,16 +332,16 @@ export default {
 
         this.$root.player.show = true;
         this.$root.player.loading = true;
-        this.$root.player.id_musica = id_musica;
-        let data = await this.$root.getData(`musica/${id_musica}`);
+        this.$root.player.id_music = id_music;
+        let data = await this.$root.getData(`music/${id_music}`);
         if (this.$root.player.audio == 1) {
-            this.$root.player.file = data.arquivo;
+            this.$root.player.file = data.file;
         } else if (this.$root.player.audio == 2) {
-            this.$root.player.file = data.arquivo_pb;
+            this.$root.player.file = data.instrumental_file;
         } else {
             this.$root.player.file = "";
         }
-        this.$root.player.titulo = data.titulo;
+        this.$root.player.name = data.name;
         this.$root.player.music = data;
         this.$root.player.loading = false;
 
@@ -339,19 +349,28 @@ export default {
             audio.play();
         }
     },
-    openLetterMusic: async function (obj) {
-        let id_musica = obj;
-        this.$root.letter.album = '';
-        this.$root.letter.track = 0;
+    openLyricMusic: async function (obj) {
+        let id_music = obj;
+        console.log(obj);
+        this.$root.lyric.album = '';
+        this.$root.lyric.track = 0;
         if (typeof (obj) === "object") {
-            id_musica = obj.id_musica;
-            this.$root.letter.album = obj.album || '';
-            this.$root.letter.track = obj.track || 0;
+            id_music = obj.id_music;
+            this.$root.lyric.album = obj.album || '';
+            this.$root.lyric.track = obj.track || 0;
         }
-        this.$root.letter.show = true;
-        this.$root.letter.loading = true;
-        let data = await this.$root.getData(`musica/${id_musica}`);
-        this.$root.letter.music = data;
-        this.$root.letter.loading = false;
+        this.$root.lyric.show = true;
+        this.$root.lyric.loading = true;
+        let data = await this.$root.getData(`music/${id_music}`);
+        this.$root.lyric.music = data;
+        this.$root.lyric.loading = false;
     },
+
+
+    encodeDataToURL: function (data) {
+        return Object
+            .keys(data)
+            .map(value => `${value}=${encodeURIComponent(data[value])}`)
+            .join('&');
+    }
 }

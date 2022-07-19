@@ -5,7 +5,7 @@ module.exports = {
       desktop: typeof desktop !== "undefined" ? desktop : false,
       config_web: null,
 
-      path: { base: "", files: "https://arquivos.louvorja.com.br/PT/config/" },
+      path: { base: "", files: "" },
       displays: [],
       ip: "",
       //server: {status: false},
@@ -112,7 +112,7 @@ module.exports = {
       store: {
         show: false,
       },
-      letter: {
+      lyric: {
         show: false,
         loading: false,
         music: {
