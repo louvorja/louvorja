@@ -30,6 +30,7 @@ new Vue({
   watch,
   methods,
   mounted() {
+
     this.def = JSON.parse(JSON.stringify(this.data));
     //this.def = Object.assign({}, this.data);
     var self = this;

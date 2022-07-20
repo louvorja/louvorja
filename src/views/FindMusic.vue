@@ -6,12 +6,10 @@
         v-model="search"
         label="Digite o nome da música"
         append-icon="mdi-magnify"
-        :error="
-          !loading && musicas.length > 0 && pagination.itemsLength === 0
-        "
+        :error="!loading && musics.length > 0 && pagination.itemsLength === 0"
       />
     </div>
-    <div v-if="!loading && musicas.length <= 0">
+    <div v-if="!loading && musics.length <= 0">
       <v-alert
         border="bottom"
         colored-border
@@ -38,7 +36,7 @@
     >
       <v-data-table
         :headers="fields"
-        :items="musicas"
+        :items="musics"
         :items-per-page="items_page"
         :search="search"
         :custom-filter="filterPerfectMatch"
@@ -50,20 +48,20 @@
         dense
         @pagination="pagination = $event"
       >
-        <template v-slot:[`item.albuns`]="{ item }">
+        <template v-slot:[`item.albums`]="{ item }">
           <v-chip
-            v-for="album in item.albuns"
+            v-for="album in item.albums"
             :key="album.id_album"
             small
             outlined
             class="mx-2"
             :color="$root.data.layout.color"
           >
-            {{ album.titulo }}
+            {{ album.name }}
           </v-chip>
         </template>
 
-        <template v-slot:[`item.opcoes`]="{ item }">
+        <template v-slot:[`item.options`]="{ item }">
           <music-bar v-bind="item" v-if="true" />
         </template>
       </v-data-table>
@@ -73,7 +71,7 @@
 
 <script>
 export default {
-  name: "localizar-musicas",
+  name: "find-musics",
   components: {
     lInput: () => import(`@/components/Input`),
     MusicBar: () => import("@/components/MusicBar"),
@@ -82,11 +80,11 @@ export default {
     return {
       search: null,
       loading: true,
-      musicas: [],
+      musics: [],
       fields: [
-        { text: "Titulo", value: "titulo" },
-        { text: "Álbuns", value: "albuns" },
-        { text: "", value: "opcoes" },
+        { text: "Titulo", value: "name" },
+        { text: "Álbuns", value: "albums" },
+        { text: "", value: "options" },
       ],
       items_page: 10,
       pagination: {
@@ -152,27 +150,33 @@ export default {
       }
     },
     loadData: async function () {
-      let data = await this.$root.getData("musicas");
-      let albuns_musicas = await this.$root.getData("albuns_musicas");
-      let albuns = await this.$root.getData("albuns");
+      let data = await this.$root.getData("musics", {
+        params: { limit: -1 },
+      });
+      let albums_musics = await this.$root.getData("albums_musics", {
+        params: { limit: -1 },
+      });
+      let albums = await this.$root.getData("albums", {
+        params: { limit: -1 },
+      });
 
-      data.map((musica) => {
-        return (musica.albuns = albuns_musicas
-          .filter((album_musica) => {
-            return album_musica.id_musica == musica.id_musica;
+      data.map((music) => {
+        return (music.albums = albums_musics
+          .filter((album_music) => {
+            return album_music.id_music == music.id_music;
           })
-          .map((album_musica) => {
-            album_musica.album = albuns.filter((album) => {
-              return album.id_album == album_musica.id_album;
+          .map((album_music) => {
+            album_music.album = albums.filter((album) => {
+              return album.id_album == album_music.id_album;
             });
-            return album_musica;
+            return album_music;
           })
           .map((item) => {
             return item.album[0];
           }));
       });
 
-      this.musicas = data;
+      this.musics = data;
       this.loading = false;
       const self = this;
       setTimeout(function () {

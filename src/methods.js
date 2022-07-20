@@ -264,6 +264,15 @@ export default {
         }
     },
 
+    toSeconds: function (hms) {
+        if (hms == undefined){
+            return 0;
+        }else{
+            let a = hms.split(":");
+            return +a[0] * 60 * 60 + +a[1] * 60 + +a[2];
+        }
+    },
+
     openMusic: async function (obj, options = {}) {
         let id_music = obj;
         this.$root.media.album = '';
@@ -291,13 +300,14 @@ export default {
         this.$root.media.loading = true;
         this.$root.media.slide = 0;
         this.$root.media.id_music = id_music;
-        let data = await this.$root.getData(`musica/${id_music}`);
+        let data = await this.$root.getData(`music/${id_music}`);
         if (this.$root.media.audio == 1) {
-            this.$root.media.file = data.arquivo;
-            data.letra.map(item => { item.time = item.tempo || 0 });
+            this.$root.media.file = data.file;
+            data.lyric.map(item => { item.time = this.toSeconds(item.time) || 0 });
+            console.log(data.lyric);
         } else if (this.$root.media.audio == 2) {
-            this.$root.media.file = data.arquivo_pb;
-            data.letra.map(item => { item.time = item.tempo_pb || item.tempo || 0 });
+            this.$root.media.file = data.instrumental_file;
+            data.lyric.map(item => { item.time = this.toSeconds(item.instrumental_time) || this.toSeconds(item.time) || 0 });
         } else {
             this.$root.media.file = "";
         }

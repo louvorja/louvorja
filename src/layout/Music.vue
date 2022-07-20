@@ -6,11 +6,11 @@
           <div class="flex-grow-0">
             <v-list-item class="px-2">
               <v-list-item-content>
-                <v-list-item-title>{{ media.music.titulo }}</v-list-item-title>
+                <v-list-item-title>{{ media.music.name }}</v-list-item-title>
                 <v-list-item-subtitle v-if="!media.loading">
                   <span v-if="media.album">{{ media.album }}</span>
                   <span v-if="media.audio == 2"> | PB</span>
-                  <span v-if="media.faixa"> | faixa {{ media.faixa }}</span>
+                  <span v-if="media.track"> | track {{ media.track }}</span>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-btn icon @click.stop="close()">
@@ -124,20 +124,20 @@
               <v-list>
                 <v-list-item
                   v-if="media.music.arquivo !== ''"
-                  @click="$root.openMusic(obj_musica, { audio: 1 })"
+                  @click="$root.openMusic(obj_music, { audio: 1 })"
                 >
                   Cantado
                 </v-list-item>
                 <v-list-item
                   v-if="media.music.arquivo_pb !== ''"
-                  @click="$root.openMusic(obj_musica, { audio: 2 })"
+                  @click="$root.openMusic(obj_music, { audio: 2 })"
                 >
                   Playback
                 </v-list-item>
-                <v-list-item @click="$root.openMusic(obj_musica, { audio: 0 })">
+                <v-list-item @click="$root.openMusic(obj_music, { audio: 0 })">
                   Sem áudio
                 </v-list-item>
-                <v-list-item @click="$root.openLetterMusic(obj_musica)">
+                <v-list-item @click="$root.openLetterMusic(obj_music)">
                   Letra
                 </v-list-item>
               </v-list>
@@ -177,11 +177,11 @@
                   </v-list-item-avatar>
 
                   <v-list-item-content>
-                    <v-list-item-title v-if="item.titulo">
-                      <h3 class="text-block">{{ item.titulo }}</h3>
+                    <v-list-item-title v-if="item.name">
+                      <h3 class="text-block">{{ item.name }}</h3>
                     </v-list-item-title>
                     <v-list-item-subtitle v-else>
-                      <span class="text-block">{{ item.letra }}</span>
+                      <span class="text-block">{{ item.lyric }}</span>
                     </v-list-item-subtitle>
                     <v-progress-linear
                       v-if="media.file && slide_index == index"
@@ -221,27 +221,27 @@ export default {
       if (this.media.music.length <= 0) {
         return [];
       }
-      let slides = Object.assign({}, this.media.music, { exibe_slide: 1 });
-      delete slides.letra;
+      let slides = Object.assign({}, this.media.music, { show_slide: 1 });
+      delete slides.lyric;
       slides = [slides];
-      slides.push(...this.media.music.letra);
+      slides.push(...this.media.music.lyric);
       let img = "";
       slides.map((item) => {
-        item.imagem = item.imagem || img;
-        if (item.imagem) {
-          img = item.imagem;
+        item.image = item.image || img;
+        if (item.image) {
+          img = item.image;
         }
         return item;
       });
-      return slides.filter((item) => item.exibe_slide === 1);
+      return slides.filter((item) => item.show_slide === 1);
     },
     text: function () {
       if (!this.slides || !this.slides[this.media.slide]) {
         return "";
       }
       return (
-        this.slides[this.media.slide].letra ||
-        this.slides[this.media.slide].titulo
+        this.slides[this.media.slide].lyric ||
+        this.slides[this.media.slide].name
       );
     },
     file_music: function () {
@@ -253,13 +253,13 @@ export default {
         return undefined;
       }
       return this.$root.dir(
-        `${this.path.files}/musicas/${this.media.music.pasta}/${this.media.file}`
+        `${this.media.music.url_music}${this.path.files}/${this.media.music.folder}/${this.media.file}`
       );
     },
     style_bg: function () {
       if (this.media.show && this.slide) {
         let backgroundImage = this.$root.dir(
-          `${this.path.files}/imagens/${this.slide.imagem}`
+          `${this.media.music.url_images}${this.path.files}/${this.slide.image}`
         );
         return Object.assign({
           backgroundSize: "cover",
@@ -279,11 +279,11 @@ export default {
         return {};
       }
     },
-    obj_musica: function () {
+    obj_music: function () {
       return {
         id_musica: this.media.id_musica,
         album: this.media.album,
-        faixa: this.media.faixa,
+        track: this.media.track,
       };
     },
   },

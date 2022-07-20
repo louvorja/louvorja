@@ -6,10 +6,10 @@
         v-model="search"
         label="Digite o nome ou número do hino"
         append-icon="mdi-magnify"
-        :error="!loading && hinos.length > 0 && pagination.itemsLength === 0"
+        :error="!loading && musics.length > 0 && pagination.itemsLength === 0"
       />
     </div>
-    <div v-if="!loading && hinos.length <= 0">
+    <div v-if="!loading && musics.length <= 0">
       <v-alert
         border="bottom"
         colored-border
@@ -36,7 +36,7 @@
     >
       <v-data-table
         :headers="fields"
-        :items="hinos"
+        :items="musics"
         :items-per-page="items_page"
         :search="search"
         :custom-filter="filterPerfectMatch"
@@ -70,7 +70,7 @@ export default {
     return {
       search: null,
       loading: true,
-      hinos: [],
+      musics: [],
       fields: [
         {
           text: "Número",
@@ -147,7 +147,7 @@ export default {
       let data = await this.$root.getData("hymnal", {
         params: { limit: -1 },
       });
-      this.hinos = data;
+      this.musics = data;
       this.loading = false;
       const self = this;
       setTimeout(function () {
