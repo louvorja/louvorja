@@ -3,6 +3,7 @@ module.exports = {
   data() {
     return {
       desktop: typeof desktop !== "undefined" ? desktop : false,
+      debug: window.location.hostname == "localhost",
       config_web: null,
 
       path: { base: "", files: "" },

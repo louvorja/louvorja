@@ -20,6 +20,7 @@
         </v-app-bar-nav-icon>
 
         <v-toolbar-title class="ml-5">LouvorJA</v-toolbar-title>
+        <v-toolbar-title v-if="debug" class="ml-5">[ DEBUG ]</v-toolbar-title>
 
         <v-spacer></v-spacer>
 
@@ -197,6 +198,9 @@ export default {
       return this.$root.openpages.map((item) => {
         return item.name;
       });
+    },
+    debug: function () {
+      return this.$root.debug;
     },
   },
   components: {

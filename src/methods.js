@@ -1,4 +1,9 @@
 export default {
+    console(){
+        if (this.debug){
+            console.log(">>",Array.from(arguments))
+        }
+    },
     dir: function (dir) {
         if (this.desktop) {
             dir = dir.replaceAll("/", "\\");
@@ -14,7 +19,7 @@ export default {
         if (this.desktop) {
             // SE FOR APLICAÇÃO DESKTOP, SALVA AS CONFIGURAÇÕES NA MAQUINA DO USUARIO
             ipcRenderer.send('save_data', this.data);
-            console.log("salvando");
+            this.console("salvando");
         }
 
         // SEMPRE SALVA AS CONFIGURAÇÕES TBM EM LOCALSTORAGE
@@ -89,7 +94,7 @@ export default {
             params = `?${this.encodeDataToURL(options.params)}`;
         }
         url = `${baseurl}/pt/${url}${params}`
-        console.log('getApiData', url, options)
+        this.console('getApiData', url, options)
         let response = await fetch(url,
             {
                 method: 'get',
@@ -99,7 +104,7 @@ export default {
             }
         ).catch(err => {
             this.msgAlert("erro", "Erro ao estabelecer conexão com o servidor!")
-            console.log('%c' + err, 'color:red')
+            this.console('%c' + err, 'color:red')
             return false;
         });
         if (response.ok) {
@@ -108,7 +113,7 @@ export default {
                 this.msgAlert("erro", "Erro ao obter dados do servidor: " + data.error)
                 return false;
             }
-            //console.log('getApiData', data.data);
+            //this.console('getApiData', data.data);
             return data.data;
         } else {
             let data = await response.json();
@@ -122,7 +127,7 @@ export default {
         //this.progress.value = -1;
         //this.progress.show = true;
         var url = `http://localhost:${this.$root.db_port}/${url}`;
-        console.log('getDBData', url)
+        this.console('getDBData', url)
         let response = await fetch(url,
             {
                 method: 'post',
@@ -132,7 +137,7 @@ export default {
             }
         ).catch(err => {
             this.msgAlert("erro", "Erro ao estabelecer conexão com o banco de dados!")
-            console.log('%c' + err, 'color:red')
+            this.console('%c' + err, 'color:red')
             return false;
         });
         //this.progress.show = false;
@@ -142,7 +147,7 @@ export default {
                 this.msgAlert("erro", "Erro ao obter dados do banco de dados: " + data.erro)
                 return false;
             }
-            console.log('getDBData', data);
+            this.console('getDBData', data);
             return data;
         } else {
             return false;
@@ -150,7 +155,7 @@ export default {
     },
     sendDBData: async function (u, data) {
         var url = `http://localhost:${this.$root.db_port}/${u}`;
-        console.log('sendDBData', url)
+        this.console('sendDBData', url)
         let response = await fetch(url,
             {
                 method: 'post',
@@ -160,7 +165,7 @@ export default {
             }
         ).catch(err => {
             this.msgAlert("erro", "Erro ao estabelecer conexão com o banco de dados!")
-            console.log('%c' + err, 'color:red')
+            this.console('%c' + err, 'color:red')
             return false;
         });
         if (response.ok) {
@@ -169,14 +174,14 @@ export default {
                 this.msgAlert("erro", "Erro ao inserir dados no banco de dados: " + data.error)
                 return false;
             }
-            console.log('sendDBData', data);
+            this.console('sendDBData', data);
             return data;
         } else {
             return false;
         }
     },
     downloadDB: async function (filtros) {
-        console.log("Rotina de Download do Banco de Dados")
+        this.console("Rotina de Download do Banco de Dados")
         this.progress.text = 'Baixando dados do servidor...';
         this.progress.value = -1;
         this.progress.show = true;
@@ -190,10 +195,10 @@ export default {
                     let filtro = filtros || Object.assign({}, this.data.downloads.baixados, { datahora: self.data.db[item] });
                     // SOLICITA DADOS DA WEB
                     var urlapi = db.url || item;
-                    console.log("%cDownload banco de dados", "color:orange")
-                    console.log("DB", item, self.data.db[item], db)
-                    console.log('URL', urlapi)
-                    console.log('FILTROS', filtro)
+                    this.console("%cDownload banco de dados", "color:orange")
+                    this.console("DB", item, self.data.db[item], db)
+                    this.console('URL', urlapi)
+                    this.console('FILTROS', filtro)
 
                     let data = await self.getApiData(urlapi, db.get_param, filtro);
                     if (data.sql !== undefined) {
@@ -204,22 +209,22 @@ export default {
                         var t_data = data;
                     }
                     let sql_arr = t_data.split(';');
-                    //console.log('Lista SQL',sql_arr);
+                    //this.console('Lista SQL',sql_arr);
                     for (var indx in sql_arr) {
                         var sql = sql_arr[indx];
                         let ret = await this.sendDBData(t_url, sql);
                         if (ret == false) {
                             this.progress.show = false;
-                            console.log('%c' + sql, 'color:yellow');
+                            this.console('%c' + sql, 'color:yellow');
                             return;
                         }
                     }
                     self.data.db[item] = db.versao;
                     self.save_data = true;
 
-                    console.log("%cFim download do banco de dados", "color:orange")
+                    this.console("%cFim download do banco de dados", "color:orange")
                 } else {
-                    console.log("DB Não processado ", item)
+                    this.console("DB Não processado ", item)
                 }
             }
         }
@@ -228,28 +233,28 @@ export default {
     },
     checkDownloads: async function () {
         if (this.progress.show) {
-            console.log('%cFila de Downloads ocupada!', 'color:red')
+            this.console('%cFila de Downloads ocupada!', 'color:red')
             return false;
         }
-        console.log('%cVerificando Downloads na fila', 'color:blue')
-        console.log('%cFila de dowloads', 'color:green', this.baixar)
+        this.console('%cVerificando Downloads na fila', 'color:blue')
+        this.console('%cFila de dowloads', 'color:green', this.baixar)
 
         let baixar = [];
         if (this.baixar.albuns.length > 0) {
             baixar = { albuns: [this.baixar.albuns[0]] };
-            console.log('Processando fila', baixar, this.baixar)
+            this.console('Processando fila', baixar, this.baixar)
             await this.downloadDB(baixar)
 
             this.data.downloads.baixados.albuns.push(this.baixar.albuns[0]);
-            console.log('%cFila processada - checa se fila possui novos dados', 'color:blue')
+            this.console('%cFila processada - checa se fila possui novos dados', 'color:blue')
             this.checkDownloads();
             return;
         }
 
-        console.log('%cFila processada', 'color:blue')
+        this.console('%cFila processada', 'color:blue')
     },
     msgAlert: function (type, msg) {
-        console.log('%cErro do Sistema: ' + type + ' - ' + msg, 'color:red');
+        this.console('%cErro do Sistema: ' + type + ' - ' + msg, 'color:red');
         if (this.alert.show && this.alert.type === type) {
             if (typeof this.alert.text === 'string') {
                 this.alert.text = [this.alert.text];
@@ -304,9 +309,9 @@ export default {
         if (this.$root.media.audio == 1) {
             this.$root.media.file = data.url_music;
             data.lyric.map(item => { item.time = this.toSeconds(item.time) || 0 });
-            console.log(data.lyric);
+            this.console(data.lyric);
         } else if (this.$root.media.audio == 2) {
-            console.log(data);
+            this.console(data);
             this.$root.media.file = data.url_instrumental_music;
             data.lyric.map(item => { item.time = this.toSeconds(item.instrumental_time) || this.toSeconds(item.time) || 0 });
         } else {
@@ -362,7 +367,7 @@ export default {
     },
     openLyricMusic: async function (obj) {
         let id_music = obj;
-        console.log(obj);
+        this.console(obj);
         this.$root.lyric.album = '';
         this.$root.lyric.track = 0;
         if (typeof (obj) === "object") {
