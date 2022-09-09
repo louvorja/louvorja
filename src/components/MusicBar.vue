@@ -8,7 +8,7 @@
           :color="$root.data.layout.color"
           v-on="on"
           @click="$root.openMusic($attrs, { audio: 1 })"
-          :disabled="!$attrs.file"
+          :disabled="!$attrs.url_music"
         >
           <v-icon>mdi-play-box-multiple</v-icon>
         </v-btn>
@@ -22,7 +22,7 @@
           :color="$root.data.layout.color"
           v-on="on"
           @click="$root.openMusic($attrs, { audio: 2 })"
-          :disabled="!$attrs.instrumental_file"
+          :disabled="!$attrs.url_instrumental_music"
         >
           <v-icon>mdi-play-box-multiple-outline</v-icon>
         </v-btn>
@@ -49,7 +49,7 @@
           :color="$root.data.layout.color"
           v-on="on"
           @click="$root.openPlayer($attrs, { audio: 1 })"
-          :disabled="!$attrs.file"
+          :disabled="!$attrs.url_music"
         >
           <v-icon>mdi-file-music</v-icon>
         </v-btn>
@@ -63,7 +63,7 @@
           :color="$root.data.layout.color"
           v-on="on"
           @click="$root.openPlayer($attrs, { audio: 2 })"
-          :disabled="!$attrs.instrumental_file"
+          :disabled="!$attrs.url_instrumental_music"
         >
           <v-icon>mdi-file-music-outline</v-icon>
         </v-btn>

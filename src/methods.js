@@ -302,11 +302,12 @@ export default {
         this.$root.media.id_music = id_music;
         let data = await this.$root.getData(`music/${id_music}`);
         if (this.$root.media.audio == 1) {
-            this.$root.media.file = data.file;
+            this.$root.media.file = data.url_music;
             data.lyric.map(item => { item.time = this.toSeconds(item.time) || 0 });
             console.log(data.lyric);
         } else if (this.$root.media.audio == 2) {
-            this.$root.media.file = data.instrumental_file;
+            console.log(data);
+            this.$root.media.file = data.url_instrumental_music;
             data.lyric.map(item => { item.time = this.toSeconds(item.instrumental_time) || this.toSeconds(item.time) || 0 });
         } else {
             this.$root.media.file = "";
@@ -345,9 +346,9 @@ export default {
         this.$root.player.id_music = id_music;
         let data = await this.$root.getData(`music/${id_music}`);
         if (this.$root.player.audio == 1) {
-            this.$root.player.file = data.file;
+            this.$root.player.file = data.url_music;
         } else if (this.$root.player.audio == 2) {
-            this.$root.player.file = data.instrumental_file;
+            this.$root.player.file = data.url_instrumental_music;
         } else {
             this.$root.player.file = "";
         }

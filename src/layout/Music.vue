@@ -10,7 +10,7 @@
                 <v-list-item-subtitle v-if="!media.loading">
                   <span v-if="media.album">{{ media.album }}</span>
                   <span v-if="media.audio == 2"> | PB</span>
-                  <span v-if="media.track"> | track {{ media.track }}</span>
+                  <span v-if="media.track"> | faixa {{ media.track }}</span>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-btn icon @click.stop="close()">
@@ -137,7 +137,7 @@
                 <v-list-item @click="$root.openMusic(obj_music, { audio: 0 })">
                   Sem áudio
                 </v-list-item>
-                <v-list-item @click="$root.openLetterMusic(obj_music)">
+                <v-list-item @click="$root.openLyricMusic(obj_music)">
                   Letra
                 </v-list-item>
               </v-list>
@@ -252,15 +252,11 @@ export default {
       ) {
         return undefined;
       }
-      return this.$root.dir(
-        `${this.media.music.url_music}${this.path.files}/${this.media.music.folder}/${this.media.file}`
-      );
+      return this.media.file;
     },
     style_bg: function () {
       if (this.media.show && this.slide) {
-        let backgroundImage = this.$root.dir(
-          `${this.media.music.url_images}${this.path.files}/${this.slide.image}`
-        );
+        let backgroundImage = this.slide.url_image;
         return Object.assign({
           backgroundSize: "cover",
           backgroundImage: `url(${backgroundImage})`,
@@ -281,7 +277,7 @@ export default {
     },
     obj_music: function () {
       return {
-        id_musica: this.media.id_musica,
+        id_music: this.media.id_music,
         album: this.media.album,
         track: this.media.track,
       };

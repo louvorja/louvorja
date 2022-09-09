@@ -1,3 +1,3 @@
 <template>
-  <div>CONFIG PART</div>
+  <div>Em construção</div>
 </template>

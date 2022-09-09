@@ -1,5 +1,5 @@
 <template>
   <footer class="bg-secondary">
-      fOOTER
+      Versão: 1.0.0
   </footer>
 </template>

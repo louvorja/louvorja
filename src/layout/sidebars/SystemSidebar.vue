@@ -63,6 +63,7 @@ export default {
           icon: "mdi-access-point",
           //content: "server",
           component: "themes",
+          desktop: true,
         },
         {
           tab: "Loja",

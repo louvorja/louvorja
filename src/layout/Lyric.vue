@@ -5,7 +5,7 @@
         <div class="flex-grow-0">
           <v-card-title>
             <v-skeleton-loader v-if="lyric.loading" width="100%" type="heading"></v-skeleton-loader>
-            <span v-else>{{lyric.music.titulo}}</span>
+            <span v-else>{{lyric.music.name}}</span>
           </v-card-title>
           <v-card-subtitle v-if="!lyric.loading && lyric.album">
             <span>{{lyric.album}}</span>

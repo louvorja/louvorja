@@ -152,9 +152,7 @@ export default {
       if (this.player.file == "" || this.player.file == undefined) {
         return undefined;
       }
-      return this.$root.dir(
-        `${this.player.music.url_music}${this.path.files}/${this.player.music.folder}/${this.player.file}`
-      );
+      return this.player.file;
     },
     obj_music: function () {
       return {
@@ -181,7 +179,9 @@ export default {
       this.goTo(0);
     },
     goTo: function (time) {
+      console.log(this.el.currentTime,time)
       this.el.currentTime = time;
+      console.log(this.el.currentTime,time)
     },
     close: function (time) {
       if (this.el.duration > 0) {

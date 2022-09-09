@@ -151,7 +151,7 @@ export default {
           tab: "Bíblia",
           content: [[{ type: "button", route: "bible" }]],
         },
-        {
+        /*{
           tab: "Utilitários",
           content: [
             [
@@ -175,7 +175,7 @@ export default {
           tab: "Localizar Músicas",
           visible: "find-music",
           component: "findmusic",
-        },
+        },*/
       ],
     };
   },
