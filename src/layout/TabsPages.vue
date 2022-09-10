@@ -24,7 +24,7 @@
           "
         >
           <ico :src="pg.icon" size="16" />
-          <span class="ml-2 mr-2">{{ pg.title }}</span>
+          <span class="ml-2 mr-2">{{ $t(pg.name) }}</span>
           <span v-if="tabs_dot.indexOf(pg.name) >= 0">
             <v-badge dot color="red"></v-badge>
           </span>
@@ -76,9 +76,8 @@ export default {
     closeTab: function (page) {
       if (this.tabs_dot.indexOf(page) >= 0) {
         this.dialog.show = true;
-        this.dialog.title = "Tarefa em andamento";
-        this.dialog.text =
-          "Existe uma tarefa em andamento nesta aba! Encerre a tarefa primeiro.";
+        this.dialog.title = $t("task-in-progress");
+        this.dialog.text = $t("message.task-in-progress")+".";
         this.dialog.buttons = [{ text: "Ok", value: "ok" }];
         this.dialog.value = "";
         return;

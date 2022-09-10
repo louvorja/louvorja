@@ -1,0 +1,34 @@
+{
+    "app": {
+        "name": "Louvor JA"
+    },
+    "message": {
+        "task-in-progress": "Existe uma tarefa em andamento nesta aba! Encerre a tarefa primeiro",
+        "no-data-text": "Não há dados para serem exibidos",
+        "no-results-text": "Nenhum resultado encontrado",
+        "loading-text": "Carregando...",
+        "hymnal-not-downloaded": "O hinário não foi baixado em seu programa. Acesse a loja e faça o download do hinário!",
+        "musics-not-downloaded": "Nenhuma música foi baixada em seu programa. Acesse a loja e faça o download das músicas!"
+    },
+    "home": "Início",
+    "hymnal": "Hinário Adventista",
+    "find-musics": "Localizar Músicas",
+    "online-videos": "Vídeos On-line",
+    "bible": "Bíblia",
+    "liturgy": "Liturgia",
+    "scheduled-items": "Itens Agendados",
+    "stopwatch": "Cronômetro",
+    "clock": "Relógio",
+    "worship-timer": "Cronômetro de Culto",
+    "sweepstake": "Sorteio",
+    "slide-editor": "Editor",
+    "collections": "Coletâneas",
+    "online-collections": "Coletâneas On-line",
+    "utilities": "Utilitários",
+    "task-in-progress": "Tarefa em andamento",
+    "refresh-page": "Atualizar Página",
+    "access-store": "Acessar Loja",
+    "number": "Número",
+    "title": "Título",
+    "album": "Álbum"
+}

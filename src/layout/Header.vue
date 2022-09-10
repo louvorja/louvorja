@@ -19,7 +19,7 @@
         >
         </v-app-bar-nav-icon>
 
-        <v-toolbar-title class="ml-5">LouvorJA</v-toolbar-title>
+        <v-toolbar-title class="ml-5">{{ $t("app.name") }}</v-toolbar-title>
         <v-toolbar-title v-if="debug" class="ml-5">[ DEBUG ]</v-toolbar-title>
 
         <v-spacer></v-spacer>
@@ -65,7 +65,7 @@
           :class="item.visible ? 'active_header_tab' : ''"
           :data-id="index"
         >
-          {{ item.tab }}
+          {{ $t(item.tab) }}
         </v-tab>
       </v-tabs>
       <v-tabs-items
@@ -73,7 +73,7 @@
         :dark="$root.data.layout.dark"
         style="min-height: 72px"
       >
-        <v-tab-item v-for="(item,index) in items_tabs" :key="index">
+        <v-tab-item v-for="(item, index) in items_tabs" :key="index">
           <v-slide-group show-arrows>
             <keep-alive :include="tabs">
               <transition>
@@ -138,22 +138,22 @@ export default {
     return {
       items: [
         {
-          tab: "Coletâneas",
+          tab: "collections",
           content: [
             [{ type: "button", route: "hymnal" }],
-            [{ type: "button", route: "find-music" }],
+            [{ type: "button", route: "find-musics" }],
           ],
         },
         {
-          tab: "Coletâneas On-line",
+          tab: "online-collections",
           content: [[{ type: "button", route: "online-videos" }]],
         },
         {
-          tab: "Bíblia",
+          tab: "bible",
           content: [[{ type: "button", route: "bible" }]],
         },
         /*{
-          tab: "Utilitários",
+          tab: "utilities",
           content: [
             [
               { type: "button", route: "liturgy" },
@@ -168,13 +168,13 @@ export default {
           ],
         },
         {
-          tab: "Cronômetro",
+          tab: "stopwatch",
           visible: "stopwatch",
           component: "stopwatch",
         },
         {
-          tab: "Localizar Músicas",
-          visible: "find-music",
+          tab: "find-musics",
+          visible: "find-musics",
           component: "findmusic",
         },*/
       ],

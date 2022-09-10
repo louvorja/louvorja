@@ -17,13 +17,14 @@
         elevation="2"
         class="mx-4"
       >
-        O hinário não foi baixado em seu programa. Acesse a loja e faça o
-        download do hinário!
+        {{ $t("hymnal-not-downloaded") }}
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="warning" @click="loadData"> Atualizar Página </v-btn>
+          <v-btn color="warning" @click="loadData">
+            {{ $t("refresh-page") }}
+          </v-btn>
           <v-btn color="info" @click="$root.$data.store.show = true">
-            Acessar Loja
+            {{ $t("access-store") }}
           </v-btn>
         </v-card-actions>
       </v-alert>
@@ -42,15 +43,15 @@
         :custom-filter="filterPerfectMatch"
         :loading="loading"
         :disable-pagination="false"
-        no-data-text="Não há dados para serem exibidos"
-        no-results-text="Nenhum resultado encontrado"
-        loading-text="Carregando..."
+        :no-data-text="$t('message.no-data-text')"
+        :no-results-text="$t('message.no-results-text')"
+        :loading-text="$t('message.loading-text')"
         dense
         @pagination="pagination = $event"
       >
         <template v-slot:[`item.options`]="{ item }">
           <music-bar
-            v-bind="{ ...item, album: 'Hinário Adventista' }"
+            v-bind="{ ...item, album: $t('hymnal') }"
             v-if="true"
           />
         </template>
@@ -73,11 +74,11 @@ export default {
       musics: [],
       fields: [
         {
-          text: "Número",
+          text: this.$t('number'),
           value: "track",
           align: "end",
         },
-        { text: "Titulo", value: "name" },
+        { text: this.$t('title'), value: "name" },
         { text: "", value: "options" },
       ],
       items_page: 10,

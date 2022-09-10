@@ -17,13 +17,14 @@
         elevation="2"
         class="mx-4"
       >
-        Nenhuma música foi baixada em seu programa. Acesse a loja e faça o
-        download das músicas!
+        {{ $t("musics-not-downloaded") }}
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="warning" @click="loadData"> Atualizar Página </v-btn>
+          <v-btn color="warning" @click="loadData">
+            {{ $t("refresh-page") }}
+          </v-btn>
           <v-btn color="info" @click="$root.$data.store.show = true">
-            Acessar Loja
+            {{ $t("access-store") }}
           </v-btn>
         </v-card-actions>
       </v-alert>
@@ -42,9 +43,9 @@
         :custom-filter="filterPerfectMatch"
         :loading="loading"
         :disable-pagination="false"
-        no-data-text="Não há dados para serem exibidos"
-        no-results-text="Nenhum resultado encontrado"
-        loading-text="Carregando..."
+        :no-data-text="$t('message.no-data-text')"
+        :no-results-text="$t('message.no-results-text')"
+        :loading-text="$t('message.loading-text')"
         dense
         @pagination="pagination = $event"
       >
@@ -82,8 +83,8 @@ export default {
       loading: true,
       musics: [],
       fields: [
-        { text: "Titulo", value: "name" },
-        { text: "Álbuns", value: "albums" },
+        { text: this.$t('title'), value: "name" },
+        { text: this.$t('album'), value: "albums" },
         { text: "", value: "options" },
       ],
       items_page: 10,

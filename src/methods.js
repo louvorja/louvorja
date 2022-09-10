@@ -1,8 +1,13 @@
 export default {
-    console(){
-        if (this.debug){
-            console.log(">>",Array.from(arguments))
+    console() {
+        if (this.debug) {
+            console.log(">>", ...Array.from(arguments))
         }
+    },
+    changeLocale: function (lang) {
+        this.$i18n.locale = lang;
+        this.data.lang = lang;
+        this.console("idioma selecionado",lang);
     },
     dir: function (dir) {
         if (this.desktop) {
@@ -270,9 +275,9 @@ export default {
     },
 
     toSeconds: function (hms) {
-        if (hms == undefined){
+        if (hms == undefined) {
             return 0;
-        }else{
+        } else {
             let a = hms.split(":");
             return +a[0] * 60 * 60 + +a[1] * 60 + +a[2];
         }

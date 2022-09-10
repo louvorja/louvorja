@@ -54,6 +54,7 @@ module.exports = {
 
       data: {
         db: {port: 7770},
+        lang: "pt",
         downloads: {
           albuns: [],
           musicas: [],

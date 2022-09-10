@@ -12,6 +12,8 @@ Vue.use(JSONView);
 
 import './assets/dist/css/custom.css';
 
+import i18n from './i18n'
+
 
 import computed from './computed';
 import methods from './methods';
@@ -20,6 +22,7 @@ import watch from './watch';
 Vue.config.productionTip = false
 
 new Vue({
+  i18n,
   router,
   vuetify,
   render: function (h) { return h(App) },
@@ -137,6 +140,9 @@ new Vue({
       }
 
     }
+
+    // CARREGA IDIOMA
+    this.changeLocale(self.data.lang);
 
     //SALVAR CONFIG
     setInterval(function () {
