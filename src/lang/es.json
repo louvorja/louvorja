@@ -1,6 +1,53 @@
 {
-    "hello": "ESES World",
+    "app": {
+        "name": "Loor JA"
+    },
     "message": {
-        "hello": "BBBBBB"
-    }
+        "task-in-progress": "¡Hay una tarea en progreso en esta pestaña! Cerrar la tarea primero",
+        "no-data-text": "No hay datos para mostrar",
+        "no-results-text": "Ningún resultado encontrado",
+        "loading-text": "Cargando...",
+        "hymnal-not-downloaded": "El himnario no se descargó en su programa. ¡Ve a la tienda y descarga el himnario!",
+        "musics-not-downloaded": "No se han descargado canciones en su programa. ¡Ve a la tienda y descarga las canciones!",
+        "label-hymn-name-or-number": "Ingrese el nombre o número del himno",
+        "label-song-name": "Introduce el nombre de la canción"
+    },
+    "initials":{
+        "sung": "CA",
+        "instrumental": "PB",
+        "without-audio": "SA"
+    },
+    "home": "Comienzo",
+    "hymnal": "Himnario Adventista",
+    "find-musics": "Encontrar Canciones",
+    "online-videos": "Vídeos En-línea",
+    "bible": "Biblia",
+    "liturgy": "Liturgia",
+    "scheduled-items": "Elementos Programados",
+    "stopwatch": "Cronógrafo",
+    "clock": "Reloj",
+    "worship-timer": "Temporizador de Adoración",
+    "sweepstake": "Sorteo",
+    "slide-editor": "Editor",
+    "collections": "Colecciones",
+    "online-collections": "Colecciones En-Llínea",
+    "utilities": "Utilidades",
+    "task-in-progress": "Tarea en progreso",
+    "refresh-page": "Actualizar Página",
+    "access-store": "Tienda de Acceso",
+    "number": "Número",
+    "title": "Título",
+    "album": "Álbum",
+    "slide":"Slide",
+    "instrumental-slide": "Slide Playback",
+    "instrumental": "Playback",
+    "sung": "Cantado",
+    "slide-without-audio": "Slide sin Audio",
+    "without-audio": "Sin Audio",
+    "listen-to-music": "Oír Música",
+    "listen-to-instrumental-music": "Oír Música Playback",
+    "lyrics": "Letra de musica",
+    "version": "Versión",
+    "track": "Rango",
+    "close": "Cerca"
 }

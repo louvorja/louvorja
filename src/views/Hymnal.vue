@@ -4,7 +4,7 @@
       <l-input
         type="text"
         v-model="search"
-        label="Digite o nome ou número do hino"
+        :label="$t('message.label-hymn-name-or-number')"
         append-icon="mdi-magnify"
         :error="!loading && musics.length > 0 && pagination.itemsLength === 0"
       />

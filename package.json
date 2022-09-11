@@ -24,6 +24,7 @@
     "sqlite3": "^5.0.3",
     "vue": "^2.6.14",
     "vue-axios": "^3.4.1",
+    "vue-flag-icon": "^2.1.0",
     "vue-i18n": "^8.27.2",
     "vue-json-component": "^0.4.1",
     "vue-router": "^3.5.1",

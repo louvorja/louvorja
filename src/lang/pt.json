@@ -8,7 +8,9 @@
         "no-results-text": "Nenhum resultado encontrado",
         "loading-text": "Carregando...",
         "hymnal-not-downloaded": "O hinário não foi baixado em seu programa. Acesse a loja e faça o download do hinário!",
-        "musics-not-downloaded": "Nenhuma música foi baixada em seu programa. Acesse a loja e faça o download das músicas!"
+        "musics-not-downloaded": "Nenhuma música foi baixada em seu programa. Acesse a loja e faça o download das músicas!",
+        "label-hymn-name-or-number": "Digite o nome ou número do hino",
+        "label-song-name": "Digite o nome da música"
     },
     "initials":{
         "sung": "CA",

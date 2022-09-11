@@ -7,7 +7,14 @@ export default {
     changeLocale: function (lang) {
         this.$i18n.locale = lang;
         this.data.lang = lang;
-        this.console("idioma selecionado",lang);
+        this.console("idioma selecionado", lang);
+    },
+    flag: function (lang) {
+        if (lang === "pt") {
+            return "br";
+        } else {
+            return lang;
+        }
     },
     dir: function (dir) {
         if (this.desktop) {
@@ -98,7 +105,7 @@ export default {
         if (options.params) {
             params = `?${this.encodeDataToURL(options.params)}`;
         }
-        url = `${baseurl}/pt/${url}${params}`
+        url = `${baseurl}/${this.data.lang}/${url}${params}`
         this.console('getApiData', url, options)
         let response = await fetch(url,
             {

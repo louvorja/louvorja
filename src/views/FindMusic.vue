@@ -4,7 +4,7 @@
       <l-input
         type="text"
         v-model="search"
-        label="Digite o nome da música"
+        :label="$t('message.label-song-name')"
         append-icon="mdi-magnify"
         :error="!loading && musics.length > 0 && pagination.itemsLength === 0"
       />

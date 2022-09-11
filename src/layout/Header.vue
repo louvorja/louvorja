@@ -24,6 +24,27 @@
 
         <v-spacer></v-spacer>
 
+        <div class="text-center">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon dark v-bind="attrs" v-on="on">
+                <flag :iso="$root.flag(lang)" />
+                {{ lang }}
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click="$root.changeLocale('pt')">
+                <v-list-item-icon><flag iso="br" /></v-list-item-icon>
+                <v-list-item-title>Português</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="$root.changeLocale('es')">
+                <v-list-item-icon><flag iso="es" /></v-list-item-icon>
+                <v-list-item-title>Espanhol</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
+
         <v-btn icon to="/"><v-icon>mdi-home-circle-outline</v-icon></v-btn>
         <v-btn icon><v-icon>mdi-magnify</v-icon></v-btn>
 
@@ -201,6 +222,9 @@ export default {
     },
     debug: function () {
       return this.$root.debug;
+    },
+    lang: function () {
+      return this.$root.data.lang;
     },
   },
   components: {

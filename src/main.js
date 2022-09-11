@@ -14,6 +14,8 @@ import './assets/dist/css/custom.css';
 
 import i18n from './i18n'
 
+import FlagIcon from 'vue-flag-icon'
+Vue.use(FlagIcon);
 
 import computed from './computed';
 import methods from './methods';
