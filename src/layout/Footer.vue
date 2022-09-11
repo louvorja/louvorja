@@ -1,5 +1,5 @@
 <template>
   <footer class="bg-secondary">
-      {{$t("version")}}: 1.0.0
+      {{$t("version")}}: 22.9.1
   </footer>
 </template>
