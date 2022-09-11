@@ -13,7 +13,7 @@
           <v-icon>mdi-play-box-multiple</v-icon>
         </v-btn>
       </template>
-      <span>Slide</span>
+      <span>{{$t("slide")}}</span>
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
@@ -27,7 +27,7 @@
           <v-icon>mdi-play-box-multiple-outline</v-icon>
         </v-btn>
       </template>
-      <span>Slide Playback</span>
+      <span>{{$t("instrumental-slide")}}</span>
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
@@ -40,7 +40,7 @@
           <v-icon>mdi-checkbox-multiple-blank-outline</v-icon>
         </v-btn>
       </template>
-      <span>Slide Sem Áudio</span>
+      <span>{{$t("slide-without-audio")}}</span>
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
@@ -54,7 +54,7 @@
           <v-icon>mdi-file-music</v-icon>
         </v-btn>
       </template>
-      <span>Ouvir Música</span>
+      <span>{{$t("listen-to-music")}}</span>
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
@@ -68,7 +68,7 @@
           <v-icon>mdi-file-music-outline</v-icon>
         </v-btn>
       </template>
-      <span>Ouvir Playback</span>
+      <span>{{$t("listen-to-instrumental-music")}}</span>
     </v-tooltip>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
@@ -81,7 +81,7 @@
           <v-icon>mdi-text-box-outline</v-icon>
         </v-btn>
       </template>
-      <span>Letra da Música</span>
+      <span>{{$t("lyrics")}}</span>
     </v-tooltip>
     <!--
     <v-tooltip bottom>

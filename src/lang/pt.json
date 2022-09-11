@@ -10,6 +10,11 @@
         "hymnal-not-downloaded": "O hinário não foi baixado em seu programa. Acesse a loja e faça o download do hinário!",
         "musics-not-downloaded": "Nenhuma música foi baixada em seu programa. Acesse a loja e faça o download das músicas!"
     },
+    "initials":{
+        "sung": "CA",
+        "instrumental": "PB",
+        "without-audio": "SA"
+    },
     "home": "Início",
     "hymnal": "Hinário Adventista",
     "find-musics": "Localizar Músicas",
@@ -30,5 +35,17 @@
     "access-store": "Acessar Loja",
     "number": "Número",
     "title": "Título",
-    "album": "Álbum"
+    "album": "Álbum",
+    "slide":"Slide",
+    "instrumental-slide": "Slide Playback",
+    "instrumental": "Playback",
+    "sung": "Cantado",
+    "slide-without-audio": "Slide sem Áudio",
+    "without-audio": "Sem Áudio",
+    "listen-to-music": "Ouvir Música",
+    "listen-to-instrumental-music": "Ouvir Música Playback",
+    "lyrics": "Letra da Música",
+    "version": "Versão",
+    "track": "Faixa",
+    "close": "Fechar"
 }

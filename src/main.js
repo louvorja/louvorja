@@ -41,7 +41,7 @@ new Vue({
     if (this.desktop) {
 
       // É UMA APLICAÇÃO DESKTOP - INICIA COMUNICAÇÃO COM A MÁQUINA
-      console.log("Aplicação DESKTOP")
+      this.console("Aplicação DESKTOP")
 
       ipcRenderer.on('displays', function (event, data) {
         self.displays = data;
@@ -66,14 +66,14 @@ new Vue({
       ipcRenderer.on('data', function (event, data) {
         deepAssign(self.data, data)
         self.db_port = self.data.db.port;
-        console.log('Obteve dados locais. Inicia conexão com o banco de dados')
+        this.console('Obteve dados locais. Inicia conexão com o banco de dados')
         ipcRenderer.send('start_db', self.data.db.port);
       });
 
       ipcRenderer.on('start_db', function (event, status, port, message) {
         self.db_port = port;
         if (status == "true" || status == true) {
-          console.log('Conectou ao Banco de Dados. Obtém dados da web')
+          this.console('Conectou ao Banco de Dados. Obtém dados da web')
           ipcRenderer.send('config_web');
         } else {
           self.dialog.show = true;
@@ -87,7 +87,7 @@ new Vue({
 
       ipcRenderer.on('save_data', function (event) {
         self.save_data = false;
-        console.log('Dados salvos!')
+        this.console('Dados salvos!')
       });
 
       ipcRenderer.on('config_web', async function (event, data) {
@@ -103,9 +103,9 @@ new Vue({
             ipcRenderer.send('save_json', 'config', d, 'filedir');
 
             //inicia o processo de download e atualização do banco de dados
-            console.log('%cAtualizando Banco de Dados', 'color:blue')
+            this.console('%cAtualizando Banco de Dados', 'color:blue')
             await self.downloadDB();
-            console.log('%cBanco de Dados atualizado!', 'color:blue')
+            this.console('%cBanco de Dados atualizado!', 'color:blue')
           }
           await self.checkDownloads();
         }
@@ -114,7 +114,7 @@ new Vue({
         /*self.getApiData('config', function (d) {
           self.config_web = d;
           ipcRenderer.send('save_json', 'config', d, 'filedir');
-          console.log("rotina de downloadddd")
+          this.console("rotina de downloadddd")
           self.downloadDB();
         });*/
       });
@@ -125,12 +125,12 @@ new Vue({
     } else {
 
       // NÃO É UMA APLICAÇÃO DESKTOP
-      console.log("Não é aplicação DESKTOP")
+      this.console("Não é aplicação DESKTOP")
 
       if (localStorage.data !== undefined) {
         var c = JSON.parse(localStorage.data);
         if (c !== '' && c !== null && c !== undefined) {
-          console.log("JSON", c)
+          this.console("JSON", c)
           deepAssign(this.data,c)
         } else {
           this.saveData();

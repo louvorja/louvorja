@@ -18,7 +18,9 @@
               <v-list-item-subtitle v-if="!player.loading">
                 <span v-if="player.album">{{ player.album }}</span>
                 <span v-if="player.audio == 2"> | PB</span>
-                <span v-if="player.track"> | faixa {{ player.track }}</span>
+                <span v-if="player.track" class="text-lowercase">
+                  | {{ $t("track") }} {{ player.track }}
+                </span>
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-btn icon @click.stop="close()">
@@ -80,52 +82,17 @@
           </v-btn>
 
           <v-spacer></v-spacer>
+          <list-change-music-type
+            :key="player.music.id_music"
+            type="player"
+            :audio="player.audio"
+            v-bind="player.music"
+            @sung="$root.openPlayer(obj_music, { audio: 1 })"
+            @instrumental="$root.openPlayer(obj_music, { audio: 2 })"
+            @lyrics="$root.openLyricMusic(obj_music)"
+          >
+          </list-change-music-type>
 
-          <v-menu offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                text
-                small
-                color="info"
-                v-bind="attrs"
-                v-on="on"
-                v-if="player.audio === 1"
-              >
-                CT
-              </v-btn>
-              <v-btn
-                text
-                small
-                color="success"
-                v-bind="attrs"
-                v-on="on"
-                v-else-if="player.audio === 2"
-              >
-                PB
-              </v-btn>
-              <v-btn text small color="error" v-bind="attrs" v-on="on" v-else>
-                SA
-              </v-btn>
-            </template>
-
-            <v-list>
-              <v-list-item
-                v-if="player.music.arquivo !== ''"
-                @click="$root.openPlayer(obj_music, { audio: 1 })"
-              >
-                Cantado
-              </v-list-item>
-              <v-list-item
-                v-if="player.music.arquivo_pb !== ''"
-                @click="$root.openPlayer(obj_music, { audio: 2 })"
-              >
-                Playback
-              </v-list-item>
-              <v-list-item @click="$root.openLyricMusic(obj_music)">
-                Letra
-              </v-list-item>
-            </v-list>
-          </v-menu>
           <span class="caption">
             {{ player.current_time | formatSecond }} /
             {{ player.duration | formatSecond }}
@@ -144,6 +111,9 @@ export default {
   data() {
     return { progress_slide: 0, ...this.$root.$data };
   },
+  components: {
+    ListChangeMusicType: () => import(`@/components/ListChangeMusicType`),
+  },
   computed: {
     el: function () {
       return document.getElementById("player-media");
@@ -155,11 +125,15 @@ export default {
       return this.player.file;
     },
     obj_music: function () {
-      return {
-        id_music: this.player.id_music,
-        album: this.player.album,
-        track: this.player.track,
-      };
+      if (this.player.show && this.player.file) {
+        return {
+          id_music: this.player.id_music,
+          album: this.player.album,
+          track: this.player.track,
+        };
+      } else {
+        return {};
+      }
     },
   },
   methods: {
@@ -179,9 +153,7 @@ export default {
       this.goTo(0);
     },
     goTo: function (time) {
-      console.log(this.el.currentTime,time)
       this.el.currentTime = time;
-      console.log(this.el.currentTime,time)
     },
     close: function (time) {
       if (this.el.duration > 0) {

@@ -10,7 +10,9 @@
                 <v-list-item-subtitle v-if="!media.loading">
                   <span v-if="media.album">{{ media.album }}</span>
                   <span v-if="media.audio == 2"> | PB</span>
-                  <span v-if="media.track"> | faixa {{ media.track }}</span>
+                  <span v-if="media.track" class="text-lowercase">
+                    | {{ $t("track") }} {{ media.track }}
+                  </span>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-btn icon @click.stop="close()">
@@ -94,54 +96,16 @@
               <v-icon>mdi-page-last</v-icon>
             </v-btn>
 
-            <v-menu offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  text
-                  small
-                  color="info"
-                  v-bind="attrs"
-                  v-on="on"
-                  v-if="media.audio === 1"
-                >
-                  CT
-                </v-btn>
-                <v-btn
-                  text
-                  small
-                  color="success"
-                  v-bind="attrs"
-                  v-on="on"
-                  v-else-if="media.audio === 2"
-                >
-                  PB
-                </v-btn>
-                <v-btn text small color="error" v-bind="attrs" v-on="on" v-else>
-                  SA
-                </v-btn>
-              </template>
-
-              <v-list>
-                <v-list-item
-                  v-if="media.music.arquivo !== ''"
-                  @click="$root.openMusic(obj_music, { audio: 1 })"
-                >
-                  Cantado
-                </v-list-item>
-                <v-list-item
-                  v-if="media.music.arquivo_pb !== ''"
-                  @click="$root.openMusic(obj_music, { audio: 2 })"
-                >
-                  Playback
-                </v-list-item>
-                <v-list-item @click="$root.openMusic(obj_music, { audio: 0 })">
-                  Sem áudio
-                </v-list-item>
-                <v-list-item @click="$root.openLyricMusic(obj_music)">
-                  Letra
-                </v-list-item>
-              </v-list>
-            </v-menu>
+            <list-change-music-type
+              :key="media.music.id_music"
+              :audio="media.audio"
+              v-bind="media.music"
+              @sung="$root.openMusic(obj_music, { audio: 1 })"
+              @instrumental="$root.openMusic(obj_music, { audio: 2 })"
+              @without-audio="$root.openMusic(obj_music, { audio: 0 })"
+              @lyrics="$root.openLyricMusic(obj_music)"
+            >
+            </list-change-music-type>
           </div>
 
           <div
@@ -206,6 +170,9 @@
 export default {
   data() {
     return { progress_slide: 0, ...this.$root.$data };
+  },
+  components: {
+    ListChangeMusicType: () => import(`@/components/ListChangeMusicType`),
   },
   computed: {
     el: function () {
@@ -276,11 +243,15 @@ export default {
       }
     },
     obj_music: function () {
-      return {
-        id_music: this.media.id_music,
-        album: this.media.album,
-        track: this.media.track,
-      };
+      if (this.media.show && this.slide) {
+        return {
+          id_music: this.media.id_music,
+          album: this.media.album,
+          track: this.media.track,
+        };
+      } else {
+        return {};
+      }
     },
   },
   methods: {

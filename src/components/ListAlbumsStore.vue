@@ -1,3 +1,6 @@
+<!--
+NECESSITA DE  REVISÃO.... NOMES DE VARIAVEIS E MULTI-LINGUAGEM
+-->
 <template>
   <v-layout wrap justify-space-around>
     <v-flex
