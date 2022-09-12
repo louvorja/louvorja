@@ -1,7 +1,11 @@
 <template>
   <v-expand-x-transition>
     <v-card v-show="media.show" style="border-radius: 0 !important">
-      <v-navigation-drawer :mini-variant.sync="data.media.mini" permanent>
+      <v-navigation-drawer
+        :mini-variant.sync="data.media.mini"
+        permanent
+        :width="280"
+      >
         <v-layout column fill-height>
           <div class="flex-grow-0">
             <v-list-item class="px-2">
@@ -30,83 +34,110 @@
             :autoplay="true"
           ></audio>
 
-          <div
-            style="height: 200px; min-height: 200px; max-height: 200px"
-            class="layout column"
-          >
-            <div
-              class="
-                slide-show
-                flex-grow-1
-                black
-                d-flex
-                align-center
-                justify-center
-              "
-              :style="style_bg"
+          <fullscreen v-model="fullscreen">
+            <screen
+              v-if="media.show && slide"
+              :fullscreen="fullscreen"
+              :index="slide_index"
+              :text="text"
+              :image="slide.url_image"
+              :height="200"
+              @move="moveFullscreen"
             >
-              <div
-                v-if="!media.loading && media.show && text"
-                class="slide-text text-center"
-                :style="style_txt"
+            </screen>
+
+            <div
+              :class="{
+                'player-fullscreen': fullscreen,
+                'show-player': fullscreen && show_fullscreen_player,
+              }"
+              @mousemove="moveFullscreen"
+            >
+              <v-progress-linear
+                v-if="media.file"
+                v-model="media.progress"
+                :indeterminate="media.loading"
+                :height="10"
+                :color="media.is_paused ? 'orange' : 'info'"
+                @change="changeProgress"
               >
-                <span class="white--text text-block">{{ text }}</span>
+              </v-progress-linear>
+
+              <div class="text-center">
+                <v-btn
+                  :disabled="media.loading"
+                  icon
+                  color="info"
+                  @click="first()"
+                >
+                  <v-icon>mdi-page-first</v-icon>
+                </v-btn>
+                <v-btn
+                  :disabled="media.loading"
+                  icon
+                  color="info"
+                  @click="prev()"
+                >
+                  <v-icon>mdi-chevron-left</v-icon>
+                </v-btn>
+                <v-btn
+                  :disabled="media.loading"
+                  icon
+                  color="info"
+                  @click="play()"
+                  v-if="media.is_paused && media.file !== ''"
+                >
+                  <v-icon>mdi-play</v-icon>
+                </v-btn>
+                <v-btn
+                  :disabled="media.loading"
+                  icon
+                  color="info"
+                  @click="pause()"
+                  v-if="!media.is_paused && media.file !== ''"
+                >
+                  <v-icon>mdi-pause</v-icon>
+                </v-btn>
+                <v-btn
+                  :disabled="media.loading"
+                  icon
+                  color="info"
+                  @click="next()"
+                >
+                  <v-icon>mdi-chevron-right</v-icon>
+                </v-btn>
+                <v-btn
+                  :disabled="media.loading"
+                  icon
+                  color="info"
+                  @click="last()"
+                >
+                  <v-icon>mdi-page-last</v-icon>
+                </v-btn>
+                <v-btn
+                  :disabled="media.loading"
+                  icon
+                  color="info"
+                  @click="toggleFullscreen()"
+                >
+                  <v-icon v-if="!fullscreen">mdi-fullscreen</v-icon>
+                  <v-icon v-else>mdi-fullscreen-exit</v-icon>
+                </v-btn>
+
+                <list-change-music-type
+                  v-if="!fullscreen"
+                  :key="media.music.id_music"
+                  :audio="media.audio"
+                  v-bind="media.music"
+                  @sung="$root.openMusic(obj_music, { audio: 1 })"
+                  @instrumental="$root.openMusic(obj_music, { audio: 2 })"
+                  @without-audio="$root.openMusic(obj_music, { audio: 0 })"
+                  @lyrics="$root.openLyricMusic(obj_music)"
+                >
+                </list-change-music-type>
               </div>
             </div>
-
-            <v-progress-linear
-              v-if="media.file"
-              v-model="media.progress"
-              :indeterminate="media.loading"
-              :height="10"
-              :color="media.is_paused ? 'orange' : 'info'"
-              @change="changeProgress"
-            ></v-progress-linear>
-          </div>
-
-          <div class="text-center">
-            <v-btn :disabled="media.loading" icon color="info" @click="first()">
-              <v-icon>mdi-page-first</v-icon>
-            </v-btn>
-            <v-btn :disabled="media.loading" icon color="info" @click="prev()">
-              <v-icon>mdi-chevron-left</v-icon>
-            </v-btn>
-            <v-btn
-              :disabled="media.loading"
-              icon
-              color="info"
-              @click="play()"
-              v-if="media.is_paused && media.file !== ''"
-            >
-              <v-icon>mdi-play</v-icon>
-            </v-btn>
-            <v-btn
-              :disabled="media.loading"
-              icon
-              color="info"
-              @click="pause()"
-              v-if="!media.is_paused && media.file !== ''"
-            >
-              <v-icon>mdi-pause</v-icon>
-            </v-btn>
-            <v-btn :disabled="media.loading" icon color="info" @click="next()">
-              <v-icon>mdi-chevron-right</v-icon>
-            </v-btn>
-            <v-btn :disabled="media.loading" icon color="info" @click="last()">
-              <v-icon>mdi-page-last</v-icon>
-            </v-btn>
-
-            <list-change-music-type
-              :key="media.music.id_music"
-              :audio="media.audio"
-              v-bind="media.music"
-              @sung="$root.openMusic(obj_music, { audio: 1 })"
-              @instrumental="$root.openMusic(obj_music, { audio: 2 })"
-              @without-audio="$root.openMusic(obj_music, { audio: 0 })"
-              @lyrics="$root.openLyricMusic(obj_music)"
-            >
-            </list-change-music-type>
-          </div>
+          </fullscreen>
 
           <div
             class="flex-grow-1"
@@ -169,10 +200,17 @@
 <script>
 export default {
   data() {
-    return { progress_slide: 0, ...this.$root.$data };
+    return {
+      progress_slide: 0,
+      fullscreen: false,
+      show_fullscreen_player: false,
+      interval: null,
+      ...this.$root.$data,
+    };
   },
   components: {
     ListChangeMusicType: () => import(`@/components/ListChangeMusicType`),
+    screen: () => import(`@/components/Screen`),
   },
   computed: {
     el: function () {
@@ -220,27 +258,6 @@ export default {
         return undefined;
       }
       return this.media.file;
-    },
-    style_bg: function () {
-      if (this.media.show && this.slide) {
-        let backgroundImage = this.slide.url_image;
-        return Object.assign({
-          backgroundSize: "cover",
-          backgroundImage: `url(${backgroundImage})`,
-        });
-      } else {
-        return {};
-      }
-    },
-    style_txt: function () {
-      if (this.media.show && this.slide) {
-        return Object.assign({
-          backgroundColor: "rgba(0, 0, 0, 0.75)",
-          fontSize: "20px",
-        });
-      } else {
-        return {};
-      }
     },
     obj_music: function () {
       if (this.media.show && this.slide) {
@@ -377,6 +394,23 @@ export default {
       let time = (this.media.duration * val) / 100;
       this.goTo(time);
     },
+
+    toggleFullscreen: function () {
+      this.fullscreen = !this.fullscreen;
+      this.show_fullscreen_player = true;
+    },
+    moveFullscreen() {
+      if (this.fullscreen) {
+        this.show_fullscreen_player = true;
+        if (this.interval) {
+          clearInterval(this.interval);
+        }
+        let self = this;
+        this.interval = setTimeout(function () {
+          self.show_fullscreen_player = false;
+        }, 3000);
+      }
+    },
   },
   mounted() {
     this.el.addEventListener("timeupdate", this.timeUpdate);
@@ -386,3 +420,18 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+.player-fullscreen {
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
+  background: #000000a8;
+  transition: opacity 0.3s linear;
+  opacity: 0;
+}
+.show-player {
+  opacity: 1;
+}
+</style>

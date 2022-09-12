@@ -17,6 +17,9 @@ import i18n from './i18n'
 import FlagIcon from 'vue-flag-icon'
 Vue.use(FlagIcon);
 
+import VueFullscreen from 'vue-fullscreen'
+Vue.use(VueFullscreen)
+
 import computed from './computed';
 import methods from './methods';
 import watch from './watch';

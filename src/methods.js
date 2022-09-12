@@ -1,7 +1,7 @@
 export default {
     console() {
         if (this.debug) {
-            console.log(">>", ...Array.from(arguments))
+            console.log(...Array.from(arguments)," << ")
         }
     },
     changeLocale: function (lang) {
