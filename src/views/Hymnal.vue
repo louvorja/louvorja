@@ -9,7 +9,7 @@
         :error="!loading && musics.length > 0 && pagination.itemsLength === 0"
       />
     </div>
-    <div v-if="!loading && musics.length <= 0">
+    <div v-if="desktop && !loading && musics.length <= 0">
       <v-alert
         border="bottom"
         colored-border
@@ -17,7 +17,7 @@
         elevation="2"
         class="mx-4"
       >
-        {{ $t("hymnal-not-downloaded") }}
+        {{ $t("message.hymnal-not-downloaded") }}
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="warning" @click="loadData">
@@ -87,6 +87,14 @@ export default {
       },
     };
   },
+  computed: {
+    lang: function () {
+      return this.$root.data.lang;
+    },
+    desktop: function () {
+      return this.$root.desktop;
+    },
+  },
   watch: {
     search() {
       this.items_page = 5;
@@ -97,6 +105,11 @@ export default {
       setTimeout(function () {
         self.calcItemsPage();
       }, 10);
+    },
+    async lang() {
+      this.loading = true;
+      this.musics = [];
+      await this.loadData();
     },
   },
   methods: {
