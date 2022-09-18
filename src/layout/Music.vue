@@ -69,6 +69,8 @@
                   icon
                   color="info"
                   @click="first()"
+                  v-shortkey="['home']"
+                  @shortkey="first()"
                 >
                   <v-icon>mdi-page-first</v-icon>
                 </v-btn>
@@ -77,6 +79,12 @@
                   icon
                   color="info"
                   @click="prev()"
+                  v-shortkey="{
+                    left: ['arrowleft'],
+                    up: ['arrowup'],
+                    pgup: ['pageup'],
+                  }"
+                  @shortkey="prev()"
                 >
                   <v-icon>mdi-chevron-left</v-icon>
                 </v-btn>
@@ -85,6 +93,8 @@
                   icon
                   color="info"
                   @click="play()"
+                  v-shortkey="['space']"
+                  @shortkey="play()"
                   v-if="media.is_paused && media.file !== ''"
                 >
                   <v-icon>mdi-play</v-icon>
@@ -94,6 +104,8 @@
                   icon
                   color="info"
                   @click="pause()"
+                  v-shortkey="['space']"
+                  @shortkey="pause()"
                   v-if="!media.is_paused && media.file !== ''"
                 >
                   <v-icon>mdi-pause</v-icon>
@@ -103,6 +115,12 @@
                   icon
                   color="info"
                   @click="next()"
+                  v-shortkey="{
+                    right: ['arrowright'],
+                    down: ['arrowdown'],
+                    pgdn: ['pagedown'],
+                  }"
+                  @shortkey="next()"
                 >
                   <v-icon>mdi-chevron-right</v-icon>
                 </v-btn>
@@ -111,6 +129,8 @@
                   icon
                   color="info"
                   @click="last()"
+                  v-shortkey="['end']"
+                  @shortkey="last()"
                 >
                   <v-icon>mdi-page-last</v-icon>
                 </v-btn>
@@ -119,6 +139,8 @@
                   icon
                   color="info"
                   @click="toggleFullscreen()"
+                  v-shortkey="{ f11: ['f11'], altenter: ['alt', 'enter'] }"
+                  @shortkey="toggleFullscreen()"
                 >
                   <v-icon v-if="!fullscreen">mdi-fullscreen</v-icon>
                   <v-icon v-else>mdi-fullscreen-exit</v-icon>

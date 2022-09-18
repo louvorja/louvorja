@@ -58,6 +58,12 @@
             :disabled="player.loading || !player.file"
             icon
             @click="back()"
+            v-shortkey="{
+              left: ['arrowleft'],
+              up: ['arrowup'],
+              pgup: ['pageup'],
+            }"
+            @shortkey="back()"
           >
             <v-icon>mdi-rewind-10</v-icon>
           </v-btn>
@@ -66,6 +72,8 @@
             icon
             @click="play()"
             v-if="player.is_paused"
+            v-shortkey="['space']"
+            @shortkey="play()"
           >
             <v-icon>mdi-play</v-icon>
           </v-btn>
@@ -74,10 +82,22 @@
             icon
             @click="pause()"
             v-if="!player.is_paused"
+            v-shortkey="['space']"
+            @shortkey="pause()"
           >
             <v-icon>mdi-pause</v-icon>
           </v-btn>
-          <v-btn :disabled="player.loading || !player.file" icon @click="go()">
+          <v-btn
+            :disabled="player.loading || !player.file"
+            icon
+            @click="go()"
+            v-shortkey="{
+              right: ['arrowright'],
+              down: ['arrowdown'],
+              pgdn: ['pagedown'],
+            }"
+            @shortkey="go()"
+          >
             <v-icon>mdi-fast-forward-10</v-icon>
           </v-btn>
 

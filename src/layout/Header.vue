@@ -46,7 +46,13 @@
         </div>
 
         <v-btn icon to="/"><v-icon>mdi-home-circle-outline</v-icon></v-btn>
-        <v-btn icon><v-icon>mdi-magnify</v-icon></v-btn>
+        <v-btn
+          icon
+          @click="search()"
+          v-shortkey="['ctrl','f']"
+          @shortkey="search()"
+          ><v-icon>mdi-magnify</v-icon></v-btn
+        >
 
         <v-btn plain @click="$root.send('minimize')" v-if="$root.desktop">
           <v-icon>mdi-window-minimize</v-icon>
@@ -232,6 +238,11 @@ export default {
     stopwatch: () => import(`@/layout/headertabs/StopwatchTab`),
     findmusic: () => import(`@/layout/headertabs/FindMusicTab`),
     ico: () => import(`@/components/Icon`),
+  },
+  methods: {
+    search: function () {
+      alert("Busca em construção");
+    },
   },
 };
 </script>

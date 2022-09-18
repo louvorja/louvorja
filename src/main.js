@@ -20,6 +20,9 @@ Vue.use(FlagIcon);
 import VueFullscreen from 'vue-fullscreen'
 Vue.use(VueFullscreen)
 
+const ShortKey = require('vue-shortkey')
+Vue.use(ShortKey, { prevent: ['input', 'textarea'] })
+
 import computed from './computed';
 import methods from './methods';
 import watch from './watch';
@@ -136,7 +139,7 @@ new Vue({
         var c = JSON.parse(localStorage.data);
         if (c !== '' && c !== null && c !== undefined) {
           this.console("JSON", c)
-          deepAssign(this.data,c)
+          deepAssign(this.data, c)
         } else {
           this.saveData();
         }
