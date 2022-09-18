@@ -50,10 +50,7 @@
         @pagination="pagination = $event"
       >
         <template v-slot:[`item.options`]="{ item }">
-          <music-bar
-            v-bind="{ ...item, album: $t('hymnal') }"
-            v-if="true"
-          />
+          <music-bar v-bind="{ ...item, album: $t('hymnal') }" v-if="true" />
         </template>
       </v-data-table>
     </div>
@@ -74,11 +71,11 @@ export default {
       musics: [],
       fields: [
         {
-          text: this.$t('number'),
+          text: this.$t("number"),
           value: "track",
           align: "end",
         },
-        { text: this.$t('title'), value: "name" },
+        { text: this.$t("title"), value: "name" },
         { text: "", value: "options" },
       ],
       items_page: 10,
@@ -159,7 +156,7 @@ export default {
     },
     loadData: async function () {
       let data = await this.$root.getData("hymnal", {
-        params: { limit: -1 },
+        params: { limit: -1, sort_by: "track" },
       });
       this.musics = data;
       this.loading = false;

@@ -165,7 +165,7 @@ export default {
     },
     loadData: async function () {
       let data = await this.$root.getData("musics", {
-        params: { limit: -1 },
+        params: { limit: -1, sort_by: "name" },
       });
       let albums_musics = await this.$root.getData("albums_musics", {
         params: { limit: -1 },
@@ -203,6 +203,7 @@ export default {
   },
   mounted: async function () {
     await this.loadData();
+    console.log(this.musics);
   },
 };
 </script>
