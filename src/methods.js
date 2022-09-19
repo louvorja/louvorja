@@ -7,6 +7,11 @@ export default {
     changeLocale: function (lang) {
         this.$i18n.locale = lang;
         this.data.lang = lang;
+        let lang_tag = lang;
+        if (lang == "pt"){
+            lang_tag = "pt-BR";
+        }
+        document.documentElement.setAttribute('lang', lang_tag)
         this.console("idioma selecionado", lang);
     },
     flag: function (lang) {
