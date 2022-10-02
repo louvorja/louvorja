@@ -49,7 +49,7 @@
         <v-btn
           icon
           @click="search()"
-          v-shortkey="['ctrl','f']"
+          v-shortkey="['ctrl', 'f']"
           @shortkey="search()"
           ><v-icon>mdi-magnify</v-icon></v-btn
         >
@@ -168,6 +168,9 @@ export default {
           tab: "collections",
           content: [
             [{ type: "button", route: "hymnal" }],
+            [
+              { type: "button", route: "collections" },
+            ],
             [{ type: "button", route: "find-musics" }],
           ],
         },

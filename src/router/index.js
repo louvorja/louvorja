@@ -20,6 +20,13 @@ const routes = [
     component: () => import('@/views/Hymnal.vue')
   },
   {
+    path: '/collections',
+    name: 'collections',
+    tab: true,
+    icon: "music",
+    component: () => import('@/views/Collections.vue')
+  },
+  {
     path: '/find-musics',
     name: 'find-musics',
     tab: true,
