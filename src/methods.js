@@ -1,14 +1,15 @@
 export default {
     console() {
         if (this.debug) {
-            console.log(...Array.from(arguments)," << ")
+            console.log(...Array.from(arguments), " << ")
         }
     },
     changeLocale: function (lang) {
+        this.$vuetify.lang.current = lang;
         this.$i18n.locale = lang;
         this.data.lang = lang;
         let lang_tag = lang;
-        if (lang == "pt"){
+        if (lang == "pt") {
             lang_tag = "pt-BR";
         }
         document.documentElement.setAttribute('lang', lang_tag)

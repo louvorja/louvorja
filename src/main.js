@@ -2,26 +2,16 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
+import i18n from './i18n'
 import deepAssign from 'simple-deep-assign';
 
-import VueSessionStorage from "vue-sessionstorage";
-Vue.use(VueSessionStorage);
-
-import JSONView from 'vue-json-component';
-Vue.use(JSONView);
+import './plugins/vue-sessionstorage.js'
+import './plugins/vue-json-component.js';
+import './plugins/vue-flag-icon.js';
+import './plugins/vue-fullscreen.js';
+import './plugins/vue-shortkey.js'
 
 import './assets/dist/css/custom.css';
-
-import i18n from './i18n'
-
-import FlagIcon from 'vue-flag-icon'
-Vue.use(FlagIcon);
-
-import VueFullscreen from 'vue-fullscreen'
-Vue.use(VueFullscreen)
-
-const ShortKey = require('vue-shortkey')
-Vue.use(ShortKey, { prevent: ['input', 'textarea'] })
 
 import computed from './computed';
 import methods from './methods';
