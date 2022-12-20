@@ -1,35 +1,29 @@
 <template>
   <div class="d-flex flex-column" style="height: 100%">
+    <v-alert type="error" v-if="error" class="ma-3">{{ error }}</v-alert>
 
-    <v-alert type="warning">Em construção</v-alert>
-
+    <div
+      id="content_scroll"
+      class="pa-3"
+      style="height: 100%; max-height: 100%; overflow: auto"
+    >
+      <pre>{{ albums }}</pre>
+    </div>
   </div>
 </template>
 
 <script>
+const Albums = require("@/controllers/Albums.js");
+
 export default {
-  name: "hymnal",
-  components: {
-    lInput: () => import(`@/components/Input`),
-  },
+  name: "collections",
+  components: {},
   data() {
     return {
       search: null,
       loading: true,
-      musics: [],
-      fields: [
-        {
-          text: this.$t("number"),
-          value: "track",
-          align: "end",
-        },
-        { text: this.$t("title"), value: "name" },
-        { text: "", value: "options" },
-      ],
-      items_page: 10,
-      pagination: {
-        itemsLength: -1,
-      },
+      albums: [],
+      error: null,
     };
   },
   computed: {
@@ -43,24 +37,25 @@ export default {
   watch: {
     search() {},
     async lang() {
-      this.loading = true;
-      this.musics = [];
+      this.albums = [];
       await this.loadData();
     },
   },
   methods: {
     loadData: async function () {
-      /*
-      let data = await this.$root.getData("hymnal", {
-        params: { limit: -1, sort_by: "track" },
-      });
-      this.musics = data;
-      this.loading = false;
-      const self = this;
-      setTimeout(function () {
-        self.calcItemsPage();
-      }, 10);
-      */
+      this.error = null;
+      this.loading = true;
+      Albums.list(
+        { limit: -1, with_categories: 1, categories_slug: "aym" },
+        (resp, data) => {
+          if (resp) {
+            this.albums = data;
+          } else {
+            this.error = data;
+          }
+          this.loading = false;
+        }
+      );
     },
   },
   created() {},

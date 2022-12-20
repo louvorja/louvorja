@@ -110,7 +110,6 @@ export default {
       }, 10);
     },
     async lang() {
-      this.loading = true;
       this.musics = [];
       await this.loadData();
     },

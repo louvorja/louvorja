@@ -121,7 +121,6 @@ export default {
       }, 10);
     },
     async lang() {
-      this.loading = true;
       this.musics = [];
       await this.loadData();
     },
@@ -174,60 +173,22 @@ export default {
     loadData: async function () {
       this.error = null;
       this.loading = true;
+      Musics.list(
+        { limit: -1, sort_by: "name", with_albums: 1 },
+        (resp, data) => {
+          if (resp) {
+            this.musics = data;
+            const self = this;
+            setTimeout(function () {
+              self.calcItemsPage();
+            }, 10);
+          } else {
+            this.error = data;
+          }
 
-      let musics;
-      let albums_musics;
-      let albums;
-
-      Musics.list({ limit: -1, sort_by: "name" }, (resp, data) => {
-        if (resp) {
-          musics = data;
-
-          AlbumsMusics.list({ limit: -1 }, (resp, data) => {
-            if (resp) {
-              albums_musics = data;
-
-              Albums.list({ limit: -1 }, (resp, data) => {
-                if (resp) {
-                  albums = data;
-
-                  musics.map((music) => {
-                    return (music.albums = albums_musics
-                      .filter((album_music) => {
-                        return album_music.id_music == music.id_music;
-                      })
-                      .map((album_music) => {
-                        album_music.album = albums.filter((album) => {
-                          return album.id_album == album_music.id_album;
-                        });
-                        return album_music;
-                      })
-                      .map((item) => {
-                        return item.album[0];
-                      }));
-                  });
-
-                  this.musics = musics;
-                  this.loading = false;
-                  const self = this;
-                  setTimeout(function () {
-                    self.calcItemsPage();
-                  }, 10);
-                } else {
-                  this.error = data;
-                  this.loading = false;
-                }
-              });
-            } else {
-              this.error = data;
-              this.loading = false;
-            }
-          });
-        } else {
-          this.error = data;
           this.loading = false;
         }
-      });
+      );
     },
   },
   created() {
