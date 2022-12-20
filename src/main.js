@@ -4,6 +4,7 @@ import router from './router'
 import vuetify from './plugins/vuetify'
 import i18n from './i18n'
 import deepAssign from 'simple-deep-assign';
+import store from './store/index.js'
 
 import './plugins/vue-sessionstorage.js'
 import './plugins/vue-json-component.js';
@@ -14,23 +15,27 @@ import './plugins/vue-shortkey.js'
 import './assets/dist/css/custom.css';
 
 import computed from './computed';
-import methods from './methods';
 import watch from './watch';
 
 Vue.config.productionTip = false
+
+const DevTools = require("./helpers/DevTools");
+const Locale = require("./helpers/Locale");
+const Data = require("./helpers/Data");
 
 new Vue({
   i18n,
   router,
   vuetify,
+  store,
   render: function (h) { return h(App) },
-  mixins: [
-    require('./mixins/data.vue')
-  ],
+  data() {
+    return this.$store.state;
+  },
   computed,
   watch,
-  methods,
   mounted() {
+    this.debug = DevTools.debug();
 
     this.def = JSON.parse(JSON.stringify(this.data));
     //this.def = Object.assign({}, this.data);
@@ -39,7 +44,7 @@ new Vue({
     if (this.desktop) {
 
       // É UMA APLICAÇÃO DESKTOP - INICIA COMUNICAÇÃO COM A MÁQUINA
-      this.console("Aplicação DESKTOP")
+      DevTools.write("Aplicação DESKTOP")
 
       ipcRenderer.on('displays', function (event, data) {
         self.displays = data;
@@ -64,14 +69,14 @@ new Vue({
       ipcRenderer.on('data', function (event, data) {
         deepAssign(self.data, data)
         self.db_port = self.data.db.port;
-        this.console('Obteve dados locais. Inicia conexão com o banco de dados')
+        DevTools.write('Obteve dados locais. Inicia conexão com o banco de dados')
         ipcRenderer.send('start_db', self.data.db.port);
       });
 
       ipcRenderer.on('start_db', function (event, status, port, message) {
         self.db_port = port;
         if (status == "true" || status == true) {
-          this.console('Conectou ao Banco de Dados. Obtém dados da web')
+          DevTools.write('Conectou ao Banco de Dados. Obtém dados da web')
           ipcRenderer.send('config_web');
         } else {
           self.dialog.show = true;
@@ -85,7 +90,7 @@ new Vue({
 
       ipcRenderer.on('save_data', function (event) {
         self.save_data = false;
-        this.console('Dados salvos!')
+        DevTools.write('Dados salvos!')
       });
 
       ipcRenderer.on('config_web', async function (event, data) {
@@ -101,9 +106,9 @@ new Vue({
             ipcRenderer.send('save_json', 'config', d, 'filedir');
 
             //inicia o processo de download e atualização do banco de dados
-            this.console('%cAtualizando Banco de Dados', 'color:blue')
+            DevTools.write('%cAtualizando Banco de Dados', 'color:blue')
             await self.downloadDB();
-            this.console('%cBanco de Dados atualizado!', 'color:blue')
+            DevTools.write('%cBanco de Dados atualizado!', 'color:blue')
           }
           await self.checkDownloads();
         }
@@ -112,7 +117,7 @@ new Vue({
         /*self.getApiData('config', function (d) {
           self.config_web = d;
           ipcRenderer.send('save_json', 'config', d, 'filedir');
-          this.console("rotina de downloadddd")
+          DevTools.write("rotina de downloadddd")
           self.downloadDB();
         });*/
       });
@@ -123,29 +128,29 @@ new Vue({
     } else {
 
       // NÃO É UMA APLICAÇÃO DESKTOP
-      this.console("Não é aplicação DESKTOP")
+      DevTools.write("Não é aplicação DESKTOP")
 
       if (localStorage.data !== undefined) {
         var c = JSON.parse(localStorage.data);
         if (c !== '' && c !== null && c !== undefined) {
-          this.console("JSON", c)
+          DevTools.write("JSON", c)
           deepAssign(this.data, c)
         } else {
-          this.saveData();
+          Data.save();
         }
       } else {
-        this.saveData();
+        Data.save();
       }
 
     }
 
     // CARREGA IDIOMA
-    this.changeLocale(self.data.lang);
+    this.lang = Locale.change(self.data.lang);
 
     //SALVAR CONFIG
     setInterval(function () {
       if (self.save_data) {
-        self.saveData();
+        Data.save();
       }
     }, 1000);
 

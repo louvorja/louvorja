@@ -2,7 +2,7 @@
   <v-app :dark="$root.data.layout.dark">
     <app-side-bar />
     <app-dialog />
-    <app-store />
+    <!-- <app-store /> -->
     <app-alert />
     <app-lyric />
 
@@ -27,17 +27,17 @@
 <script>
 export default {
   components: {
-    AppHeader: () => import("@/layout/Header"),
-    AppFooter: () => import("@/layout/Footer"),
-    AppProgress: () => import("@/layout/Progress"),
-    AppTabs: () => import("@/layout/TabsPages"),
     AppSideBar: () => import("@/layout/SideBar"),
-    AppMusicBar: () => import("@/layout/Music"),
     AppDialog: () => import("@/layout/Dialog"),
-    AppStore: () => import("@/layout/Store"),
+    //AppStore: () => import("@/layout/Store"),
     AppAlert: () => import("@/layout/Alert"),
     AppLyric: () => import("@/layout/Lyric"),
+    AppHeader: () => import("@/layout/Header"),
+    AppTabs: () => import("@/layout/TabsPages"),
     AppPlayer: () => import("@/layout/Player"),
+    AppProgress: () => import("@/layout/Progress"),
+    AppFooter: () => import("@/layout/Footer"),
+    AppMusicBar: () => import("@/layout/Music"),
   },
   created() {
     document.title = "Louvor JA";

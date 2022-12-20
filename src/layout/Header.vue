@@ -3,19 +3,23 @@
     <v-card rounded="0">
       <v-toolbar
         :class="!sidebar ? 'headerbar' : ''"
-        :color="$root.data.layout.color"
+        :color="$store.state.data.layout.color"
         dark
         flat
       >
         <v-btn icon>
           <ico
-            @click.native="$root.sidebar.geral = !$root.sidebar.geral"
+            @click.native="
+              $store.state.sidebar.geral = !$store.state.sidebar.geral
+            "
             src="louvorja"
             size="40"
           />
         </v-btn>
         <v-app-bar-nav-icon
-          @click.native="$root.sidebar.geral = !$root.sidebar.geral"
+          @click.native="
+            $store.state.sidebar.geral = !$store.state.sidebar.geral
+          "
         >
         </v-app-bar-nav-icon>
 
@@ -28,16 +32,16 @@
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon dark v-bind="attrs" v-on="on">
-                <flag :iso="$root.flag(lang)" />
+                <flag :iso="flag(lang)" />
                 {{ lang }}
               </v-btn>
             </template>
             <v-list>
-              <v-list-item @click="$root.changeLocale('pt')">
+              <v-list-item @click="changeLocale('pt')">
                 <v-list-item-icon><flag iso="br" /></v-list-item-icon>
                 <v-list-item-title>Português</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="$root.changeLocale('es')">
+              <v-list-item @click="changeLocale('es')">
                 <v-list-item-icon><flag iso="es" /></v-list-item-icon>
                 <v-list-item-title>Espanhol</v-list-item-title>
               </v-list-item>
@@ -54,6 +58,7 @@
           ><v-icon>mdi-magnify</v-icon></v-btn
         >
 
+        <!--
         <v-btn plain @click="$root.send('minimize')" v-if="$root.desktop">
           <v-icon>mdi-window-minimize</v-icon>
         </v-btn>
@@ -79,11 +84,12 @@
         >
           <v-icon>mdi-window-close</v-icon>
         </v-btn>
+        -->
       </v-toolbar>
       <v-tabs
-        v-model="$root.active_header_tab"
+        v-model="$store.state.active_header_tab"
         dark
-        :background-color="$root.data.layout.color"
+        :background-color="$store.state.data.layout.color"
         show-arrows
       >
         <v-tab
@@ -96,8 +102,8 @@
         </v-tab>
       </v-tabs>
       <v-tabs-items
-        v-model="$root.active_header_tab"
-        :dark="$root.data.layout.dark"
+        v-model="$store.state.active_header_tab"
+        :dark="$store.state.data.layout.dark"
         style="min-height: 72px"
       >
         <v-tab-item v-for="(item, index) in items_tabs" :key="index">
@@ -160,6 +166,8 @@ header .active_header_tab {
 </style>
 
 <script>
+const Locale = require("../helpers/Locale.js");
+
 export default {
   data() {
     return {
@@ -168,9 +176,7 @@ export default {
           tab: "collections",
           content: [
             [{ type: "button", route: "hymnal" }],
-            [
-              { type: "button", route: "collections" },
-            ],
+            [{ type: "button", route: "collections" }],
             [{ type: "button", route: "find-musics" }],
           ],
         },
@@ -219,21 +225,21 @@ export default {
     },
     sidebar: function () {
       return (
-        Object.values(this.$root.sidebar).filter(function (key) {
+        Object.values(this.$store.state.sidebar).filter(function (key) {
           return key;
         }).length > 0
       );
     },
     tabs: function () {
-      return this.$root.openpages.map((item) => {
+      return this.$store.state.openpages.map((item) => {
         return item.name;
       });
     },
     debug: function () {
-      return this.$root.debug;
+      return this.$store.state.debug;
     },
     lang: function () {
-      return this.$root.data.lang;
+      return this.$store.state.data.lang;
     },
   },
   components: {
@@ -245,6 +251,12 @@ export default {
   methods: {
     search: function () {
       alert("Busca em construção");
+    },
+    changeLocale: function (lang) {
+      this.$store.state.lang = Locale.change(lang);
+    },
+    flag: function (lang) {
+      return Locale.flag(lang);
     },
   },
 };

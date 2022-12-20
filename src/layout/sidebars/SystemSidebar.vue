@@ -1,17 +1,17 @@
 <template>
   <v-navigation-drawer
-    v-model="$root.sidebar.geral"
+    v-model="$store.state.sidebar.geral"
     absolute
     left
     temporary
     :width="width"
-    :dark="$root.data.layout.dark"
+    :dark="$store.state.data.layout.dark"
   >
     <v-tabs
       vertical
       v-model="active_menu"
-      :color="$root.data.layout.color"
-      :dark="$root.data.layout.dark"
+      :color="$store.state.data.layout.color"
+      :dark="$store.state.data.layout.dark"
     >
       <v-tab
         v-for="(m, index) in menu_list"
@@ -24,7 +24,7 @@
         {{ m.tab }}
       </v-tab>
 
-      <v-tabs-items v-model="active_menu" :dark="$root.data.layout.dark">
+      <v-tabs-items v-model="active_menu" :dark="$store.state.data.layout.dark">
         <v-tab-item v-for="m in menu" :key="m.tab">
           <!--<div v-if="m.component">-->
           <div class="text-h6 mt-3">
@@ -86,8 +86,8 @@ export default {
         ? this.menu[this.active_menu].width || this.width_menu_open
         : this.width_menu_min;
     },
-    desktop: function(){
-      return this.$root.desktop;
+    desktop: function () {
+      return this.$store.state.desktop;
     },
     menu_list: function (id_categoria) {
       return this.desktop
@@ -107,12 +107,12 @@ export default {
         setTimeout(() => {
           self.active_menu = 0;
         }, 100);
-        this.$root.sidebar.geral = false;
+        this.$store.state.sidebar.geral = false;
         eval(item.click);
       }
     },
     store: function () {
-      this.$root.$data.store.show = true
+      this.$store.state.store.show = true;
     },
   },
 };

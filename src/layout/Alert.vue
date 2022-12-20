@@ -1,5 +1,11 @@
 <template>
-  <v-snackbar v-model="alert.show" :timeout="alert.timeout" top right color="error">
+  <v-snackbar
+    v-model="alert.show"
+    :timeout="alert.timeout"
+    top
+    right
+    :color="alert.type"
+  >
     <span v-if="typeof alert.text == 'string'">
       {{ alert.text }}
     </span>
@@ -9,7 +15,12 @@
       </li>
     </ul>
 
-    <v-btn color="danger" icon @click="alert.show = false" class="float-right">
+    <v-btn
+      color="white"
+      icon
+      @click="alert.show = false"
+      class="float-right"
+    >
       <v-icon>mdi-close</v-icon>
     </v-btn>
   </v-snackbar>
@@ -19,7 +30,7 @@
 <script>
 export default {
   data() {
-    return this.$root.$data;
+    return this.$store.state;
   },
   watch: {
     alert: {

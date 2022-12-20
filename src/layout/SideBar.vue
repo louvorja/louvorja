@@ -9,7 +9,7 @@
 <script>
 export default {
   data() {
-    return this.$root.$data;
+    return this.$store.state;
   },
   components: {
     system: () => import(`@/layout/sidebars/SystemSidebar`),

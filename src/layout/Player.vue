@@ -2,7 +2,7 @@
   <v-expand-transition>
     <v-card
       dark
-      :color="$root.data.layout.color"
+      :color="$store.state.data.layout.color"
       v-show="player.show"
       style="border-radius: 0 !important"
     >
@@ -107,9 +107,9 @@
             type="player"
             :audio="player.audio"
             v-bind="player.music"
-            @sung="$root.openPlayer(obj_music, { audio: 1 })"
-            @instrumental="$root.openPlayer(obj_music, { audio: 2 })"
-            @lyrics="$root.openLyricMusic(obj_music)"
+            @sung="openPlayer(obj_music, { audio: 1 })"
+            @instrumental="openPlayer(obj_music, { audio: 2 })"
+            @lyrics="openLyric(obj_music)"
           >
           </list-change-music-type>
 
@@ -125,11 +125,13 @@
 
 
 <script>
+const Audio = require("@/helpers/Audio.js");
 import filters from "@/filters";
+
 export default {
   filters,
   data() {
-    return { progress_slide: 0, ...this.$root.$data };
+    return { progress_slide: 0, ...this.$store.state };
   },
   components: {
     ListChangeMusicType: () => import(`@/components/ListChangeMusicType`),
@@ -157,6 +159,16 @@ export default {
     },
   },
   methods: {
+    openMusic: function (obj, options = {}) {
+      Audio.open(obj, options);
+    },
+    openPlayer: function (obj, options = {}) {
+      Audio.player(obj, options);
+    },
+    openLyric: function (obj, options = {}) {
+      Audio.lyric(obj, options);
+    },
+
     play: function () {
       this.el.play();
     },

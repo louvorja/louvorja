@@ -66,7 +66,7 @@ import draggable from "vuedraggable";
 
 export default {
   data() {
-    return this.$root.$data;
+    return this.$store.state;
   },
   components: {
     ico: () => import(`@/components/Icon`),
@@ -77,7 +77,7 @@ export default {
       if (this.tabs_dot.indexOf(page) >= 0) {
         this.dialog.show = true;
         this.dialog.title = $t("task-in-progress");
-        this.dialog.text = $t("message.task-in-progress")+".";
+        this.dialog.text = $t("message.task-in-progress") + ".";
         this.dialog.buttons = [{ text: "Ok", value: "ok" }];
         this.dialog.value = "";
         return;
@@ -87,14 +87,14 @@ export default {
       if (this.$route.name == page) {
         open = true;
       }
-      this.$root.openpages = this.$root.openpages.filter(
+      this.$store.state.openpages = this.$store.state.openpages.filter(
         (element) => element.name !== page
       );
       if (open) {
-        if (this.$root.openpages.length <= 0) {
+        if (this.$store.state.openpages.length <= 0) {
           this.$router.push("/");
         } else {
-          var r = this.$root.openpages[0];
+          var r = this.$store.state.openpages[0];
           this.$router.push(r.path);
         }
       }

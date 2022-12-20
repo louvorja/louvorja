@@ -5,6 +5,11 @@ export default {
         },
         deep: true
     },
+    lang: function () {
+        this.$vuetify.lang.current = this.$store.state.lang;
+        this.$i18n.locale = this.$store.state.lang;
+        this.$store.state.data.lang = this.$store.state.lang;
+    },
     show_arrows: function () {
         if (this.show_arrows == false) {
             var self = this;

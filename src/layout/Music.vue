@@ -151,10 +151,10 @@
                   :key="media.music.id_music"
                   :audio="media.audio"
                   v-bind="media.music"
-                  @sung="$root.openMusic(obj_music, { audio: 1 })"
-                  @instrumental="$root.openMusic(obj_music, { audio: 2 })"
-                  @without-audio="$root.openMusic(obj_music, { audio: 0 })"
-                  @lyrics="$root.openLyricMusic(obj_music)"
+                  @sung="openMusic(obj_music, { audio: 1 })"
+                  @instrumental="openMusic(obj_music, { audio: 2 })"
+                  @without-audio="openMusic(obj_music, { audio: 0 })"
+                  @lyrics="openLyric(obj_music)"
                 >
                 </list-change-music-type>
               </div>
@@ -220,6 +220,8 @@
 
 
 <script>
+const Audio = require("@/helpers/Audio.js");
+
 export default {
   data() {
     return {
@@ -227,7 +229,7 @@ export default {
       fullscreen: false,
       show_fullscreen_player: false,
       interval: null,
-      ...this.$root.$data,
+      ...this.$store.state,
     };
   },
   components: {
@@ -294,6 +296,16 @@ export default {
     },
   },
   methods: {
+    openMusic: function (obj, options = {}) {
+      Audio.open(obj, options);
+    },
+    openPlayer: function (obj, options = {}) {
+      Audio.player(obj, options);
+    },
+    openLyric: function (obj, options = {}) {
+      Audio.lyric(obj, options);
+    },
+
     play: function () {
       this.el.play();
     },

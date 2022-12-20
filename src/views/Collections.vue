@@ -1,23 +1,8 @@
 <template>
   <div class="d-flex flex-column" style="height: 100%">
-    <div class="pa-3">
-      <l-input
-        type="text"
-        v-model="search"
-        :label="$t('message.label-hymn-name-or-number')"
-        append-icon="mdi-magnify"
-        :error="!loading && musics.length > 0 && pagination.itemsLength === 0"
-      />
-    </div>
 
-    <div
-      id="content_scroll"
-      class="pa-3"
-      style="height: 100%; max-height: 100%; overflow: auto"
-      @scroll="scroll"
-    >
-kjkkljkljkl
-    </div>
+    <v-alert type="warning">Em construção</v-alert>
+
   </div>
 </template>
 
@@ -49,16 +34,14 @@ export default {
   },
   computed: {
     lang: function () {
-      return this.$root.data.lang;
+      return this.$store.state.data.lang;
     },
     desktop: function () {
-      return this.$root.desktop;
+      return this.$store.state.desktop;
     },
   },
   watch: {
-    search() {
-
-    },
+    search() {},
     async lang() {
       this.loading = true;
       this.musics = [];
@@ -67,6 +50,7 @@ export default {
   },
   methods: {
     loadData: async function () {
+      /*
       let data = await this.$root.getData("hymnal", {
         params: { limit: -1, sort_by: "track" },
       });
@@ -76,11 +60,10 @@ export default {
       setTimeout(function () {
         self.calcItemsPage();
       }, 10);
+      */
     },
   },
-  created() {
-
-  },
+  created() {},
   mounted: async function () {
     await this.loadData();
   },

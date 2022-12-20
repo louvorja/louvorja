@@ -1,27 +1,33 @@
+/*
+ESTE ARQUIVO FOI DEPRECIADO E SERÁ APAGADO POSTERIORMENTE......
+ESTOU MANDENDO APENAS PARA CONSULTAS DE FUNÇÕES POR ENQUANTO......
+*/
+
 export default {
-    console() {
-        if (this.debug) {
-            console.log(...Array.from(arguments), " << ")
-        }
-    },
-    changeLocale: function (lang) {
-        this.$vuetify.lang.current = lang;
-        this.$i18n.locale = lang;
-        this.data.lang = lang;
-        let lang_tag = lang;
-        if (lang == "pt") {
-            lang_tag = "pt-BR";
-        }
-        document.documentElement.setAttribute('lang', lang_tag)
-        this.console("idioma selecionado", lang);
-    },
-    flag: function (lang) {
-        if (lang === "pt") {
-            return "br";
-        } else {
-            return lang;
-        }
-    },
+    /* console() {
+         if (this.debug) {
+             console.log(...Array.from(arguments), " << ")
+         }
+     },
+     changeLocale: function (lang) {
+         this.$vuetify.lang.current = lang;
+         this.$i18n.locale = lang;
+         this.data.lang = lang;
+         let lang_tag = lang;
+         if (lang == "pt") {
+             lang_tag = "pt-BR";
+         }
+         document.documentElement.setAttribute('lang', lang_tag)
+         localStorage.setItem("lang", lang);
+         this.console("idioma selecionado", lang);
+     },
+     flag: function (lang) {
+         if (lang === "pt") {
+             return "br";
+         } else {
+             return lang;
+         }
+     },*/
     dir: function (dir) {
         if (this.desktop) {
             dir = dir.replaceAll("/", "\\");
@@ -100,45 +106,45 @@ export default {
             return data;
         }
     },
-    getApiData: async function (url, options = {}) {
-        let baseurl = "";
-        if (window.location.hostname == "localhost") {
-            baseurl = "http://localhost:8000";
-        } else {
-            baseurl = "https://api.louvorja.com.br";
-        }
-        let params = "";
-        if (options.params) {
-            params = `?${this.encodeDataToURL(options.params)}`;
-        }
-        url = `${baseurl}/${this.data.lang}/${url}${params}`
-        this.console('getApiData', url, options)
-        let response = await fetch(url,
-            {
-                method: 'get',
-                headers: {
-                    'Api-Token': '02@v2nFB2Dc'
-                },
-            }
-        ).catch(err => {
-            this.msgAlert("erro", "Erro ao estabelecer conexão com o servidor!")
-            this.console('%c' + err, 'color:red')
-            return false;
-        });
-        if (response.ok) {
-            let data = await response.json();
-            if (data.error != undefined && data.erro != '') {
-                this.msgAlert("erro", "Erro ao obter dados do servidor: " + data.error)
-                return false;
-            }
-            //this.console('getApiData', data.data);
-            return data.data;
-        } else {
-            let data = await response.json();
-            this.msgAlert("erro", "Erro ao obter dados do servidor: " + data.error)
-            return false;
-        }
-    },
+    /*   getApiData: async function (url, options = {}) {
+           let baseurl = "";
+           if (window.location.hostname == "localhost") {
+               baseurl = "http://localhost:8000";
+           } else {
+               baseurl = "https://api.louvorja.com.br";
+           }
+           let params = "";
+           if (options.params) {
+               params = `?${this.encodeDataToURL(options.params)}`;
+           }
+           url = `${baseurl}/${this.data.lang}/${url}${params}`
+           this.console('getApiData', url, options)
+           let response = await fetch(url,
+               {
+                   method: 'get',
+                   headers: {
+                       'Api-Token': '02@v2nFB2Dc'
+                   },
+               }
+           ).catch(err => {
+               this.msgAlert("erro", "Erro ao estabelecer conexão com o servidor!")
+               this.console('%c' + err, 'color:red')
+               return false;
+           });
+           if (response.ok) {
+               let data = await response.json();
+               if (data.error != undefined && data.erro != '') {
+                   this.msgAlert("erro", "Erro ao obter dados do servidor: " + data.error)
+                   return false;
+               }
+               //this.console('getApiData', data.data);
+               return data.data;
+           } else {
+               let data = await response.json();
+               this.msgAlert("erro", "Erro ao obter dados do servidor: " + data.error)
+               return false;
+           }
+       },*/
     getDBData: async function (url) {
         url = url || '';
         //this.progress.text = 'Conectando ao banco de dados...';
@@ -286,125 +292,116 @@ export default {
             this.alert.timeout = 5000;
         }
     },
-
-    toSeconds: function (hms) {
-        if (hms == undefined) {
-            return 0;
-        } else {
-            let a = hms.split(":");
-            return +a[0] * 60 * 60 + +a[1] * 60 + +a[2];
-        }
-    },
-
-    openMusic: async function (obj, options = {}) {
-        let id_music = obj;
-        this.$root.media.album = '';
-        this.$root.media.track = 0;
-        if (typeof (obj) === "object") {
-            id_music = obj.id_music;
-            this.$root.media.album = obj.album || '';
-            this.$root.media.track = obj.track || 0;
-        }
-        this.$root.media.audio = (options.audio || 0);
-        /*
-        options.audio:
-        0 = sem audio
-        1 = cantado
-        2 = playback
-        */
-
-        var audio = document.getElementById('slide-audio');
-        if (audio.duration > 0) {
-            audio.pause();
-            audio.currentTime = 0;
-        }
-
-        this.$root.media.show = true;
-        this.$root.media.loading = true;
-        this.$root.media.slide = 0;
-        this.$root.media.id_music = id_music;
-        let data = await this.$root.getData(`music/${id_music}`);
-        if (this.$root.media.audio == 1) {
-            this.$root.media.file = data.url_music;
-            data.lyric.map(item => { item.time = this.toSeconds(item.time) || 0 });
-            this.console(data.lyric);
-        } else if (this.$root.media.audio == 2) {
-            this.console(data);
-            this.$root.media.file = data.url_instrumental_music;
-            data.lyric.map(item => { item.time = this.toSeconds(item.instrumental_time) || this.toSeconds(item.time) || 0 });
-        } else {
-            this.$root.media.file = "";
-        }
-        this.$root.media.music = data;
-        this.$root.media.loading = false;
-
-        if (audio.duration > 0 && audio.paused && this.$root.media.file !== "") {
-            audio.play();
-        }
-    },
-    openPlayer: async function (obj, options = {}) {
-        let id_music = obj;
-        this.$root.player.album = '';
-        this.$root.player.track = 0;
-        if (typeof (obj) === "object") {
-            id_music = obj.id_music;
-            this.$root.player.album = obj.album || '';
-            this.$root.player.track = obj.track || 0;
-        }
-        this.$root.player.audio = (options.audio || 0);
-        /*
-        options.audio:
-        1 = cantado
-        2 = playback
-        */
-
-        var audio = document.getElementById('player-media');
-        if (audio.duration > 0) {
-            audio.pause();
-            audio.currentTime = 0;
-        }
-
-        this.$root.player.show = true;
-        this.$root.player.loading = true;
-        this.$root.player.id_music = id_music;
-        let data = await this.$root.getData(`music/${id_music}`);
-        if (this.$root.player.audio == 1) {
-            this.$root.player.file = data.url_music;
-        } else if (this.$root.player.audio == 2) {
-            this.$root.player.file = data.url_instrumental_music;
-        } else {
-            this.$root.player.file = "";
-        }
-        this.$root.player.name = data.name;
-        this.$root.player.music = data;
-        this.$root.player.loading = false;
-
-        if (audio.duration > 0 && audio.paused && this.$root.player.file !== "") {
-            audio.play();
-        }
-    },
-    openLyricMusic: async function (obj) {
-        let id_music = obj;
-        this.console(obj);
-        this.$root.lyric.album = '';
-        this.$root.lyric.track = 0;
-        if (typeof (obj) === "object") {
-            id_music = obj.id_music;
-            this.$root.lyric.album = obj.album || '';
-            this.$root.lyric.track = obj.track || 0;
-        }
-        this.$root.lyric.show = true;
-        this.$root.lyric.loading = true;
-        let data = await this.$root.getData(`music/${id_music}`);
-        this.$root.lyric.music = data;
-        this.$root.lyric.loading = false;
-    },
-
-
-    encodeDataToURL: function (data) {
-        return Object
-            .keys(data)
-            .map(value => `${value}=${encodeURIComponent(data[value])}`)
-            .join('&');
-    }
+    /*
+        toSeconds: function (hms) {
+            if (hms == undefined) {
+                return 0;
+            } else {
+                let a = hms.split(":");
+                return +a[0] * 60 * 60 + +a[1] * 60 + +a[2];
+            }
+        },
+    
+        openMusic: async function (obj, options = {}) {
+            let id_music = obj;
+            this.$root.media.album = '';
+            this.$root.media.track = 0;
+            if (typeof (obj) === "object") {
+                id_music = obj.id_music;
+                this.$root.media.album = obj.album || '';
+                this.$root.media.track = obj.track || 0;
+            }
+            this.$root.media.audio = (options.audio || 0);
+    
+    
+            var audio = document.getElementById('slide-audio');
+            if (audio.duration > 0) {
+                audio.pause();
+                audio.currentTime = 0;
+            }
+    
+            this.$root.media.show = true;
+            this.$root.media.loading = true;
+            this.$root.media.slide = 0;
+            this.$root.media.id_music = id_music;
+            let data = await this.$root.getData(`music/${id_music}`);
+            if (this.$root.media.audio == 1) {
+                this.$root.media.file = data.url_music;
+                data.lyric.map(item => { item.time = this.toSeconds(item.time) || 0 });
+                this.console(data.lyric);
+            } else if (this.$root.media.audio == 2) {
+                this.console(data);
+                this.$root.media.file = data.url_instrumental_music;
+                data.lyric.map(item => { item.time = this.toSeconds(item.instrumental_time) || this.toSeconds(item.time) || 0 });
+            } else {
+                this.$root.media.file = "";
+            }
+            this.$root.media.music = data;
+            this.$root.media.loading = false;
+    
+            if (audio.duration > 0 && audio.paused && this.$root.media.file !== "") {
+                audio.play();
+            }
+        },
+        openPlayer: async function (obj, options = {}) {
+            let id_music = obj;
+            this.$root.player.album = '';
+            this.$root.player.track = 0;
+            if (typeof (obj) === "object") {
+                id_music = obj.id_music;
+                this.$root.player.album = obj.album || '';
+                this.$root.player.track = obj.track || 0;
+            }
+            this.$root.player.audio = (options.audio || 0);
+    
+    
+            var audio = document.getElementById('player-media');
+            if (audio.duration > 0) {
+                audio.pause();
+                audio.currentTime = 0;
+            }
+    
+            this.$root.player.show = true;
+            this.$root.player.loading = true;
+            this.$root.player.id_music = id_music;
+            let data = await this.$root.getData(`music/${id_music}`);
+            if (this.$root.player.audio == 1) {
+                this.$root.player.file = data.url_music;
+            } else if (this.$root.player.audio == 2) {
+                this.$root.player.file = data.url_instrumental_music;
+            } else {
+                this.$root.player.file = "";
+            }
+            this.$root.player.name = data.name;
+            this.$root.player.music = data;
+            this.$root.player.loading = false;
+    
+            if (audio.duration > 0 && audio.paused && this.$root.player.file !== "") {
+                audio.play();
+            }
+        },
+        openLyricMusic: async function (obj) {
+            let id_music = obj;
+            this.console(obj);
+            this.$root.lyric.album = '';
+            this.$root.lyric.track = 0;
+            if (typeof (obj) === "object") {
+                id_music = obj.id_music;
+                this.$root.lyric.album = obj.album || '';
+                this.$root.lyric.track = obj.track || 0;
+            }
+            this.$root.lyric.show = true;
+            this.$root.lyric.loading = true;
+            let data = await this.$root.getData(`music/${id_music}`);
+            this.$root.lyric.music = data;
+            this.$root.lyric.loading = false;
+        },
+    */
+    /*
+        encodeDataToURL: function (data) {
+            return Object
+                .keys(data)
+                .map(value => `${value}=${encodeURIComponent(data[value])}`)
+                .join('&');
+        }*/
 }

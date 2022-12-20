@@ -23,12 +23,15 @@
           <v-btn color="warning" @click="loadData">
             {{ $t("refresh-page") }}
           </v-btn>
-          <v-btn color="info" @click="$root.$data.store.show = true">
+          <v-btn color="info" @click="$store.state.store.show = true">
             {{ $t("access-store") }}
           </v-btn>
         </v-card-actions>
       </v-alert>
     </div>
+
+    <v-alert type="error" v-if="error" class="mx-3">{{ error }}</v-alert>
+
     <div
       id="content_scroll"
       class="pa-3"
@@ -58,6 +61,8 @@
 </template>
 
 <script>
+const Hymnal = require("@/controllers/Hymnal.js");
+
 export default {
   name: "hymnal",
   components: {
@@ -82,14 +87,15 @@ export default {
       pagination: {
         itemsLength: -1,
       },
+      error: null,
     };
   },
   computed: {
     lang: function () {
-      return this.$root.data.lang;
+      return this.$store.state.data.lang;
     },
     desktop: function () {
-      return this.$root.desktop;
+      return this.$store.state.desktop;
     },
   },
   watch: {
@@ -155,15 +161,21 @@ export default {
       }
     },
     loadData: async function () {
-      let data = await this.$root.getData("hymnal", {
-        params: { limit: -1, sort_by: "track" },
+      this.error = null;
+      this.loading = true;
+      Hymnal.list({ limit: -1, sort_by: "track" }, (resp, data) => {
+        if (resp) {
+          this.musics = data;
+          const self = this;
+          setTimeout(function () {
+            self.calcItemsPage();
+          }, 10);
+        } else {
+          this.error = data;
+        }
+
+        this.loading = false;
       });
-      this.musics = data;
-      this.loading = false;
-      const self = this;
-      setTimeout(function () {
-        self.calcItemsPage();
-      }, 10);
     },
   },
   created() {

@@ -18,7 +18,7 @@
 <script>
 export default {
   data() {
-    return this.$root.$data;
+    return this.$store.state;
   },
   components: {
     ico: () => import(`@/components/Icon`),

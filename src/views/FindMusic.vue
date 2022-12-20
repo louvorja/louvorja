@@ -23,12 +23,15 @@
           <v-btn color="warning" @click="loadData">
             {{ $t("refresh-page") }}
           </v-btn>
-          <v-btn color="info" @click="$root.$data.store.show = true">
+          <v-btn color="info" @click="$store.state.store.show = true">
             {{ $t("access-store") }}
           </v-btn>
         </v-card-actions>
       </v-alert>
     </div>
+
+    <v-alert type="error" v-if="error" class="mx-3">{{ error }}</v-alert>
+
     <div
       id="content_scroll"
       class="pa-3"
@@ -56,7 +59,7 @@
             small
             outlined
             class="mx-2"
-            :color="$root.data.layout.color"
+            :color="$store.state.data.layout.color"
           >
             {{ album.name }}
           </v-chip>
@@ -71,6 +74,10 @@
 </template>
 
 <script>
+const Musics = require("@/controllers/Musics.js");
+const AlbumsMusics = require("@/controllers/AlbumsMusics.js");
+const Albums = require("@/controllers/Albums.js");
+
 export default {
   name: "find-musics",
   components: {
@@ -83,22 +90,23 @@ export default {
       loading: true,
       musics: [],
       fields: [
-        { text: this.$t('title'), value: "name" },
-        { text: this.$t('album'), value: "albums" },
+        { text: this.$t("title"), value: "name" },
+        { text: this.$t("album"), value: "albums" },
         { text: "", value: "options" },
       ],
       items_page: 10,
       pagination: {
         itemsLength: -1,
       },
+      error: null,
     };
   },
   computed: {
     lang: function () {
-      return this.$root.data.lang;
+      return this.$store.state.data.lang;
     },
     desktop: function () {
-      return this.$root.desktop;
+      return this.$store.state.desktop;
     },
   },
   watch: {
@@ -164,38 +172,62 @@ export default {
       }
     },
     loadData: async function () {
-      let data = await this.$root.getData("musics", {
-        params: { limit: -1, sort_by: "name" },
-      });
-      let albums_musics = await this.$root.getData("albums_musics", {
-        params: { limit: -1 },
-      });
-      let albums = await this.$root.getData("albums", {
-        params: { limit: -1 },
-      });
+      this.error = null;
+      this.loading = true;
 
-      data.map((music) => {
-        return (music.albums = albums_musics
-          .filter((album_music) => {
-            return album_music.id_music == music.id_music;
-          })
-          .map((album_music) => {
-            album_music.album = albums.filter((album) => {
-              return album.id_album == album_music.id_album;
-            });
-            return album_music;
-          })
-          .map((item) => {
-            return item.album[0];
-          }));
-      });
+      let musics;
+      let albums_musics;
+      let albums;
 
-      this.musics = data;
-      this.loading = false;
-      const self = this;
-      setTimeout(function () {
-        self.calcItemsPage();
-      }, 10);
+      Musics.list({ limit: -1, sort_by: "name" }, (resp, data) => {
+        if (resp) {
+          musics = data;
+
+          AlbumsMusics.list({ limit: -1 }, (resp, data) => {
+            if (resp) {
+              albums_musics = data;
+
+              Albums.list({ limit: -1 }, (resp, data) => {
+                if (resp) {
+                  albums = data;
+
+                  musics.map((music) => {
+                    return (music.albums = albums_musics
+                      .filter((album_music) => {
+                        return album_music.id_music == music.id_music;
+                      })
+                      .map((album_music) => {
+                        album_music.album = albums.filter((album) => {
+                          return album.id_album == album_music.id_album;
+                        });
+                        return album_music;
+                      })
+                      .map((item) => {
+                        return item.album[0];
+                      }));
+                  });
+
+                  this.musics = musics;
+                  this.loading = false;
+                  const self = this;
+                  setTimeout(function () {
+                    self.calcItemsPage();
+                  }, 10);
+                } else {
+                  this.error = data;
+                  this.loading = false;
+                }
+              });
+            } else {
+              this.error = data;
+              this.loading = false;
+            }
+          });
+        } else {
+          this.error = data;
+          this.loading = false;
+        }
+      });
     },
   },
   created() {

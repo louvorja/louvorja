@@ -21,7 +21,7 @@
 
           <v-tabs
             v-model="tab"
-            :color="$root.data.layout.color"
+            :color="$state.store.data.layout.color"
             show-arrows
             grow
           >
@@ -39,7 +39,7 @@
           <v-progress-linear
             v-if="carregando"
             indeterminate
-            :color="$root.data.layout.color"
+            :color="$state.store.data.layout.color"
           >
           </v-progress-linear>
         </div>
@@ -111,16 +111,16 @@ export default {
   },
   computed: {
     store: function () {
-      return this.$root.$data.store;
+      return this.$state.store.store;
     },
     dialog: function () {
-      return this.$root.$data.dialog;
+      return this.$state.store.dialog;
     },
     downloads: function () {
-      return this.$root.$data.data.downloads;
+      return this.$state.store.data.downloads;
     },
     progress: function () {
-      return this.$root.progress.active;
+      return this.$state.store.progress.active;
     },
   },
   watch: {
@@ -150,7 +150,7 @@ export default {
     baixaStore: async function () {
       this.carregando = true;
       console.log("Baixando categorias");
-      let data = await this.$root.getApiData("store");
+      let data = await this.$state.store.getApiData("store");
       this.categorias = data.categorias;
 
       console.log("Baixando items");
@@ -201,7 +201,7 @@ export default {
           clearInterval(tmr);
           if (self.dialog.value == "ok") {
             self.downloads.albuns.push(item.id_album);
-            self.$root.checkDownloads();
+            self.$state.store.checkDownloads();
           }
         }
       }, 100);
@@ -234,7 +234,7 @@ export default {
             ) {
               return self.downloads.albuns.indexOf(item) === i;
             });
-            self.$root.checkDownloads();
+            self.$state.store.checkDownloads();
           }
         }
       }, 100);

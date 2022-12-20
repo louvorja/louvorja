@@ -28,10 +28,10 @@
 export default {
   computed: {
     dialog: function () {
-      return this.$root.$data.dialog;
+      return this.$store.state.dialog;
     },
     layout: function () {
-      return this.$root.$data.data.layout;
+      return this.$store.state.data.layout;
     },
   },
 };
