@@ -50,10 +50,7 @@ export function lang() {
     return localStorage.getItem("lang");
 }
 export function data_to_url(data) {
-    return Object
-        .keys(data)
-        .map(value => `${value}=${encodeURIComponent(data[value])}`)
-        .join('&');
+    return new URLSearchParams(data).toString();
 }
 export function api_token() {
     return '02@v2nFB2Dc';
