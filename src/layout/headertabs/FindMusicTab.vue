@@ -1,8 +1,7 @@
 <template>
   <v-item-group class="v-btn-toggle">
-    <span>
-      Área em construção!
-    </span>
+    <v-alert type="warning">Em construção</v-alert>
+
   </v-item-group>
 </template>
 
