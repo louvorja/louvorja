@@ -1,4 +1,4 @@
-const Api = require("../helpers/Api");
+const Api = require("../services/Api");
 
 export function get(table, data, callback = function () { }) {
     Api.get(table, data, (resp, ret) => {

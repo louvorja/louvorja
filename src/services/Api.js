@@ -1,4 +1,4 @@
-const DevTools = require("./DevTools");
+const DevTools = require("../helpers/DevTools");
 
 export async function get(route, options = null, callback = function () { }) {
     let params = "";
