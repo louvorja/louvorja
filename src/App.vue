@@ -5,6 +5,7 @@
     <!-- <app-store /> -->
     <app-alert />
     <app-lyric />
+    <app-album />
 
     <v-layout fill-height style="height: 100vh">
       <v-layout column fill-height style="height: 100vh">
@@ -32,6 +33,7 @@ export default {
     //AppStore: () => import("@/layout/Store"),
     AppAlert: () => import("@/layout/Alert"),
     AppLyric: () => import("@/layout/Lyric"),
+    AppAlbum: () => import("@/layout/Album"),
     AppHeader: () => import("@/layout/Header"),
     AppTabs: () => import("@/layout/TabsPages"),
     AppPlayer: () => import("@/layout/Player"),

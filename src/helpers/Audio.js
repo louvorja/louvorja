@@ -129,6 +129,4 @@ export function lyric(obj) {
 
         store.state.lyric.loading = false;
     });
-
-
 }
