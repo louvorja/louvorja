@@ -20,6 +20,7 @@ import watch from './watch';
 Vue.config.productionTip = false
 
 const DevTools = require("./helpers/DevTools");
+const Dialog = require("./helpers/Dialog");
 const Locale = require("./helpers/Locale");
 const Data = require("./helpers/Data");
 
@@ -73,17 +74,18 @@ new Vue({
         ipcRenderer.send('start_db', self.data.db.port);
       });
 
+
       ipcRenderer.on('start_db', function (event, status, port, message) {
         self.db_port = port;
         if (status == "true" || status == true) {
-          DevTools.write('Conectou ao Banco de Dados. Obtém dados da web')
+          DevTools.write('Conectou ao Banco de Dados')
+          DevTools.write('Obtendo dados da web')
           ipcRenderer.send('config_web');
         } else {
-          self.dialog.show = true;
-          self.dialog.title = "Erro ao conectar no Banco de Dados!";
-          self.dialog.text = `<span class='error--text'>${message}</span><br><br>Seu programa não irá funcionar corretamente. Tente reiniciar o programa.`;
-          self.dialog.buttons = [{ text: "Fechar", color: "error", value: "cancel" }];
-          self.dialog.value = '';
+          Dialog.ok(
+            'Erro ao conectar no Banco de Dados!',
+            `<span class='error--text'>${message}</span><br><br>Seu programa não irá funcionar corretamente. Tente reiniciar o programa.`
+          );
         }
 
       })
@@ -95,24 +97,24 @@ new Vue({
 
       ipcRenderer.on('config_web', async function (event, data) {
         self.config_web = data;
-
-        //checa conexão com o banco de dados
-        let s = await self.getDBData();
-        if (s) {
-          //obtem configurações da web
-          let d = await self.getApiData('config');
-          if (d) {
-            self.config_web = d;
-            ipcRenderer.send('save_json', 'config', d, 'filedir');
-
-            //inicia o processo de download e atualização do banco de dados
-            DevTools.write('%cAtualizando Banco de Dados', 'color:blue')
-            await self.downloadDB();
-            DevTools.write('%cBanco de Dados atualizado!', 'color:blue')
-          }
-          await self.checkDownloads();
-        }
-
+        /*
+                //checa conexão com o banco de dados
+                let s = await self.getDBData();
+                if (s) {
+                  //obtem configurações da web
+                  let d = await self.getApiData('config');
+                  if (d) {
+                    self.config_web = d;
+                    ipcRenderer.send('save_json', 'config', d, 'filedir');
+        
+                    //inicia o processo de download e atualização do banco de dados
+                    DevTools.write('%cAtualizando Banco de Dados', 'color:blue')
+                    await self.downloadDB();
+                    DevTools.write('%cBanco de Dados atualizado!', 'color:blue')
+                  }
+                  await self.checkDownloads();
+                }
+        */
 
         /*self.getApiData('config', function (d) {
           self.config_web = d;
@@ -122,7 +124,9 @@ new Vue({
         });*/
       });
 
-      ipcRenderer.send('config');
+      if (self.$store.state.lang) {
+        ipcRenderer.send('config', self.$store.state.lang);
+      }
 
 
     } else {

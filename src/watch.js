@@ -9,6 +9,15 @@ export default {
         this.$vuetify.lang.current = this.$store.state.lang;
         this.$i18n.locale = this.$store.state.lang;
         this.$store.state.data.lang = this.$store.state.lang;
+
+        let self = this;
+        if (this.desktop) {
+            setTimeout(function () {
+                if (self.$store.state.lang) {
+                    ipcRenderer.send('config', self.$store.state.lang);
+                }
+            }, 1000);
+        }
     },
     show_arrows: function () {
         if (this.show_arrows == false) {
