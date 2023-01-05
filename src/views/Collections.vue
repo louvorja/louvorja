@@ -110,7 +110,7 @@ export default {
       Categories.list(
         {
           limit: -1,
-          sort_by: "order",
+          sort_by: "order,name",
           type: "collection",
         },
         (resp, data) => {
@@ -137,7 +137,7 @@ export default {
           limit: -1,
           with_categories: 1,
           categories_slug: this.id_category,
-          sort_by: "order",
+          sort_by: "order,name",
         },
         (resp, data) => {
           if (resp) {
