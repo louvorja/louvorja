@@ -193,7 +193,7 @@ export default {
         this.el.currentTime = 0;
       }
       this.player.show = false;
-      this.player.id_musica = 0;
+      this.player.id_music = 0;
     },
     timeUpdate: function () {
       this.player.current_time = this.el.currentTime;

@@ -106,12 +106,15 @@ export default {
   methods: {
     openMusic: function (obj, options = {}) {
       Audio.open(obj, options);
+      this.$emit("music", true);
     },
     openPlayer: function (obj, options = {}) {
       Audio.player(obj, options);
+      this.$emit("player", true);
     },
     openLyric: function (obj, options = {}) {
       Audio.lyric(obj, options);
+      this.$emit("lyric", true);
     },
   },
 };

@@ -60,6 +60,7 @@
             outlined
             class="mx-2"
             :color="$store.state.data.layout.color"
+            @click="openAlbum(album)"
           >
             {{ album.name }}
           </v-chip>
@@ -75,8 +76,8 @@
 
 <script>
 const Musics = require("@/controllers/Musics.js");
-const AlbumsMusics = require("@/controllers/AlbumsMusics.js");
-const Albums = require("@/controllers/Albums.js");
+
+const Album = require("@/helpers/Album.js");
 
 export default {
   name: "find-musics",
@@ -189,6 +190,9 @@ export default {
           this.loading = false;
         }
       );
+    },
+    openAlbum(id) {
+      Album.open(id);
     },
   },
   created() {

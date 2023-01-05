@@ -5,6 +5,8 @@ export function list(data, callback = function () { }) {
         callback(resp, ret);
     });
 }
-export function show() {
-    //console.log("bbbb");
+export function show(id, callback = function () { }) {
+    DB.get(`albums/${id}`, {}, (resp, ret) => {
+        callback(resp, ret);
+    });
 }
