@@ -3,10 +3,9 @@
     <v-progress-linear indeterminate v-if="loading" />
 
     <v-alert type="error" v-if="error" class="ma-3">{{ error }}</v-alert>
-
     <div class="d-flex flex-no-wrap" style="height: inherit">
       <div>
-        <v-navigation-drawer permanent :width="150" dark>
+        <v-navigation-drawer permanent :width="170" dark>
           <v-list dense nav>
             <v-list-item
               link
@@ -16,6 +15,13 @@
             >
               <v-list-item-content>
                 <v-list-item-title>{{ category.name }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item link @click="setCategory(all_categories)">
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ $t("all-collections") }}
+                </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -29,8 +35,8 @@
       >
         <v-card
           style="min-width: 300px; max-width: 300px"
-          v-for="album in albums"
-          :key="album.id_album"
+          v-for="(album, index) in albums"
+          :key="index"
           width="320"
           class="ma-2"
           :color="album.color || '#385F73'"
@@ -83,11 +89,10 @@ export default {
     };
   },
   computed: {
-    lang: function () {
-      return this.$store.state.data.lang;
-    },
-    desktop: function () {
-      return this.$store.state.desktop;
+    all_categories: function () {
+      return this.categories.map((item) => {
+        return item.slug;
+      });
     },
   },
   watch: {
@@ -137,7 +142,7 @@ export default {
           limit: -1,
           with_categories: 1,
           categories_slug: this.id_category,
-          sort_by: "order,name",
+          sort_by: typeof this.id_category == "string" ? "order,name" : "name",
         },
         (resp, data) => {
           if (resp) {
