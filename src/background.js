@@ -6,6 +6,7 @@ const http = require('http')
 const { localStorage } = require('electron-browser-storage');
 
 var fs = require('fs');
+var __lang;
 
 const APP_NAME = 'LouvorJA';
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -209,14 +210,18 @@ ipcMain.on('close', () => {
   BrowserWindow.getFocusedWindow().close()
 })
 
-ipcMain.on('config', (event) => {
+ipcMain.on('config', (event, app_lang) => {
   const ip = require("ip")
+
+  console.log("LL", app_lang)
+  lang(app_lang);
 
   event.reply('displays', screen.getAllDisplays());
   event.reply('ip', ip.address());
   event.reply('platform', process.platform);
   event.reply('data', getJSONFile(getAppBasePath('config.json')));
-  event.reply('path', { base: getAppBasePath(), files: getAppFilesPath() });
+  event.reply('path', { base: getAppBasePath(), files: getAppFilesPath(), files_lang: getAppFilesLangPath() });
+
 })
 
 ipcMain.on('start_db', async (event, port) => {
@@ -239,7 +244,7 @@ ipcMain.on('start_db', async (event, port) => {
         event.reply('start_db', true, port, "");
         clearInterval(dbStatus);
       }).on('error', err => {
-        console.log("BD fora do ar!", err.nessage)
+        console.log("BD fora do ar!", err.message)
       })
     }
   }, 1000);
@@ -282,6 +287,15 @@ ipcMain.on('save_data', (event, data) => {
 
 
 
+function lang(app_lang = null) {
+  if (app_lang) {
+    __lang = app_lang;
+  } else {
+    app_lang = __lang;
+  }
+  return __lang;
+}
+
 function getAppBasePath(p) {
   //dev
   //if (process.env.RUN_ENV === 'development') return './'
@@ -317,7 +331,14 @@ function getAppFilesPath(p) {
     fs.mkdirSync(path);
     console.log("Diretório criado", fs.existsSync(path), path);
   }
-  path = path + "pt\\";
+  if (p != undefined) {
+    path = path + p;
+  }
+  return path;
+}
+
+function getAppFilesLangPath(p) {
+  var path = getAppFilesPath() + lang() + "\\";
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path);
     console.log("Diretório criado", fs.existsSync(path), path);

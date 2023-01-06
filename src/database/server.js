@@ -119,7 +119,7 @@ app.get('/', (req, res) => {
     res.send(ret);
 })
 
-async function conectaServer() {
+async function connect() {
     let port = await localStorage.getItem("db-port") || 7770
     await localStorage.setItem("db-port", port);
     console.log('Tentando conectar BD à porta: ', port);
@@ -141,4 +141,4 @@ async function conectaServer() {
         await localStorage.setItem("db-status", false);
     }
 }
-conectaServer();
+connect();

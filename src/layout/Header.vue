@@ -58,33 +58,31 @@
           ><v-icon>mdi-magnify</v-icon></v-btn
         >
 
-        <!--
-        <v-btn plain @click="$root.send('minimize')" v-if="$root.desktop">
+        <v-btn plain @click="minimize()" v-if="$root.desktop">
           <v-icon>mdi-window-minimize</v-icon>
         </v-btn>
         <v-btn
           plain
-          @click="$root.send('maximize')"
-          v-if="$root.desktop && $root.maximize"
+          @click="maximize()"
+          v-if="$store.state.desktop && $store.state.maximize"
         >
           <v-icon>mdi-window-restore</v-icon>
         </v-btn>
         <v-btn
           plain
-          @click="$root.send('maximize')"
-          v-if="$root.desktop && !$root.maximize"
+          @click="maximize()"
+          v-if="$store.state.desktop && !$store.state.maximize"
         >
           <v-icon>mdi-window-maximize</v-icon>
         </v-btn>
         <v-btn
           plain
           class="btn-close"
-          @click="$root.send('close')"
-          v-if="$root.desktop"
+          @click="close()"
+          v-if="$store.state.desktop"
         >
           <v-icon>mdi-window-close</v-icon>
         </v-btn>
-        -->
       </v-toolbar>
       <v-tabs
         v-model="$store.state.active_header_tab"
@@ -166,6 +164,7 @@ header .active_header_tab {
 </style>
 
 <script>
+const System = require("../helpers/System.js");
 const Locale = require("../helpers/Locale.js");
 
 export default {
@@ -257,6 +256,15 @@ export default {
     },
     flag: function (lang) {
       return Locale.flag(lang);
+    },
+    maximize() {
+      System.maximize();
+    },
+    minimize() {
+      System.minimize();
+    },
+    close() {
+      System.close();
     },
   },
 };
