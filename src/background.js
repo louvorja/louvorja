@@ -213,7 +213,6 @@ ipcMain.on('close', () => {
 ipcMain.on('config', (event, app_lang) => {
   const ip = require("ip")
 
-  console.log("LL", app_lang)
   lang(app_lang);
 
   event.reply('displays', screen.getAllDisplays());

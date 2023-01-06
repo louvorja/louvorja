@@ -19,10 +19,12 @@ import watch from './watch';
 
 Vue.config.productionTip = false
 
+const Api = require("./services/Api");
 const DevTools = require("./helpers/DevTools");
 const Dialog = require("./helpers/Dialog");
 const Locale = require("./helpers/Locale");
 const Data = require("./helpers/Data");
+const Sync = require("./helpers/Sync");
 
 new Vue({
   i18n,
@@ -97,6 +99,37 @@ new Vue({
 
       ipcRenderer.on('config_web', async function (event, data) {
         self.config_web = data;
+        let date = new Date().toISOString().split('T')[0];
+
+        DevTools.write('Obteve dados da maquina', data, date, self.data.last_conn_server);
+
+
+
+        //verifica se já se conectou hoje no servidor, ou se não há dados salvos na maquina
+        if (!data || date != self.data.last_conn_server) {
+
+          //Obtém configurações da web
+          Api.get('configs', null, (resp, ret) => {
+            if (resp) {
+              DevTools.write('Obteve dados do servidor', ret);
+              self.data.last_conn_server = date;
+              self.config_web = ret;
+              ipcRenderer.send('save_json', 'config', ret, 'filedir');
+
+              //inicia checagem e atualização do banco de dados
+              Sync.start();
+            } else {
+              Dialog.ok('Erro ao obter dados do servidor!', data);
+            }
+          });
+
+        } else {
+          DevTools.write('Já se conectou ao servidor hoje');
+
+          //inicia checagem e atualização do banco de dados
+          Sync.start();
+        }
+
         /*
                 //checa conexão com o banco de dados
                 let s = await self.getDBData();

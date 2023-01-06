@@ -22,6 +22,7 @@ export default new Vuex.Store({
     data: {
       db: { port: 7770 },
       lang: "pt",
+      last_conn_server: null,
       downloads: {
         albuns: [],
         musicas: [],
