@@ -2,7 +2,7 @@
   <div>
     <div class="px-2" v-if="skins">
       <div v-for="list in skins" :key="list.title" class="mb-3">
-        <h4>{{ list.title }}</h4>
+        <div class="subtitle-1 font-weight-medium">{{ list.title }}</div>
         <v-btn
           icon
           v-for="skin in list.list"
