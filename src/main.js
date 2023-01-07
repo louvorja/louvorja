@@ -119,7 +119,7 @@ new Vue({
               //inicia checagem e atualização do banco de dados
               Sync.start();
             } else {
-              Dialog.ok('Erro ao obter dados do servidor!', data);
+              //Não conseguiu conectar ao servidor.... vai trabalhar off-line
             }
           });
 
