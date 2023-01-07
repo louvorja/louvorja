@@ -25,6 +25,7 @@ module.exports = {
     async show(req, res, next) {
         //
     },
+
     async tables(req, res, next) {
         try {
             tables = await knex.raw(`
@@ -56,6 +57,38 @@ module.exports = {
             return res.json({
                 status: "success",
                 data: data
+            });
+        }
+        catch (e) {
+            return res.status(500).json({
+                status: "error",
+                data: e.message
+            });
+        }
+    },
+
+    async create_table(req, res, next) {
+        try {
+            let table_name = req.params.table_name;
+            await knex.schema.dropTableIfExists(table_name);
+            await knex.schema.createTable(table_name, function (table) {
+                Object.keys(req.body.columns).map(column_name => {
+                    let column = req.body.columns[column_name];
+                    if (column.type == 'integer') {
+                        table.integer(column_name);
+                    } else if (column.type == 'datetime') {
+                        table.datetime(column_name);
+                    } else {
+                        table.string(column_name, column.length);
+                    }
+                    //console.log(column)
+                })
+            });
+            //console.log(req.body.columns)
+
+            return res.json({
+                status: "success",
+                data: table_name
             });
         }
         catch (e) {
