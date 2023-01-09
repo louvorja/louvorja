@@ -1,5 +1,7 @@
 import store from '../store'
 const DevTools = require("./DevTools");
+const System = require("./System");
+const Dialog = require("./Dialog");
 const DB = require("../controllers/DB");
 
 export function start() {
@@ -34,23 +36,60 @@ export function check_tables() {
                             //Retorna para a rotina de checagem de tabelas
                             this.check_tables();
                         } else {
-                            DevTools.write('%cErro', 'color:red', ret);
                             //Ocorreu um erro.... aborta missão para evitar loop infinito
+                            Dialog.error(
+                                'Erro ao criar tabela!',
+                                `${ret}`,
+                                function () {
+                                    System.close();
+                                }
+                            );
                         }
                     });
-                }else{
+                } else {
 
                     //Verifica se as colunas estão iguais às do servidor....
                     //Em caso de inconsistências, recria a tabela local
 
-                    //.......................ROTINA AQUI..............//
+                    let create_columns = Object.keys(tables).filter(table => {
+                        return Object.keys(tables[table].columns).filter(column => {
+                            return !(Object.keys(local_tables[table].columns).includes(column))
+                        }).length;
+                    });
 
+                    if (create_columns.length > 0) {
+                        let table = create_columns[0];
+                        DevTools.write('Recriando tabela ', table);
+                        DB.post(`create_table/${table}`, tables[table], (resp, ret) => {
+                            if (resp) {
+                                //Retorna para a rotina de checagem de tabelas
+                                this.check_tables();
+                            } else {
+                                //Ocorreu um erro.... aborta missão para evitar loop infinito
+                                Dialog.error(
+                                    'Erro ao recriar tabela!',
+                                    `${ret}`,
+                                    function () {
+                                        System.close();
+                                    }
+                                );
+                            }
+                        });
+                    } else {
+
+                        //Todas as tabelas em ordem. Checa os dados
+                        this.check_data();
+
+                    }
                 }
-
-
-                console.log(resp, ret, tables, create_tables);
             }
         }
 
     });
+}
+
+export function check_data() {
+    DevTools.write('Verificando dados');
+
+    console.log("SINCRINUZAR DADOS")
 }

@@ -43,3 +43,14 @@ export function ok(title, text, callback = function () { }) {
         callback(resp, ret);
     });
 }
+export function error(title, text, callback = function () { }) {
+    this.show({
+        title,
+        text,
+        buttons: [
+            { text: "Fechar", color: "error", value: "close" },
+        ]
+    }, (resp, ret) => {
+        callback(resp, ret);
+    });
+}

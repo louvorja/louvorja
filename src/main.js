@@ -25,6 +25,7 @@ const Dialog = require("./helpers/Dialog");
 const Locale = require("./helpers/Locale");
 const Data = require("./helpers/Data");
 const Sync = require("./helpers/Sync");
+const System = require("./helpers/System");
 
 new Vue({
   i18n,
@@ -84,9 +85,12 @@ new Vue({
           DevTools.write('Obtendo dados da web')
           ipcRenderer.send('config_web');
         } else {
-          Dialog.ok(
+          Dialog.error(
             'Erro ao conectar no Banco de Dados!',
-            `<span class='error--text'>${message}</span><br><br>Seu programa não irá funcionar corretamente. Tente reiniciar o programa.`
+            `${message}`,
+            function () {
+              System.close();
+            }
           );
         }
 
@@ -107,6 +111,7 @@ new Vue({
 
         //verifica se já se conectou hoje no servidor, ou se não há dados salvos na maquina
         if (!data || date != self.data.last_conn_server) {
+          DevTools.write('Não se conectou ao servidor hoje');
 
           //Obtém configurações da web
           Api.get('configs', null, (resp, ret) => {

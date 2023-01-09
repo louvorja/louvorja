@@ -81,8 +81,10 @@ module.exports = {
                     } else {
                         table.string(column_name, column.length);
                     }
-                    //console.log(column)
                 })
+                if (req.body.primary) {
+                    table.primary(req.body.primary);
+                }
             });
             //console.log(req.body.columns)
 
