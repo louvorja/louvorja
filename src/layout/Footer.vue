@@ -1,5 +1,5 @@
 <template>
   <footer class="bg-secondary">
-      &nbsp;{{$t("version")}}: 23.1.1
+    &nbsp;{{ $t("version") }}: {{ $store.state.version }}
   </footer>
 </template>

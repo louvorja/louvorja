@@ -1,5 +1,6 @@
 import store from '../store'
 const DevTools = require("./DevTools");
+const Api = require("../services/Api");
 const System = require("./System");
 const Dialog = require("./Dialog");
 const DB = require("../controllers/DB");
@@ -28,6 +29,7 @@ export function check_tables() {
 
                 if (create_tables.length > 0) {
                     //Existem tabelas para serem criadas... cria as tabelas na base local
+                    store.state.data.sync_version = null;
 
                     let table = create_tables[0];
                     DevTools.write('Criando tabela ', table);
@@ -58,6 +60,8 @@ export function check_tables() {
                     });
 
                     if (create_columns.length > 0) {
+                        store.state.data.sync_version = null;
+
                         let table = create_columns[0];
                         DevTools.write('Recriando tabela ', table);
                         DB.post(`create_table/${table}`, tables[table], (resp, ret) => {
@@ -91,5 +95,54 @@ export function check_tables() {
 export function check_data() {
     DevTools.write('Verificando dados');
 
-    console.log("SINCRINUZAR DADOS")
+    if (store.state.data.sync_version != store.state.version) {
+        DevTools.write('Ajusta versão de sincronização');
+        store.state.data.downloads.downloaded.full_tables = [];
+        store.state.data.sync_version = store.state.version;
+    }
+
+    //Verifica e alimenta tabelas full
+    let full_tables = store.state.config_web.data_transfer.full.filter(item => {
+        return !store.state.data.downloads.downloaded.full_tables.includes(item);
+    });
+    if (full_tables.length > 0) {
+        let table = full_tables[0];
+        this.download_data(table, (resp, ret) => {
+            if (resp) {
+                store.state.data.downloads.downloaded.full_tables.push(table);
+                this.check_data();
+            } else {
+                //Erro ao obter dados
+            }
+        });
+        return;
+    }
+
+    console.log("SINCRINUZAR DADOS", store.state.config_web.data_transfer.full)
+}
+
+export function download_data(table, callback = function () { }, page = 1) {
+    DevTools.write('Baixando dados');
+    DevTools.write(`%c${table}`, 'color:green', page);
+
+    let limit = 5;
+    Api.get(table, { limit, page }, (resp, ret) => {
+        if (resp) {
+            if (ret.length > 0) {
+                //A ROTINA PARA INSERIR NO BD LOCAL É AQUI
+                console.log("INSERIR", ret)
+                /* ********************************** */
+                /* ********************************** */
+                /* ********************************** */
+                /* ********************************** */
+                this.download_data(table, callback, page + 1);
+            } else {
+                //Não tem mais dados para baixar nesta tabela... encerra download
+                callback(resp);
+            }
+        } else {
+            //Erro ao obter dados
+            callback(resp, data);
+        }
+    });
 }

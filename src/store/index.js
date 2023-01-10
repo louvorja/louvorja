@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    version: "23.1.1",
     desktop: typeof desktop !== "undefined" ? desktop : false,
     debug: false,
     config_web: null,
@@ -20,15 +21,15 @@ export default new Vuex.Store({
     //monitor: 0,
 
     data: {
+      sync_version: null,
       db: { port: 7770 },
       lang: "pt",
       last_conn_server: null,
       downloads: {
-        albuns: [],
-        musicas: [],
-        baixados: {
-          albuns: [],
-          musicas: [],
+        albums: [],
+        downloaded: {
+          full_tables: [],
+          albums: [],
         },
       },
       media: {
