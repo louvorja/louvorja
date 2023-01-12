@@ -16,7 +16,6 @@ try {
 
 
 
-const sqlite3 = require('sqlite3').verbose();
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -43,6 +42,7 @@ app.post('/create_table/:table_name', DB.create_table);
 app.post('/:lang/create_table/:table_name', DB.create_table);
 
 app.get('/:lang/:table', DB.index);
+app.post('/:lang/:table', DB.store);
 
 
 async function connect() {

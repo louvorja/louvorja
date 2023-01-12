@@ -34,6 +34,7 @@ export function check_tables() {
                     let table = create_tables[0];
                     DevTools.write('Criando tabela ', table);
                     DB.post(`create_table/${table}`, tables[table], (resp, ret) => {
+                        this.reset_download(table);
                         if (resp) {
                             //Retorna para a rotina de checagem de tabelas
                             this.check_tables();
@@ -65,6 +66,7 @@ export function check_tables() {
                         let table = create_columns[0];
                         DevTools.write('Recriando tabela ', table);
                         DB.post(`create_table/${table}`, tables[table], (resp, ret) => {
+                            this.reset_download(table);
                             if (resp) {
                                 //Retorna para a rotina de checagem de tabelas
                                 this.check_tables();
@@ -82,7 +84,15 @@ export function check_tables() {
                     } else {
 
                         //Todas as tabelas em ordem. Checa os dados
-                        this.check_data();
+                        this.check_data((resp) => {
+                            if (resp) {
+
+                                DevTools.write('Fim da verificação');
+
+                            } else {
+                                //
+                            }
+                        });
 
                     }
                 }
@@ -92,7 +102,13 @@ export function check_tables() {
     });
 }
 
-export function check_data() {
+export function reset_download(table) {
+    if (store.state.config_web.data_transfer.album.includes(table)) {
+        store.state.data.downloads.downloaded.albums = [];
+    }
+}
+
+export function check_data(callback = function () { }) {
     DevTools.write('Verificando dados');
 
     if (store.state.data.sync_version != store.state.version) {
@@ -107,10 +123,10 @@ export function check_data() {
     });
     if (full_tables.length > 0) {
         let table = full_tables[0];
-        this.download_data(table, (resp, ret) => {
+        this.download_data(table, {}, (resp, ret) => {
             if (resp) {
                 store.state.data.downloads.downloaded.full_tables.push(table);
-                this.check_data();
+                this.check_data(callback);
             } else {
                 //Erro ao obter dados
             }
@@ -118,24 +134,75 @@ export function check_data() {
         return;
     }
 
-    console.log("SINCRINUZAR DADOS", store.state.config_web.data_transfer.full)
+
+    //Obtém lista de albuns para download
+    let albums = store.state.data.downloads.albums.filter(item => {
+        return !store.state.data.downloads.downloaded.albums.includes(item);
+    });
+    if (albums.length > 0) {
+        let album = albums[0];
+        this.download_album(album, (resp, ret) => {
+            if (resp) {
+                //Baixou o album
+                store.state.data.downloads.downloaded.albums.push(album);
+                this.check_data(callback);
+            } else {
+                //Erro ao obter dados
+            }
+        });
+        return;
+    }
+
+    callback(true);
+    return;
+
 }
 
-export function download_data(table, callback = function () { }, page = 1) {
+export function download_album(id_album, callback = function () { }, table_index = 0) {
+    DevTools.write('Baixando album', id_album);
+
+    if (table_index > store.state.config_web.data_transfer.album.length - 1) {
+        //Não há mais tabelas para baixar
+        callback(true);
+        return;
+    }
+
+    let table = store.state.config_web.data_transfer.album[table_index];
+    this.download_data(table, { id_album }, (resp, ret) => {
+        if (resp) {
+            this.download_album(id_album, callback, table_index + 1);
+        } else {
+            //Erro ao obter dados
+        }
+    });
+}
+
+export function download_data(table, filter = {}, callback = function () { }, page = 1) {
     DevTools.write('Baixando dados');
     DevTools.write(`%c${table}`, 'color:green', page);
 
-    let limit = 5;
-    Api.get(table, { limit, page }, (resp, ret) => {
+    filter.limit = 100;
+    filter.page = page;
+    Api.get(table, filter, (resp, ret) => {
         if (resp) {
             if (ret.length > 0) {
-                //A ROTINA PARA INSERIR NO BD LOCAL É AQUI
-                console.log("INSERIR", ret)
-                /* ********************************** */
-                /* ********************************** */
-                /* ********************************** */
-                /* ********************************** */
-                this.download_data(table, callback, page + 1);
+
+                DB.post(table, ret, (resp, ret) => {
+                    if (resp) {
+                        //Retorna para a rotina de download, para baixar mais dados
+                        this.download_data(table, filter, callback, page + 1);
+                    } else {
+                        //Ocorreu um erro.... aborta missão para evitar loop infinito
+                        Dialog.error(
+                            'Erro ao inserir dados na tabela!',
+                            `${ret}`,
+                            function () {
+                                System.close();
+                            }
+                        );
+                    }
+                });
+
             } else {
                 //Não tem mais dados para baixar nesta tabela... encerra download
                 callback(resp);

@@ -22,8 +22,41 @@ module.exports = {
             });
         }
     },
+
     async show(req, res, next) {
         //
+    },
+
+    async store(req, res, next) {
+        try {
+            let table = req.params.table;
+
+            let info = await knex.raw(`PRAGMA table_info(${table})`);
+            let fields = [];
+            info.map(item => {
+                fields.push(item.name);
+            });
+
+            let data = req.body.map(item => {
+                Object.keys(item).map(function (key) {
+                    fields.indexOf(key) < 0 ? delete item[key] : ""
+                });
+                return item;
+            });
+
+            await knex.insert(data).table(table).onConflict().ignore();
+
+            return res.json({
+                status: "success",
+                data
+            });
+        }
+        catch (e) {
+            return res.status(500).json({
+                status: "error",
+                data: e.message
+            });
+        }
     },
 
     async tables(req, res, next) {
