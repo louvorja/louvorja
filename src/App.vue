@@ -2,7 +2,7 @@
   <v-app :dark="$root.data.layout.dark">
     <app-side-bar />
     <app-dialog />
-    <!-- <app-store /> -->
+    <app-store />
     <app-alert />
     <app-lyric />
     <app-album />
@@ -17,7 +17,6 @@
           </keep-alive>
         </v-main>
         <app-player />
-        <app-progress />
         <app-footer />
       </v-layout>
       <app-music-bar />
@@ -30,14 +29,13 @@ export default {
   components: {
     AppSideBar: () => import("@/layout/SideBar"),
     AppDialog: () => import("@/layout/Dialog"),
-    //AppStore: () => import("@/layout/Store"),
+    AppStore: () => import("@/layout/store/Store"),
     AppAlert: () => import("@/layout/Alert"),
     AppLyric: () => import("@/layout/Lyric"),
     AppAlbum: () => import("@/layout/Album"),
     AppHeader: () => import("@/layout/Header"),
     AppTabs: () => import("@/layout/TabsPages"),
     AppPlayer: () => import("@/layout/Player"),
-    AppProgress: () => import("@/layout/Progress"),
     AppFooter: () => import("@/layout/Footer"),
     AppMusicBar: () => import("@/layout/Music"),
   },

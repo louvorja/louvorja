@@ -23,15 +23,31 @@
         >
         </v-app-bar-nav-icon>
 
+        <!-- Título -->
         <v-toolbar-title class="ml-5">{{ $t("app.name") }}</v-toolbar-title>
         <v-toolbar-title v-if="debug" class="ml-5">[ DEBUG ]</v-toolbar-title>
 
+        <!-- Espaçador -->
         <v-spacer></v-spacer>
 
+        <!-- Botão Home -->
+        <v-btn icon to="/"><v-icon>mdi-home-circle-outline</v-icon></v-btn>
+
+        <!-- Botão de Busca -->
+        <v-btn
+          icon
+          @click="search()"
+          v-shortkey="['ctrl', 'f']"
+          @shortkey="search()"
+        >
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+
+        <!-- Seletor de Idioma -->
         <div class="text-center">
-          <v-menu offset-y>
+          <v-menu offset-y left>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn icon dark v-bind="attrs" v-on="on">
+              <v-btn icon v-bind="attrs" v-on="on">
                 <flag :iso="flag(lang)" />
                 {{ lang }}
               </v-btn>
@@ -49,16 +65,57 @@
           </v-menu>
         </div>
 
-        <v-btn icon to="/"><v-icon>mdi-home-circle-outline</v-icon></v-btn>
-        <v-btn
-          icon
-          @click="search()"
-          v-shortkey="['ctrl', 'f']"
-          @shortkey="search()"
-          ><v-icon>mdi-magnify</v-icon></v-btn
-        >
+        <!-- Divisor -->
+        <v-divider class="mx-2" vertical v-if="$store.state.download.show" />
 
-        <v-btn plain @click="minimize()" v-if="$root.desktop">
+        <!-- Botão de Download -->
+        <div class="text-center" v-if="$store.state.download.show">
+          <v-menu offset-y left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-progress-circular
+                :indeterminate="
+                  !$store.state.download.max_value ||
+                  !$store.state.download.value
+                "
+                :width="2"
+                :value="
+                  (($store.state.download.value || 0) /
+                    ($store.state.download.max_value || 0)) *
+                  100
+                "
+                :rotate="
+                  !$store.state.download.max_value ||
+                  !$store.state.download.value
+                    ? 0
+                    : 280
+                "
+                color="white"
+              >
+                <v-btn icon v-bind="attrs" v-on="on">
+                  <v-icon>mdi-download</v-icon>
+                </v-btn>
+              </v-progress-circular>
+            </template>
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title v-if="$store.state.download.title">
+                    {{ $store.state.download.title }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle v-if="$store.state.download.subtitle">
+                    {{ $store.state.download.subtitle }}
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
+
+        <!-- Divisor -->
+        <v-divider class="mx-2" vertical v-if="$store.state.desktop" />
+
+        <!-- Botões de Minimizar, Maximizar, Restaurar e Fechar -->
+        <v-btn plain @click="minimize()" v-if="$store.state.desktop">
           <v-icon>mdi-window-minimize</v-icon>
         </v-btn>
         <v-btn

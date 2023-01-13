@@ -16,6 +16,15 @@ body {
 }
 
 
+button.bt-column .v-btn__content {
+    flex-direction: column !important;
+}
+
+button.bt-column {
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+}
+
 /*:root{
     --primary: #29569b !important;
     --primary-hover: #275291 !important;

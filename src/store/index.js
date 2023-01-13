@@ -21,15 +21,15 @@ export default new Vuex.Store({
     //monitor: 0,
 
     data: {
-      sync_version: null,
+      sync_version: { pt: null, es: null },
       db: { port: 7770 },
       lang: "pt",
       last_conn_server: null,
       downloads: {
-        albums: [],
+        albums: { pt: null, es: null },
         downloaded: {
-          full_tables: [],
-          albums: [],
+          full_tables: { pt: null, es: null },
+          albums: { pt: null, es: null },
         },
       },
       media: {
@@ -67,6 +67,12 @@ export default new Vuex.Store({
     active_header_tab: null,
     tabs_dot: [],
 
+    download: {
+      show: false,
+      title: null,
+      value: null,
+      max_value: null,
+    },
     dialog: {
       show: false,
       title: "",
@@ -112,11 +118,6 @@ export default new Vuex.Store({
       duration: 0,
       album: '',
       track: 0,
-    },
-    progress: {
-      show: false,
-      value: 0,
-      text: "",
     },
     lyric: {
       show: false,

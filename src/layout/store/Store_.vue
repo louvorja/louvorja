@@ -2,17 +2,18 @@
   <v-dialog v-model="store.show" max-width="80%" persistent>
     <v-card>
       <v-layout column fill-height style="height: 90vh">
+        <!--
         <div class="flex-grow-0">
           <v-card-title>
             <span>Loja Virtual</span>
             <v-spacer></v-spacer>
             <v-btn icon>
-              <v-icon color="info" @click="baixaStore()">mdi-refresh</v-icon>
+              <v-icon color="info" @click="refreshStore()">mdi-refresh</v-icon>
             </v-btn>
           </v-card-title>
           <v-card-subtitle>
             Baixe gratuitamente conteúdos para seu aplicativo LouvorJA.
-            <v-alert v-if="progress" dense text border="left" type="info">
+            <v-alert vif="download.show" dense text border="left" type="info">
               O programa está baixando os arquivos em segundo plano. Pode fechar
               esta janela e continuar navegando enquanto o download é feito.
             </v-alert>
@@ -21,32 +22,35 @@
 
           <v-tabs
             v-model="tab"
-            :color="$state.store.data.layout.color"
+            :color="$store.state.data.layout.color"
             show-arrows
             grow
           >
             <v-tab
-              v-for="(categoria, index) in categorias"
+              v-for="(categoria, index) in categories"
               :key="categoria.id_categoria"
               :data-id="index"
             >
               {{ categoria.titulo }}
-              <v-chip small class="ms-2">{{
-                albuns(categoria.id_categoria, false).length
-              }}</v-chip>
+              <v-chip small class="ms-2">
+                {{ albuns(categoria.id_categoria, false).length }}
+              </v-chip>
             </v-tab>
           </v-tabs>
           <v-progress-linear
-            v-if="carregando"
+            v-if="loading"
             indeterminate
-            :color="$state.store.data.layout.color"
+            :color="$store.state.data.layout.color"
           >
           </v-progress-linear>
+          
         </div>
+        -->
+        <!--
         <div class="flex-grow-1" style="overflow: auto; flex: auto">
           <v-tabs-items v-model="tab">
             <v-tab-item
-              v-for="categoria in categorias"
+              v-for="categoria in categories"
               :key="categoria.id_categoria"
             >
               <v-container fluid>
@@ -85,6 +89,7 @@
             <v-btn text color="error" @click="closeStore()">Fechar</v-btn>
           </v-card-actions>
         </div>
+        -->
       </v-layout>
     </v-card>
   </v-dialog>
@@ -104,27 +109,28 @@ export default {
         { titulo: "Disponíveis para Download", baixados: false },
         { titulo: "Baixados", baixados: true },
       ],
-      carregando: true,
-      categorias: null,
+      loading: false,
+      categories: null,
       items: null,
     };
   },
   computed: {
     store: function () {
-      return this.$state.store.store;
+      return this.$store.state.store;
     },
+    /*
     dialog: function () {
-      return this.$state.store.dialog;
+      return this.$store.state.dialog;
     },
     downloads: function () {
-      return this.$state.store.data.downloads;
-    },
-    progress: function () {
-      return this.$state.store.progress.active;
+      return this.$store.state.data.downloads;
+    },*/
+    download: function () {
+      return this.$store.state.download;
     },
   },
   watch: {
-    store: {
+    /*store: {
       handler: function () {
         if (this.store.show) {
           this.panel = 0;
@@ -133,7 +139,7 @@ export default {
             console.log("Carregado do sessionStorage");
             this.items = JSON.parse(sessionStorage.getItem("store"));
           } else {
-            this.baixaStore();
+            this.refreshStore();
           }
         }
       },
@@ -141,24 +147,22 @@ export default {
     },
     tab: function () {
       this.panel = 0;
-    },
-  },
-  mounted: async function () {
-    //this.baixaStore();
+    },*/
   },
   methods: {
-    baixaStore: async function () {
-      this.carregando = true;
-      console.log("Baixando categorias");
-      let data = await this.$state.store.getApiData("store");
-      this.categorias = data.categorias;
+    refreshStore: async function () {
+      /*
+      this.loading = true;
+      console.log("Baixando categories");
+      let data = await this.$store.state.getApiData("store");
+      this.categories = data.categories;
 
       console.log("Baixando items");
       this.items = data.albuns;
       sessionStorage.setItem("store", JSON.stringify(this.items));
 
-      this.carregando = false;
-    },
+      this.loading = false;*/
+    } /*
     closeStore: function () {
       this.store.show = false;
     },
@@ -201,7 +205,7 @@ export default {
           clearInterval(tmr);
           if (self.dialog.value == "ok") {
             self.downloads.albuns.push(item.id_album);
-            self.$state.store.checkDownloads();
+            self.$store.state.checkDownloads();
           }
         }
       }, 100);
@@ -234,11 +238,14 @@ export default {
             ) {
               return self.downloads.albuns.indexOf(item) === i;
             });
-            self.$state.store.checkDownloads();
+            self.$store.state.checkDownloads();
           }
         }
       }, 100);
-    },
+    },*/,
+  },
+  mounted: async function () {
+    this.refreshStore();
   },
 };
 </script>
