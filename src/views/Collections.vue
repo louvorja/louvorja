@@ -45,7 +45,7 @@
         >
           <div class="d-flex flex-no-wrap justify-space-between align-center">
             <v-avatar class="ma-3" size="125" tile>
-              <v-img :src="album.url_image"></v-img>
+              <v-img :src="album.url_image" />
             </v-avatar>
             <div class="flex-grow-1 d-flex flex-column">
               <div class="text-h6 pt-2" v-text="album.name" />

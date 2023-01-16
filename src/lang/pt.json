@@ -22,6 +22,7 @@
     "find-musics": "Localizar Músicas",
     "online-videos": "Vídeos On-line",
     "bible": "Bíblia",
+    "bibles": "Bíblias",
     "liturgy": "Liturgia",
     "scheduled-items": "Itens Agendados",
     "stopwatch": "Cronômetro",
@@ -35,6 +36,7 @@
     "task-in-progress": "Tarefa em andamento",
     "refresh-page": "Atualizar Página",
     "access-store": "Acessar Loja",
+    "store": "Loja",
     "number": "Número",
     "title": "Título",
     "album": "Álbum",
@@ -52,5 +54,6 @@
     "close": "Fechar",
     "annual-collections":"Coletâneas Anuais",
     "various-collections":"Coletâneas Diversas",
-    "all-collections":"Todas as Coletâneas"
+    "all-collections":"Todas as Coletâneas",
+    "my-downloads":"Meus Downloads"
 }

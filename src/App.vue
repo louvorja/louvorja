@@ -29,7 +29,7 @@ export default {
   components: {
     AppSideBar: () => import("@/layout/SideBar"),
     AppDialog: () => import("@/layout/Dialog"),
-    AppStore: () => import("@/layout/store/Store"),
+    AppStore: () => import("@/layout/store/Index"),
     AppAlert: () => import("@/layout/Alert"),
     AppLyric: () => import("@/layout/Lyric"),
     AppAlbum: () => import("@/layout/Album"),

@@ -12,7 +12,7 @@
         "label-hymn-name-or-number": "Ingrese el nombre o número del himno",
         "label-song-name": "Introduce el nombre de la canción"
     },
-    "initials":{
+    "initials": {
         "sung": "CA",
         "instrumental": "PB",
         "without-audio": "SA"
@@ -22,6 +22,7 @@
     "find-musics": "Encontrar Canciones",
     "online-videos": "Vídeos En-línea",
     "bible": "Biblia",
+    "bibles": "Biblias",
     "liturgy": "Liturgia",
     "scheduled-items": "Elementos Programados",
     "stopwatch": "Cronógrafo",
@@ -35,10 +36,11 @@
     "task-in-progress": "Tarea en progreso",
     "refresh-page": "Actualizar Página",
     "access-store": "Tienda de Acceso",
+    "store": "Tienda",
     "number": "Número",
     "title": "Título",
     "album": "Álbum",
-    "slide":"Slide",
+    "slide": "Slide",
     "instrumental-slide": "Slide Playback",
     "instrumental": "Playback",
     "sung": "Cantado",
@@ -50,7 +52,8 @@
     "version": "Versión",
     "track": "Rango",
     "close": "Cerca",
-    "annual-collections":"Varias Colecciones",
-    "various-collections":"Colecciones Anuales",
-    "all-collections":"Todas las Colecciones"
+    "annual-collections": "Varias Colecciones",
+    "various-collections": "Colecciones Anuales",
+    "all-collections": "Todas las Colecciones",
+    "my-downloads":"Mis Descargas"
 }

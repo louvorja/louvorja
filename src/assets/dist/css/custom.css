@@ -25,6 +25,14 @@ button.bt-column {
     padding-bottom: 30px !important;
 }
 
+.h-100 {
+    height: 100% !important;
+}
+
+.overflow {
+    overflow: auto !important;
+}
+
 /*:root{
     --primary: #29569b !important;
     --primary-hover: #275291 !important;

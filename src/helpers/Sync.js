@@ -5,8 +5,6 @@ const System = require("./System");
 const Dialog = require("./Dialog");
 const DB = require("../controllers/DB");
 
-var tmr_download;
-
 export function start() {
     DevTools.write('Inicia sincronização de dados');
     this.check_tables();
