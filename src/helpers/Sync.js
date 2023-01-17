@@ -7,11 +7,17 @@ const DB = require("../controllers/DB");
 
 export function start() {
     DevTools.write('Inicia sincronização de dados');
+
+    store.state.download.id_album = null;
+    store.state.download.active = true;
     this.check_tables();
 }
 export function end() {
-    DevTools.write('Fim da sincronização de dados');
+    store.state.download.id_album = null;
+    store.state.download.active = false;
     this.hide_download_info();
+
+    DevTools.write('Fim da sincronização de dados');
 }
 export function lang() {
     return store.state.lang;
@@ -193,6 +199,7 @@ export function check_data(callback = function () { }) {
         this.download_album(album, (resp, ret) => {
             if (resp) {
                 //Baixou o album
+                store.state.download.id_album = null;
                 store.state.data.downloads.downloaded.albums[this.lang()].push(album);
                 this.check_data(callback);
             } else {
@@ -209,6 +216,7 @@ export function check_data(callback = function () { }) {
 
 export function download_album(id_album, callback = function () { }, table_index = 0) {
     DevTools.write('Baixando album', id_album);
+    store.state.download.id_album = id_album;
 
     if (table_index > store.state.config_web.data_transfer.album.length - 1) {
         //Não há mais tabelas para baixar

@@ -18,6 +18,7 @@
         </v-tab>
       </v-tabs>
     </v-card-text>
+
     <v-card-text
       style="height: 0px"
       class="flex-grow-1 flex-shrink-1 overflow d-flex flex-wrap justify-center"
@@ -37,7 +38,7 @@
       <!-- ITEMS -->
       <v-card
         v-for="(album, index) in albums"
-        :key="index"
+        :key="album.id_album + '_' + index"
         width="200px"
         class="ma-2"
       >
@@ -46,6 +47,11 @@
           class="white--text align-end"
           gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
           height="200px"
+          :style="
+            !downloaded_albums.includes(album.id_album)
+              ? 'filter: grayscale(100%);'
+              : ''
+          "
         >
           <v-card-title v-text="album.name" style="word-break: initial" />
         </v-img>
@@ -53,16 +59,30 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn icon>
-            <v-icon>mdi-heart</v-icon>
+          <v-btn v-if="current_album == album.id_album" icon>
+            <v-progress-circular :size="22" indeterminate color="amber">
+              <v-icon color="amber" :size="15">mdi-download</v-icon>
+            </v-progress-circular>
           </v-btn>
-
-          <v-btn icon>
-            <v-icon>mdi-bookmark</v-icon>
+          <v-btn v-else-if="downloaded_albums.includes(album.id_album)" icon>
+            <v-icon color="success">mdi-check-bold</v-icon>
           </v-btn>
-
-          <v-btn icon>
-            <v-icon>mdi-share-variant</v-icon>
+          <v-hover
+            v-slot="{ hover }"
+            v-else-if="pending_albums.includes(album.id_album)"
+          >
+            <v-btn @click="cancel_download(album)" icon>
+              <v-icon v-if="hover" color="red">mdi-close-circle-outline</v-icon>
+              <v-progress-circular
+                v-else
+                :size="22"
+                indeterminate
+                color="amber"
+              />
+            </v-btn>
+          </v-hover>
+          <v-btn v-else @click="download_album(album)" icon>
+            <v-icon color="primary">mdi-download</v-icon>
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -72,6 +92,8 @@
 
 
 <script>
+const Sync = require("@/helpers/Sync");
+const Dialog = require("@/helpers/Dialog");
 const Api = require("@/services/Api");
 
 export default {
@@ -86,10 +108,28 @@ export default {
     };
   },
   computed: {
+    lang: function () {
+      return this.$store.state.lang;
+    },
     all_categories: function () {
       return this.categories.map((item) => {
         return item.slug;
       });
+    },
+    downloaded_albums: function () {
+      return this.$store.state.data.downloads.downloaded.albums[this.lang];
+    },
+    pending_albums: function () {
+      return this.$store.state.data.downloads.albums[this.lang].filter(
+        (item) => {
+          return !this.$store.state.data.downloads.downloaded.albums[
+            this.lang
+          ].includes(item);
+        }
+      );
+    },
+    current_album: function () {
+      return this.$store.state.download.id_album;
     },
   },
   watch: {
@@ -149,6 +189,31 @@ export default {
     },
     setCategory(id) {
       this.id_category = id;
+    },
+    download_album(album) {
+      Dialog.yesno(
+        "Baixar álbum",
+        `Deseja fazer o download do álbum "${album.name}"?`,
+        (resp) => {
+          if (resp == "yes") {
+            this.$store.state.data.downloads.albums[this.lang].push(
+              album.id_album
+            );
+
+            if (!this.$store.state.download.active) {
+              Sync.start();
+            }
+          }
+        }
+      );
+    },
+    cancel_download(album) {
+      let indx = this.$store.state.data.downloads.albums[this.lang].indexOf(
+        album.id_album
+      );
+      if (indx > -1) {
+        this.$store.state.data.downloads.albums[this.lang].splice(indx, 1);
+      }
     },
   },
   mounted: async function () {

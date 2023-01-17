@@ -35,6 +35,18 @@
               depressed
               x-small
               class="bt-column btn-navigation"
+              :class="component == 'hymnals' ? 'active' : ''"
+              @click="page('hymnals')"
+            >
+              <v-icon dark> mdi-music-clef-treble </v-icon>
+              <span class="pt-2 font-weight-light">
+                {{ $t("hymnals") }}
+              </span>
+            </v-btn>
+            <v-btn
+              depressed
+              x-small
+              class="bt-column btn-navigation"
               :class="component == 'collections' ? 'active' : ''"
               @click="page('collections')"
             >
@@ -94,6 +106,7 @@ button.bt-column {
 export default {
   components: {
     home: () => import(`./Home`),
+    hymnals: () => import(`./Hymnals`),
     collections: () => import(`./Collections`),
     bibles: () => import(`./Bibles`),
     downloads: () => import(`./Downloads`),

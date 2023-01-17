@@ -68,8 +68,10 @@ export default new Vuex.Store({
 
     download: {
       show: false,
+      active: false,
       title: null,
       value: null,
+      id_album: null,
       max_value: null,
     },
     dialog: {
