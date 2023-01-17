@@ -5,7 +5,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    version: "23.1.1",
     desktop: typeof desktop !== "undefined" ? desktop : false,
     debug: false,
     config_web: null,
