@@ -35,13 +35,7 @@ export function remove_local(route, callback = function () { }) {
     });
 }
 
-/*
-export function del(route, callback = function () { }) {
-    this.call("delete", route, null, null, (resp, data) => {
-        callback(resp, data);
-    });
-}
-*/
+
 export async function call(method, route, options = null, body = null, local = false, callback = function () { }) {
     let params = "";
     if (options) {
