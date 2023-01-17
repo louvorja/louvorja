@@ -66,13 +66,13 @@ export default {
           desktop: true,
         },
         {
-          tab: "Loja",
-          icon: "mdi-store",
+          tab: this.$t("download-center"),
+          icon: "mdi-briefcase-download",
           click: "this.store()",
           desktop: true,
         },
         {
-          tab: "Banco de Dados",
+          tab: this.$t("database"),
           icon: "mdi-database",
           component: "database",
           desktop: true,

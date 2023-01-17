@@ -47,6 +47,14 @@ export function reset_download(table) {
         });
     }
 }
+export function reset_database() {
+    DB.remove("drop_tables", (resp, ret) => {
+        if (resp) {
+            DevTools.write('Tabelas apagadas');
+            this.start();
+        }
+    });
+}
 
 export function check_tables() {
     DevTools.write('Verificando tabelas');

@@ -133,4 +133,32 @@ module.exports = {
             });
         }
     },
+
+    async drop_tables(req, res, next) {
+        try {
+            tables = await knex.raw(`
+                                    select
+                                        m.name as 'table'
+                                    from sqlite_master m
+                                    order by m.name
+                                `);
+
+            if (tables) {
+                const promises = tables.map(async table => {
+                    await knex.schema.dropTableIfExists(table.table);
+                });
+                await Promise.all(promises);
+            }
+
+            return res.json({
+                status: "success"
+            });
+        }
+        catch (e) {
+            return res.status(500).json({
+                status: "error",
+                data: e.message
+            });
+        }
+    },
 }

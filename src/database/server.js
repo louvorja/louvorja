@@ -41,6 +41,9 @@ app.get('/:lang/list_tables', DB.tables);
 app.post('/create_table/:table_name', DB.create_table);
 app.post('/:lang/create_table/:table_name', DB.create_table);
 
+app.delete('/drop_tables', DB.drop_tables);
+app.delete('/:lang/drop_tables', DB.drop_tables);
+
 app.get('/:lang/:table', DB.index);
 app.post('/:lang/:table', DB.store);
 

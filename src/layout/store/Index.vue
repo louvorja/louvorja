@@ -4,8 +4,8 @@
       <v-layout column fill-height style="height: 90vh">
         <v-card dark flat outlined tile style="border: 0">
           <v-toolbar dark flat color="#1E1E1E">
-            <v-icon>mdi-store</v-icon>
-            <v-toolbar-title class="ml-5">{{ $t("store") }}</v-toolbar-title>
+            <v-icon>mdi-briefcase-download</v-icon>
+            <v-toolbar-title class="ml-5">{{ $t("download-center") }}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn plain @click="close()">
               <v-icon>mdi-window-close</v-icon>

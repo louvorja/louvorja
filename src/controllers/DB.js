@@ -29,3 +29,17 @@ export function post(table, data, callback = function () { }) {
         });
     }
 }
+
+export function remove(table, callback = function () { }) {
+    if (store.state.desktop) {
+        // É sistema desktop, usa banco local
+        Api.remove_local(table, (resp, ret) => {
+            callback(resp, ret);
+        });
+    } else {
+        // É sistema online, usa banco remoto
+        Api.remove(table, (resp, ret) => {
+            callback(resp, ret);
+        });
+    }
+}

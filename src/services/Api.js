@@ -24,6 +24,17 @@ export function post_local(route, body = null, callback = function () { }) {
     });
 }
 
+export function remove(route, callback = function () { }) {
+    this.call("delete", route, null, null, false, (resp, data) => {
+        callback(resp, data);
+    });
+}
+export function remove_local(route, callback = function () { }) {
+    this.call("delete", route, null, null, true, (resp, data) => {
+        callback(resp, data);
+    });
+}
+
 /*
 export function del(route, callback = function () { }) {
     this.call("delete", route, null, null, (resp, data) => {
