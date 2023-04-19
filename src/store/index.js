@@ -29,6 +29,7 @@ export default new Vuex.Store({
         downloaded: {
           full_tables: { pt: null, es: null },
           albums: { pt: null, es: null },
+          files: {},
         },
       },
       media: {
@@ -73,6 +74,11 @@ export default new Vuex.Store({
       value: null,
       id_album: null,
       max_value: null,
+      file: {
+        name: null,
+        downloaded_size: 0,
+        size: 0
+      }
     },
     dialog: {
       show: false,

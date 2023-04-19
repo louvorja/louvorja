@@ -284,6 +284,20 @@ ipcMain.on('save_data', (event, data) => {
   event.reply('save_data');
 })
 
+ipcMain.on('download', (event, file) => {
+  console.log('download', file)
+  event.reply('download', 'size', 15);
+  event.reply('download', 'progress', 5);
+
+  setTimeout(function () {
+    event.reply('download', 'complete');
+  }, 7000);
+
+  //info.properties.onProgress = status => window.webContents.send("download progress", status);
+  /*download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
+      .then(dl => window.webContents.send("download complete", dl.getSavePath()));*/
+});
+
 
 
 function lang(app_lang = null) {

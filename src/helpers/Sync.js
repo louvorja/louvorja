@@ -4,6 +4,10 @@ const Api = require("../services/Api");
 const System = require("./System");
 const Dialog = require("./Dialog");
 const DB = require("../controllers/DB");
+const Data = require("./Data");
+const IPC = require("./IPC");
+
+let tmr_download;
 
 export function start() {
     DevTools.write('Inicia sincronização de dados');
@@ -28,12 +32,15 @@ export function show_download_info(params = {}) {
     store.state.download.subtitle = params.subtitle || null;
     store.state.download.value = params.value || null;
     store.state.download.max_value = params.max_value || null;
+    store.state.download.file.name = params.file_name || null;
+    store.state.download.file.downloaded_size = params.file_downloaded_size || 0;
+    store.state.download.file.size = params.file_size || 0;
     console.log("ABRE DOWN", store.state.download)
 }
 export function hide_download_info() {
     store.state.download.show = false;
     store.state.download.title = null;
-    console.log("FECHA DOWN", store.state.download)
+    //console.log("FECHA DOWN", store.state.download)
 }
 export function reset_download(table) {
     if (store.state.config_web.data_transfer.full.includes(table)) {
@@ -136,7 +143,16 @@ export function check_tables() {
                         this.check_data((resp) => {
                             if (resp) {
 
-                                this.end();
+                                //Todos os dados em ordem. Checa os arquivos
+                                this.check_files((resp) => {
+                                    if (resp) {
+
+                                        this.end();
+
+                                    } else {
+                                        //
+                                    }
+                                });
 
                             } else {
                                 //
@@ -278,4 +294,60 @@ export function download_data(table, filter = {}, callback = function () { }, pa
             callback(resp, data);
         }
     });
+}
+
+export function check_files(callback = function () { }) {
+    DevTools.write('Verificando arquivos');
+
+    DB.get("files", null, (resp, ret) => {
+
+        if (resp) {
+
+            let file_download = ret.filter(file => {
+                return !store.state.data.downloads.downloaded.files[file.id_file]
+                    || store.state.data.downloads.downloaded.files[file.id_file] !== file.version;
+            })[0];
+
+            if (file_download) {
+                this.download_file(file_download, (resp) => {
+                    if (resp) {
+                        this.check_files(callback);
+                    } else {
+                        callback(false);
+                        return;
+                    }
+                });
+            } else {
+                callback(true);
+                return;
+            }
+
+        } else {
+            callback(false);
+            return;
+        }
+
+    });
+
+}
+
+export function download_file(file, callback = function () { }) {
+    DevTools.write('Baixando arquivo');
+    DevTools.write(`%c${file.file_name}`, 'color:green');
+
+    show_download_info({ file_name: file.name, title: `Baixando arquivo ${file.name}` });
+    IPC.send('download', file);
+
+    tmr_download = setInterval(function () {
+        if (!store.state.download.file.name) {
+            clearInterval(tmr_download);
+
+            store.state.data.downloads.downloaded.files[file.id_file] = file.version;
+            Data.save();
+
+            callback(true);
+        }
+        console.log("BAIXANDO", store.state.download.file.name);
+    }, 500);
+
 }

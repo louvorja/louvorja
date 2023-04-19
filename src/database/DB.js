@@ -6,7 +6,7 @@ module.exports = {
             let lang = req.params.lang;
             let table = req.params.table;
 
-            data = await knex(table).first();
+            data = await knex(table);
 
             console.log(req.params)
 

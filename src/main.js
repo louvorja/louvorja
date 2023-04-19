@@ -101,6 +101,22 @@ new Vue({
         DevTools.write('Dados salvos!')
       });
 
+      ipcRenderer.on('download', function (event, action, value) {
+        if (action == 'size') {
+          self.download.file.size = value;
+          self.download.max_value = value;
+        } else if (action == 'progress') {
+          self.download.file.downloaded_size = value;
+          self.download.value = value;
+        } else if (action == 'complete') {
+          self.download.file.name = null;
+          self.download.file.size = 0;
+          self.download.file.downloaded_size = 0;
+          DevTools.write('Download Completo!')
+        }
+      });
+
+
       ipcRenderer.on('config_web', async function (event, data) {
         self.config_web = data;
         let date = new Date().toISOString().split('T')[0];
