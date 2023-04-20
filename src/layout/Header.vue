@@ -96,7 +96,7 @@
                 </v-btn>
               </v-progress-circular>
             </template>
-            <v-list>
+            <v-list :width="300">
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title v-if="$store.state.download.title">
@@ -105,6 +105,44 @@
                   <v-list-item-subtitle v-if="$store.state.download.subtitle">
                     {{ $store.state.download.subtitle }}
                   </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="$store.state.download.file.name">
+                <v-list-item-content>
+                  <v-layout width="100%">
+                    <v-flex style="width: 100%" class="pt-2 pe-1">
+                      <v-progress-linear
+                        :width="2"
+                        :value="
+                          (($store.state.download.value || 0) /
+                            ($store.state.download.max_value || 1)) *
+                          100
+                        "
+                        color="info"
+                      />
+                    </v-flex>
+                    <v-flex>
+                      <span class="text-caption" style="white-space: nowrap">
+                        {{ $store.state.download.file.downloaded_size | size }}
+                        /
+                        {{ $store.state.download.file.size | size }}
+                      </span>
+                    </v-flex>
+                  </v-layout>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="$store.state.download.file.name">
+                <v-list-item-content>
+                  <span class="text-caption">
+                    Arquivo
+                    {{ +$store.state.download.file.qt_downloaded }}
+                    de
+                    {{
+                      +$store.state.download.file.qt_downloaded +
+                      +$store.state.download.file.qt_remaining -
+                      1
+                    }}
+                  </span>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
@@ -221,10 +259,13 @@ header .active_header_tab {
 </style>
 
 <script>
+import filters from "@/filters";
+
 const System = require("../helpers/System.js");
 const Locale = require("../helpers/Locale.js");
 
 export default {
+  filters,
   data() {
     return {
       items: [

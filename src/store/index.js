@@ -71,13 +71,16 @@ export default new Vuex.Store({
       show: false,
       active: false,
       title: null,
-      value: null,
+      subtitle: null,
       id_album: null,
+      value: null,
       max_value: null,
       file: {
         name: null,
         downloaded_size: 0,
-        size: 0
+        size: 0,
+        qt_remaining: 0,
+        qt_downloaded: 0,
       }
     },
     dialog: {

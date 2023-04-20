@@ -109,7 +109,7 @@ new Vue({
           self.download.file.downloaded_size = value;
           self.download.value = value;
         } else if (action == 'complete') {
-          self.download.file.name = null;
+          self.download.file.name = '#';
           self.download.file.size = 0;
           self.download.file.downloaded_size = 0;
           DevTools.write('Download Completo!')

@@ -5,6 +5,7 @@ import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const http = require('http')
 const { localStorage } = require('electron-browser-storage');
 
+var request = require('request');
 var fs = require('fs');
 var __lang;
 
@@ -285,17 +286,41 @@ ipcMain.on('save_data', (event, data) => {
 })
 
 ipcMain.on('download', (event, file) => {
-  console.log('download', file)
-  event.reply('download', 'size', 15);
-  event.reply('download', 'progress', 5);
+  let url = `${file.base_url}${file.subdirectory}${file.file_name}`;
+  let path = getAppFilesLangPath(`${file.subdirectory}`);
+  let file_name = file.file_name;
 
-  setTimeout(function () {
+  let received_bytes = 0;
+  let total_bytes = 0;
+
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path, { recursive: true });
+    console.log("Diretório criado", fs.existsSync(path), path);
+  }
+
+  let req = request({
+    method: 'GET',
+    uri: url
+  });
+
+  let out = fs.createWriteStream(`${path}${file_name}`);
+  req.pipe(out);
+
+  req.on('response', function (data) {
+    // Change the total bytes value to get progress later.
+    total_bytes = parseInt(data.headers['content-length']);
+    event.reply('download', 'size', total_bytes);
+  });
+
+  req.on('data', function (chunk) {
+    // Update the received bytes
+    received_bytes += chunk.length;
+    event.reply('download', 'progress', received_bytes);
+  });
+
+  req.on('end', function () {
     event.reply('download', 'complete');
-  }, 7000);
-
-  //info.properties.onProgress = status => window.webContents.send("download progress", status);
-  /*download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
-      .then(dl => window.webContents.send("download complete", dl.getSavePath()));*/
+  });
 });
 
 
@@ -327,7 +352,7 @@ function getAppBasePath(p) {
   */
   var path = app.getAppPath() + '\\data\\';
   if (!fs.existsSync(path)) {
-    fs.mkdirSync(path);
+    fs.mkdirSync(path, { recursive: true });
     console.log("Diretório criado", fs.existsSync(path), path);
   }
   if (p != undefined) {
@@ -341,7 +366,7 @@ console.log('Diretório Local: ', getAppBasePath())
 function getAppFilesPath(p) {
   var path = getAppBasePath() + "files\\";
   if (!fs.existsSync(path)) {
-    fs.mkdirSync(path);
+    fs.mkdirSync(path, { recursive: true });
     console.log("Diretório criado", fs.existsSync(path), path);
   }
   if (p != undefined) {
@@ -353,7 +378,7 @@ function getAppFilesPath(p) {
 function getAppFilesLangPath(p) {
   var path = getAppFilesPath() + lang() + "\\";
   if (!fs.existsSync(path)) {
-    fs.mkdirSync(path);
+    fs.mkdirSync(path, { recursive: true });
     console.log("Diretório criado", fs.existsSync(path), path);
   }
   if (p != undefined) {

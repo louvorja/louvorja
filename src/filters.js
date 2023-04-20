@@ -40,12 +40,19 @@ module.exports = {
     },
 
     formatSecond: function (num) {
-        if (isNaN(num)){
+        if (isNaN(num)) {
             num = 0;
         }
         num = parseInt(num)
         var minutes = "0" + Math.floor(num / 60);
         var seconds = "0" + (num - minutes * 60);
         return minutes.substr(-2) + ":" + seconds.substr(-2);
+    },
+
+    size: function (value) {
+        let sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        if (value == 0) return '0 Byte';
+        let i = parseInt(Math.floor(Math.log(value) / Math.log(1024)));
+        return Math.round(value / Math.pow(1024, i), 2) + ' ' + sizes[i];
     }
 };

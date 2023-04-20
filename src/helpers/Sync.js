@@ -14,6 +14,8 @@ export function start() {
 
     store.state.download.id_album = null;
     store.state.download.active = true;
+    store.state.download.file.qt_remaining = 0;
+    store.state.download.file.qt_downloaded = 0;
     this.check_tables();
 }
 export function end() {
@@ -306,10 +308,13 @@ export function check_files(callback = function () { }) {
             let file_download = ret.filter(file => {
                 return !store.state.data.downloads.downloaded.files[file.id_file]
                     || store.state.data.downloads.downloaded.files[file.id_file] !== file.version;
-            })[0];
+            });
 
-            if (file_download) {
-                this.download_file(file_download, (resp) => {
+            store.state.download.file.qt_remaining = file_download.length;
+            store.state.download.file.qt_downloaded++;
+
+            if (file_download[0]) {
+                this.download_file(file_download[0], (resp) => {
                     if (resp) {
                         this.check_files(callback);
                     } else {
@@ -335,11 +340,11 @@ export function download_file(file, callback = function () { }) {
     DevTools.write('Baixando arquivo');
     DevTools.write(`%c${file.file_name}`, 'color:green');
 
-    show_download_info({ file_name: file.name, title: `Baixando arquivo ${file.name}` });
+    show_download_info({ file_name: file.name, title: `Baixando arquivo...`, subtitle: file.name });
     IPC.send('download', file);
 
     tmr_download = setInterval(function () {
-        if (!store.state.download.file.name) {
+        if (!store.state.download.file.name || store.state.download.file.name == '#') {
             clearInterval(tmr_download);
 
             store.state.data.downloads.downloaded.files[file.id_file] = file.version;
@@ -347,7 +352,6 @@ export function download_file(file, callback = function () { }) {
 
             callback(true);
         }
-        console.log("BAIXANDO", store.state.download.file.name);
     }, 500);
 
 }
