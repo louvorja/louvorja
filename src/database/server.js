@@ -20,6 +20,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const DB = require("./DB");
+const Albums = require("./Albums");
 
 var cors = require('cors');
 
@@ -44,7 +45,10 @@ app.post('/:lang/create_table/:table_name', DB.create_table);
 app.delete('/drop_tables', DB.drop_tables);
 app.delete('/:lang/drop_tables', DB.drop_tables);
 
-app.get('/:lang/:table', DB.index);
+app.get('/:lang/albums', Albums.index);
+app.get('/:lang/albums/:id', Albums.show);
+
+
 app.post('/:lang/:table', DB.store);
 
 

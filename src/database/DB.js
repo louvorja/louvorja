@@ -1,32 +1,6 @@
 const knex = require("./knex");
 
 module.exports = {
-    async index(req, res, next) {
-        try {
-            let lang = req.params.lang;
-            let table = req.params.table;
-
-            data = await knex(table);
-
-            console.log(req.params)
-
-            return res.json({
-                status: "success",
-                data: data
-            });
-        }
-        catch (e) {
-            return res.status(500).json({
-                status: "error",
-                data: e.message
-            });
-        }
-    },
-
-    async show(req, res, next) {
-        //
-    },
-
     async store(req, res, next) {
         try {
             let table = req.params.table;
