@@ -15,12 +15,18 @@ try {
 }
 
 
-
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const { attachPaginate } = require('knex-paginate');
+attachPaginate();
+
 const DB = require("./DB");
-const Albums = require("./Albums");
+const Albums = require("./tables/Albums");
+const AlbumsMusics = require("./tables/AlbumsMusics");
+const Categories = require("./tables/Categories");
+const CategoriesAlbums = require("./tables/CategoriesAlbums");
+const Languages = require("./tables/Languages");
 
 var cors = require('cors');
 
@@ -47,7 +53,10 @@ app.delete('/:lang/drop_tables', DB.drop_tables);
 
 app.get('/:lang/albums', Albums.index);
 app.get('/:lang/albums/:id', Albums.show);
-
+app.get('/:lang/albums_musics', AlbumsMusics.index);
+app.get('/:lang/categories', Categories.index);
+app.get('/:lang/categories_albums', CategoriesAlbums.index);
+app.get('/:lang/languages', Languages.index);
 
 app.post('/:lang/:table', DB.store);
 

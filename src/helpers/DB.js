@@ -30,7 +30,7 @@ module.exports = {
         return p;
     },
     async columns(table) {
-        let columns = await knex.raw('SELECT name FROM pragma_table_info("albums")');
+        let columns = await knex.raw(`SELECT name FROM pragma_table_info("${table}")`);
         return columns.map(column => column.name);
     },
     order(fields, table = null, exception_table = []) {
@@ -63,7 +63,7 @@ module.exports = {
             ? value <= 0
                 ? 9999
                 : +value
-            : 10
+            : 100
     },
     ifJoin(join, param, field_1, field_2) {
         if (param) {

@@ -1,7 +1,5 @@
-const knex = require("./knex");
-const Data = require("../helpers/DB");
-const { attachPaginate } = require('knex-paginate');
-attachPaginate();
+const knex = require("../knex");
+const Data = require("../../helpers/DB");
 
 const table = 'albums';
 
@@ -29,7 +27,7 @@ module.exports = {
                     'albums.created_at',
                     'albums.updated_at'
                 ])
-                .where('albums.id_language', lang)
+                .where(`${table}.id_language`, lang)
                 .leftJoin('files', 'albums.id_file_image', 'files.id_file')
                 .distinct()
 
