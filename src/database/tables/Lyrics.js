@@ -1,18 +1,20 @@
 const knex = require("../knex");
 const Data = require("../../helpers/DB");
 
-const table = 'languages';
+const table = 'lyrics';
 
 module.exports = {
     async index(req, res, next) {
         try {
             let request = req.query;
+            let lang = req.params.lang;
 
             let limit = Data.limit(request.limit);
             let page = Data.page(request.page);
             let fillable = await Data.columns(table);
 
             let data = await knex(table)
+                .where(`${table}.id_language`, lang)
                 .where((p) => {
                     p = Data.filter(p, request, fillable, table);
                 })

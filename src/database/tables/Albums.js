@@ -48,7 +48,6 @@ module.exports = {
                 .orderBy(Data.order(request['sort_by'], table, ['order']))
                 .paginate({ perPage: limit, currentPage: page })
 
-
             data = await Data.withPivot(data, 'albums', 'categories_albums', 'categories', 'id_album', 'id_category');
 
             data = Data.return(data);
@@ -112,7 +111,6 @@ module.exports = {
                     ])
                     .orderBy('albums_musics.track')
             }
-            console.log(data);
 
             return res.json({
                 status: "success",

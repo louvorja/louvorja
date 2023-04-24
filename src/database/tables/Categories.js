@@ -18,6 +18,7 @@ module.exports = {
                 .where((p) => {
                     p = Data.filter(p, request, fillable, table);
                 })
+                .orderBy(Data.order(request['sort_by'], table, ['order']))
                 .paginate({ perPage: limit, currentPage: page });
 
             data = Data.return(data);

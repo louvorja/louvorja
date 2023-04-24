@@ -21,14 +21,18 @@ const bodyParser = require('body-parser');
 const { attachPaginate } = require('knex-paginate');
 attachPaginate();
 
+var cors = require('cors');
+
 const DB = require("./DB");
 const Albums = require("./tables/Albums");
 const AlbumsMusics = require("./tables/AlbumsMusics");
 const Categories = require("./tables/Categories");
 const CategoriesAlbums = require("./tables/CategoriesAlbums");
+const Files = require("./tables/Files");
+const Hymnal = require("./tables/Hymnal");
 const Languages = require("./tables/Languages");
-
-var cors = require('cors');
+const Lyrics = require("./tables/Lyrics");
+const Musics = require("./tables/Musics");
 
 const app = express();
 
@@ -56,7 +60,12 @@ app.get('/:lang/albums/:id', Albums.show);
 app.get('/:lang/albums_musics', AlbumsMusics.index);
 app.get('/:lang/categories', Categories.index);
 app.get('/:lang/categories_albums', CategoriesAlbums.index);
+app.get('/:lang/files', Files.index);
+app.get('/:lang/hymnal', Hymnal.index);
 app.get('/:lang/languages', Languages.index);
+app.get('/:lang/lyrics', Lyrics.index);
+app.get('/:lang/musics', Musics.index);
+app.get('/:lang/musics/:id', Musics.show);
 
 app.post('/:lang/:table', DB.store);
 
