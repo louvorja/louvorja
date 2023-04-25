@@ -10,6 +10,7 @@
     "build": "version.bat && vue-cli-service build",
     "db": "npx nodemon ./src/database/server.js",
     "electron:build": "vue-cli-service electron:build",
+    "electron:start": "vue-cli-service electron:serve",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
