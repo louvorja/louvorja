@@ -18,6 +18,22 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } },
 ])
 
+app.setAppPath(process.cwd());
+
+
+/* ************* SALVAR LOGS EM ARQUIVO ******************** */
+var util = require('util');
+
+var log_file = fs.createWriteStream('D:/git/LouvorJA/louvorja/dist_electron/win-unpacked/debug.log', { flags: 'w' });
+var log_stdout = process.stdout;
+
+console.log = function (...args) {
+  var output = args.join(' ');
+  log_file.write(util.format(output) + '\r\n');
+  log_stdout.write(util.format(output) + '\r\n');
+};
+console.log("Diretório do Aplicativo", process.cwd());
+/* ****************************************************************** */
 
 let win = [];
 async function activeWindow() {
@@ -31,7 +47,7 @@ async function createWindow(i, route) {
 
   var create = false;
 
-  console.log('JANELA', i, route)
+  console.log('Janela', i, route)
   if (win[i] == undefined) {
     create = true;
     win[i] = new BrowserWindow({
@@ -53,6 +69,7 @@ async function createWindow(i, route) {
         preload: path.resolve(__static, 'preload.js'),
       },
     })
+
   }
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -66,9 +83,8 @@ async function createWindow(i, route) {
     win[i].webContents.openDevTools()
   }
 
-  console.log("create", create)
+  console.log("Janela Criada?", create)
   if (create) {
-    console.log("ok")
     win[i].maximize()
     win[i].show()
 
@@ -231,7 +247,7 @@ ipcMain.on('start_db', async (event, port) => {
     let status = await localStorage.getItem("db-status");
     port = await localStorage.getItem("db-port");
     let message = await localStorage.getItem("db-message");
-    console.log("Tentando conectar.... Status: ", status, " - Porta: ", port, " - Mensagem: ", message)
+    console.log("Tentando conectar ao Banco de Dados.... Status: ", status, " - Porta: ", port, " - Mensagem: ", message)
     if (status !== "pending") {
       event.reply('start_db', status, port, message);
       clearInterval(dbStatus);

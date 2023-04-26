@@ -4,8 +4,9 @@ module.exports = defineConfig({
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
+        appId: 'LouvorJA',
         //Add also your database location
-        extraResources: ['src/res/']
+        extraResources: ['src/res/'],
       },
       //This line: add knex and sqlite3
       externals: ['knex', 'sqlite3'],

@@ -84,9 +84,9 @@ export function check_tables() {
 
                 if (create_tables.length > 0) {
                     //Existem tabelas para serem criadas... cria as tabelas na base local
+                    let table = create_tables[0];
                     this.reset_download(table);
 
-                    let table = create_tables[0];
                     DevTools.write('Criando tabela ', table);
                     this.show_download_info({
                         title: 'Criando tabelas no banco de dados local'
