@@ -24,7 +24,7 @@ app.setAppPath(process.cwd());
 /* ************* SALVAR LOGS EM ARQUIVO ******************** */
 var util = require('util');
 
-var log_file = fs.createWriteStream('D:/git/LouvorJA/louvorja/dist_electron/win-unpacked/debug.log', { flags: 'w' });
+var log_file = fs.createWriteStream(getAppBasePath() + 'debug.log', { flags: 'w' });
 var log_stdout = process.stdout;
 
 console.log = function (...args) {
