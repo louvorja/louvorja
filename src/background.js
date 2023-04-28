@@ -24,7 +24,7 @@ app.setAppPath(process.cwd());
 /* ************* SALVAR LOGS EM ARQUIVO ******************** */
 var util = require('util');
 
-var log_file = fs.createWriteStream(getAppBasePath() + 'debug.log', { flags: 'w' });
+var log_file = fs.createWriteStream(getAppPath('debug.log'), { flags: 'w' });
 var log_stdout = process.stdout;
 
 console.log = function (...args) {
@@ -33,6 +33,7 @@ console.log = function (...args) {
   log_stdout.write(util.format(output) + '\r\n');
 };
 console.log("Diretório do Aplicativo", process.cwd());
+console.log("FavIcon", getAppPath('public/favicon.png'));
 /* ****************************************************************** */
 
 let win = [];
@@ -59,14 +60,14 @@ async function createWindow(i, route) {
       titlebarStyle: 'hidden',
       frame: false,
       show: false,
-      icon: path.resolve(__static, 'favicon.svg'),
+      icon: getAppPath('public/favicon.ico'),
       title: "Louvor JA",
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
         webSecurity: false,
-        icon: path.resolve(__static, 'favicon.svg'),
-        preload: path.resolve(__static, 'preload.js'),
+        icon: getAppPath('public/favicon.ico'),
+        preload: getAppPath('public/preload.js'),
       },
     })
 
@@ -350,6 +351,14 @@ function lang(app_lang = null) {
   return __lang;
 }
 
+function getAppPath(p) {
+  let path = app.getAppPath() + '/';
+  if (p != undefined) {
+    path = path + p;
+  }
+  return dir(path);
+}
+
 function getAppBasePath(p) {
   //dev
   //if (process.env.RUN_ENV === 'development') return './'
@@ -363,10 +372,10 @@ function getAppBasePath(p) {
     path = `/Users/${process.env.USER}/Library/Application/Support/${APP_NAME}/`
   } else if (process.platform === 'win32') {
     //console.log('Windows OS detected')
-    path = `${process.env.APPDATA}\\${APP_NAME}\\`
+    path = `${process.env.APPDATA}/${APP_NAME}/`
   }
   */
-  var path = app.getAppPath() + '\\data\\';
+  var path = getAppPath() + '/data/';
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path, { recursive: true });
     console.log("Diretório criado", fs.existsSync(path), path);
@@ -375,12 +384,12 @@ function getAppBasePath(p) {
     path = path + p;
   }
   //console.log('Diretório Local: ',path)
-  return path;
+  return dir(path);
 }
 console.log('Diretório Local: ', getAppBasePath())
 
 function getAppFilesPath(p) {
-  var path = getAppBasePath() + "files\\";
+  var path = getAppBasePath() + "files/";
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path, { recursive: true });
     console.log("Diretório criado", fs.existsSync(path), path);
@@ -388,11 +397,11 @@ function getAppFilesPath(p) {
   if (p != undefined) {
     path = path + p;
   }
-  return path;
+  return dir(path);
 }
 
 function getAppFilesLangPath(p) {
-  var path = getAppFilesPath() + lang() + "\\";
+  var path = getAppFilesPath() + lang() + "/";
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path, { recursive: true });
     console.log("Diretório criado", fs.existsSync(path), path);
@@ -400,7 +409,7 @@ function getAppFilesLangPath(p) {
   if (p != undefined) {
     path = path + p;
   }
-  return path;
+  return dir(path);
 }
 
 function getJSONFile(file) {
@@ -419,11 +428,16 @@ function array2jsonfile(params) {
   var chr = "";
   for (var i = 0; i < str1.length; i++) {
     if (str1[i].match(/[^\x00-\x7F]/)) {
-      chr = "\\u" + ("000" + str1[i].charCodeAt(0).toString(16)).substr(-4);
+      chr = "/u" + ("000" + str1[i].charCodeAt(0).toString(16)).substr(-4);
     } else {
       chr = str1[i];
     }
     str2 = str2 + chr;
   }
   return str2;
+}
+
+function dir(dir) {
+  dir = dir.replace(/[\//]/gis, "/").replace(/\/\//gis, "/");
+  return dir;
 }
