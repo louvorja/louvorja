@@ -1,0 +1,16 @@
+appId: com.louvorja.app
+win:
+  target: nsis
+  icon: public/favicon.png
+mac:
+  icon: public/favicon.png
+linux:
+  icon: public/favicon.png
+nsis:
+  allowElevation: true
+  perMachine: true
+directories:
+  output:
+    win: dist_electron/win
+    mac: dist_electron/mac
+    linux: dist_electron/linux
