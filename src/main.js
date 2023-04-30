@@ -50,6 +50,9 @@ new Vue({
       // É UMA APLICAÇÃO DESKTOP - INICIA COMUNICAÇÃO COM A MÁQUINA
       DevTools.write("Aplicação DESKTOP")
 
+      ipcRenderer.on('portable', function (event, data) {
+        self.portable = data;
+      });
       ipcRenderer.on('displays', function (event, data) {
         self.displays = data;
       });

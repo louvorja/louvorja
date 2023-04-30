@@ -1,14 +1,24 @@
 appId: com.louvorja.app
+productName: LouvorJA
 win:
-  target: nsis
+  target:
+    - nsis
+    - portable
+  #target: nsis
+  #artifactName: "Setup.exe"
+  #artifactName: '${productName}_portable_${version}.${ext}'
   icon: public/favicon.png
 mac:
   icon: public/favicon.png
 linux:
   icon: public/favicon.png
 nsis:
+  oneClick: false
   allowElevation: true
   perMachine: true
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
 directories:
   output:
     win: dist_electron/win

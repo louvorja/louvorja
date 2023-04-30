@@ -5,7 +5,7 @@
   >
     <ico src="louvorja" size="100" />
     <div
-      v-if="debug"
+      vif="debug"
       class="white flex-grow-1 fill-height"
       style="overflow: auto"
     >

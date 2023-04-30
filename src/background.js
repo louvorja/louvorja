@@ -9,9 +9,10 @@ var request = require('request');
 var fs = require('fs');
 var __lang;
 
-const APP_NAME = 'LouvorJA';
+//const APP_NAME = 'LouvorJA';
 const isDevelopment = process.env.NODE_ENV !== 'production'
-const path = require('path');
+//const path = require('path');
+const isPortable = process.platform === 'win32' && process.env.PORTABLE_EXECUTABLE_DIR !== undefined;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -19,6 +20,7 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 app.setAppPath(process.cwd());
+
 
 
 /* ************* SALVAR LOGS EM ARQUIVO ******************** */
@@ -33,8 +35,9 @@ console.log = function (...args) {
   log_stdout.write(util.format(output) + '\r\n');
 };
 console.log("Diretório do Aplicativo", process.cwd());
-console.log("FavIcon", getAppPath('public/favicon.png'));
 /* ****************************************************************** */
+
+console.log("PORTABLE_EXECUTABLE_DIR", process.env.PORTABLE_EXECUTABLE_DIR);
 
 let win = [];
 async function activeWindow() {
@@ -233,6 +236,7 @@ ipcMain.on('config', (event, app_lang) => {
 
   lang(app_lang);
 
+  event.reply('portable', isPortable);
   event.reply('displays', screen.getAllDisplays());
   event.reply('ip', ip.address());
   event.reply('platform', process.platform);
@@ -375,7 +379,13 @@ function getAppBasePath(p) {
     path = `${process.env.APPDATA}/${APP_NAME}/`
   }
   */
-  var path = getAppPath() + '/data/';
+
+  let path;
+  if (isPortable) {
+    path = process.env.PORTABLE_EXECUTABLE_DIR + '/LouvorJA/';
+  } else {
+    path = getAppPath() + '/data/';
+  }
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path, { recursive: true });
     console.log("Diretório criado", fs.existsSync(path), path);

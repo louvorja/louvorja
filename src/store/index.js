@@ -12,6 +12,7 @@ export default new Vuex.Store({
 
     path: { base: "", files: "" },
     displays: [],
+    portable: false,
     ip: "",
     //server: {status: false},
     platform: "",
