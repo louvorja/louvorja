@@ -379,7 +379,7 @@ function getAppBasePath(p) {
     path = `${process.env.APPDATA}/${APP_NAME}/`
   }
   */
-
+  
   let path;
   if (isPortable) {
     path = process.env.PORTABLE_EXECUTABLE_DIR + '/LouvorJA/';
