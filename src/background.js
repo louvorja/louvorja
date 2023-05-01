@@ -15,6 +15,9 @@ var __lang;
 const isDevelopment = Config.isDevelopment()
 const isPortable = Config.isPortable();
 
+let loadingScreen;
+let tmrLoadingScreen;
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } },
@@ -24,22 +27,37 @@ app.setAppPath(process.cwd());
 
 
 /* ************* SALVAR LOGS EM ARQUIVO ******************** */
-var util = require('util');
+const util = require('util');
 
-var log_file = fs.createWriteStream(Fs.getAppBasePath('debug.log'), { flags: 'w' });
-var log_stdout = process.stdout;
+let log_file = fs.createWriteStream(Fs.getAppBasePath('debug.log'), { flags: 'w' });
+let log_stdout = process.stdout;
 
-console.log = function (...args) {
-  var output = args.join(' ');
+function saveConsole(args) {
+  const date = new Date();
+  const datetime = `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+
+  let output = datetime + ' | ' + args.join(' ');
   log_file.write(util.format(output) + '\r\n');
   log_stdout.write(util.format(output) + '\r\n');
+}
+console.log = function (...args) {
+  saveConsole(args);
 };
-console.log("Diretório do Aplicativo", process.cwd());
+console.error = function (...args) {
+  saveConsole(args);
+};
+console.warn = function (...args) {
+  saveConsole(args);
+};
 /* ****************************************************************** */
 
-console.log("Diretório Local", Fs.getAppBasePath())
-console.log("Diretório Dados", Fs.getAppDataPath());
-console.log("Diretório Portable", process.env.PORTABLE_EXECUTABLE_DIR);
+let buildCode = fs.readFileSync(Fs.getAppPath('public/buildcode.txt'));
+console.log("Build Code:", buildCode);
+console.log("É ambiente de desenvolvimento?", isDevelopment);
+console.log("É portable?", isPortable);
+console.log("Diretório do Aplicativo:", process.cwd());
+console.log("Diretório Local:", Fs.getAppBasePath());
+console.log("Diretório Portable:", process.env.PORTABLE_EXECUTABLE_DIR);
 
 let win = [];
 async function activeWindow() {
@@ -48,11 +66,35 @@ async function activeWindow() {
   // Create the browser window.
   createWindow(0);
 }
+function createLoadingScreen() {
+  console.log("Inicializando Tela de Carregamento:", Fs.getAppPath('public/loading.html'));
+
+  loadingScreen = new BrowserWindow({
+    width: 300,
+    height: 300,
+    transparent: true,
+    frame: false,
+    icon: Fs.getAppPath('public/favicon.ico'),
+    //alwaysOnTop: true,
+  });
+  loadingScreen.maximize()
+
+  loadingScreen.loadFile(Fs.getAppPath('public/loading.html'));
+  loadingScreen.on('closed', () => (loadingScreen = null));
+
+  tmrLoadingScreen = setInterval(function () { loadingScreen.focus(); }, 1);
+}
+function closeLoadingScreen() {
+  console.log("Fechando Tela de Carregamento");
+
+  clearInterval(tmrLoadingScreen);
+  loadingScreen.close();
+}
 
 async function createWindow(i, route) {
   route = (route == undefined ? "" : route);
 
-  var create = false;
+  let create = false;
 
   console.log('Janela', i, route)
   if (win[i] == undefined) {
@@ -77,6 +119,12 @@ async function createWindow(i, route) {
       },
     })
 
+    win[i].webContents.on('did-finish-load', () => {
+      console.log('Janela', i, 'carregada 100%')
+      if (loadingScreen) {
+        closeLoadingScreen();
+      }
+    })
   }
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -113,9 +161,10 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
+  console.log('app ==> activate')
+
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  console.log('Programa Ativado')
   if (BrowserWindow.getAllWindows().length === 0) activeWindow()
 })
 
@@ -123,16 +172,29 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  //if (isDevelopment && !process.env.IS_TEST) {
-  // Install Vue Devtools
-  try {
-    await installExtension(VUEJS_DEVTOOLS)
-  } catch (e) {
-    console.error('Vue Devtools failed to install:', e.toString())
+  console.log('app ==> ready')
+
+  if (isDevelopment && !process.env.IS_TEST) {
+    console.log('Ambiente de DEV. Instalando VUEJS_DEVTOOLS.')
+
+    // Install Vue Devtools
+    try {
+      await installExtension(VUEJS_DEVTOOLS)
+    } catch (e) {
+      console.error('Vue Devtools failed to install:', e.toString())
+    }
   }
-  //}
+  createLoadingScreen();
   activeWindow()
 })
+
+app.on('browser-window-ready-to-show', () => {
+  console.log('app ==> browser-window-ready-to-show')
+
+  if (loadingScreen) {
+    closeLoadingScreen()
+  }
+});
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
@@ -384,4 +446,12 @@ function array2jsonfile(params) {
     str2 = str2 + chr;
   }
   return str2;
+}
+
+
+function pad(number) {
+  if (number < 10) {
+    return `0${number}`;
+  }
+  return number;
 }

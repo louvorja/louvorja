@@ -185,6 +185,7 @@ new Vue({
         ipcRenderer.send('config', self.$store.state.lang);
       }
 
+      document.getElementById("preload").style.display = 'none'
 
     } else {
 
@@ -203,6 +204,10 @@ new Vue({
         Data.save();
       }
 
+      setTimeout(function () {
+        document.getElementById("preload").style.display = 'none'
+      }, 1000);
+
     }
 
     // CARREGA IDIOMA
@@ -215,9 +220,7 @@ new Vue({
       }
     }, 1000);
 
-    setTimeout(function () {
-      document.getElementById("preload").style.display = 'none'
-    }, 1000);
+
 
   }
 }).$mount('#app')
