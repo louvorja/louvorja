@@ -1,6 +1,5 @@
 import store from '../store'
 const Albums = require("../controllers/Albums.js");
-const Musics = require("../controllers/Musics.js");
 const Alert = require("./Alert");
 
 export function open(obj) {

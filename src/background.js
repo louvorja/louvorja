@@ -2,17 +2,18 @@ import { app, protocol, BrowserWindow, screen, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 
+const Config = require("./backend/Config");
+const Fs = require("./backend/Fs");
+
 const http = require('http')
+const fs = require('fs');
 const { localStorage } = require('electron-browser-storage');
 
 var request = require('request');
-var fs = require('fs');
 var __lang;
 
-//const APP_NAME = 'LouvorJA';
-const isDevelopment = process.env.NODE_ENV !== 'production'
-//const path = require('path');
-const isPortable = process.platform === 'win32' && process.env.PORTABLE_EXECUTABLE_DIR !== undefined;
+const isDevelopment = Config.isDevelopment()
+const isPortable = Config.isPortable();
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -22,11 +23,10 @@ protocol.registerSchemesAsPrivileged([
 app.setAppPath(process.cwd());
 
 
-
 /* ************* SALVAR LOGS EM ARQUIVO ******************** */
 var util = require('util');
 
-var log_file = fs.createWriteStream(getAppPath('debug.log'), { flags: 'w' });
+var log_file = fs.createWriteStream(Fs.getAppBasePath('debug.log'), { flags: 'w' });
 var log_stdout = process.stdout;
 
 console.log = function (...args) {
@@ -37,11 +37,14 @@ console.log = function (...args) {
 console.log("Diretório do Aplicativo", process.cwd());
 /* ****************************************************************** */
 
-console.log("PORTABLE_EXECUTABLE_DIR", process.env.PORTABLE_EXECUTABLE_DIR);
+console.log("Diretório Local", Fs.getAppBasePath())
+console.log("Diretório Dados", Fs.getAppDataPath());
+console.log("Diretório Portable", process.env.PORTABLE_EXECUTABLE_DIR);
 
 let win = [];
 async function activeWindow() {
 
+  console.log("Inicializando Janela");
   // Create the browser window.
   createWindow(0);
 }
@@ -63,14 +66,14 @@ async function createWindow(i, route) {
       titlebarStyle: 'hidden',
       frame: false,
       show: false,
-      icon: getAppPath('public/favicon.ico'),
+      icon: Fs.getAppPath('public/favicon.ico'),
       title: "Louvor JA",
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
         webSecurity: false,
-        icon: getAppPath('public/favicon.ico'),
-        preload: getAppPath('public/preload.js'),
+        icon: Fs.getAppPath('public/favicon.ico'),
+        preload: Fs.getAppPath('public/preload.js'),
       },
     })
 
@@ -93,7 +96,7 @@ async function createWindow(i, route) {
     win[i].show()
 
     win[i].on('resize', function () {
-      win[i].webContents.send('maximize', BrowserWindow.getFocusedWindow().isMaximized());
+      win[i].webContents.send('maximize', BrowserWindow.getFocusedWindow().isMaximized() || false);
     });
 
   }
@@ -112,6 +115,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
+  console.log('Programa Ativado')
   if (BrowserWindow.getAllWindows().length === 0) activeWindow()
 })
 
@@ -155,15 +159,15 @@ function ipc(){
       sendJSON(params,params2);
     }else if(data == 'saveData'){
       var str = array2jsonfile(params);
-      fs.writeFileSync(getAppBasePath()+'config.json', str);
-      //console.log('salvando... ',getAppBasePath()+'config.json',params);
+      fs.writeFileSync(Fs.getAppBasePath()+'config.json', str);
+      //console.log('salvando... ',Fs.getAppBasePath()+'config.json',params);
       win[0].webContents.send('saveData',0);
 
     }else if(data == 'saveApiData'){
       var str = array2jsonfile(params);
-      var path = getAppFilesPath()+params2+'.json';
+      var path = Fs.getAppFilesPath()+params2+'.json';
       fs.writeFileSync(path, str);
-      console.log('salvando... ',getAppFilesPath()+'config.json',params,params2);
+      console.log('salvando... ',Fs.getAppFilesPath()+'config.json',params,params2);
       //win[0].webContents.send(params2,getJSONFile(path));
 
     }else if(data == 'openWindow'){
@@ -240,8 +244,8 @@ ipcMain.on('config', (event, app_lang) => {
   event.reply('displays', screen.getAllDisplays());
   event.reply('ip', ip.address());
   event.reply('platform', process.platform);
-  event.reply('data', getJSONFile(getAppBasePath('config.json')));
-  event.reply('path', { base: getAppBasePath(), files: getAppFilesPath(), files_lang: getAppFilesLangPath() });
+  event.reply('data', getJSONFile(Fs.getAppBasePath('config.json')));
+  event.reply('path', { base: Fs.getAppBasePath(), files: Fs.getAppFilesPath(), files_lang: Fs.getAppFilesLangPath(lang()) });
 
 })
 
@@ -274,8 +278,8 @@ ipcMain.on('start_db', async (event, port) => {
 
 ipcMain.on('config_web', (event) => {
   var data = null;
-  if (fs.existsSync(getAppFilesPath('config.json'))) {
-    data = getJSONFile(getAppFilesPath('config.json'));
+  if (fs.existsSync(Fs.getAppFilesPath('config.json'))) {
+    data = getJSONFile(Fs.getAppFilesPath('config.json'));
   }
 
   event.reply('config_web', data);
@@ -283,8 +287,8 @@ ipcMain.on('config_web', (event) => {
 
 ipcMain.on('get_json', (event, filename) => {
   var data = null;
-  if (fs.existsSync(getAppFilesPath(filename + '.json'))) {
-    data = getJSONFile(getAppFilesPath(filename + '.json'));
+  if (fs.existsSync(Fs.getAppFilesPath(filename + '.json'))) {
+    data = getJSONFile(Fs.getAppFilesPath(filename + '.json'));
   }
 
   event.reply('get_json', data);
@@ -293,22 +297,22 @@ ipcMain.on('get_json', (event, filename) => {
 ipcMain.on('save_json', (event, filename, data, dir) => {
   var str = array2jsonfile(data);
   if (dir == 'filedir') {
-    dir = getAppFilesPath()
+    dir = Fs.getAppFilesPath()
   } else {
-    dir = getAppBasePath()
+    dir = Fs.getAppBasePath()
   }
   fs.writeFileSync(dir + filename + '.json', str);
 })
 
 ipcMain.on('save_data', (event, data) => {
   var str = array2jsonfile(data);
-  fs.writeFileSync(getAppBasePath() + 'config.json', str);
+  fs.writeFileSync(Fs.getAppBasePath() + 'config.json', str);
   event.reply('save_data');
 })
 
 ipcMain.on('download', (event, file) => {
   let url = `${file.base_url}${file.subdirectory}${file.file_name}`;
-  let path = getAppFilesLangPath(`${file.subdirectory}`);
+  let path = Fs.getAppFilesLangPath(lang(), `${file.subdirectory}`);
   let file_name = file.file_name;
 
   let received_bytes = 0;
@@ -355,72 +359,7 @@ function lang(app_lang = null) {
   return __lang;
 }
 
-function getAppPath(p) {
-  let path = app.getAppPath() + '/';
-  if (p != undefined) {
-    path = path + p;
-  }
-  return dir(path);
-}
 
-function getAppBasePath(p) {
-  //dev
-  //if (process.env.RUN_ENV === 'development') return './'
-  //var path = "";
-  /*
-  if (!process.platform || !['win32', 'darwin'].includes(process.platform)) {
-    console.error(`Unsupported OS: ${process.platform}`)
-    path = './'
-  } else if (process.platform === 'darwin') {
-    //console.log('Mac OS detected')
-    path = `/Users/${process.env.USER}/Library/Application/Support/${APP_NAME}/`
-  } else if (process.platform === 'win32') {
-    //console.log('Windows OS detected')
-    path = `${process.env.APPDATA}/${APP_NAME}/`
-  }
-  */
-  
-  let path;
-  if (isPortable) {
-    path = process.env.PORTABLE_EXECUTABLE_DIR + '/LouvorJA/';
-  } else {
-    path = getAppPath() + '/data/';
-  }
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path, { recursive: true });
-    console.log("Diretório criado", fs.existsSync(path), path);
-  }
-  if (p != undefined) {
-    path = path + p;
-  }
-  //console.log('Diretório Local: ',path)
-  return dir(path);
-}
-console.log('Diretório Local: ', getAppBasePath())
-
-function getAppFilesPath(p) {
-  var path = getAppBasePath() + "files/";
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path, { recursive: true });
-    console.log("Diretório criado", fs.existsSync(path), path);
-  }
-  if (p != undefined) {
-    path = path + p;
-  }
-  return dir(path);
-}
-
-function getAppFilesLangPath(p) {
-  var path = getAppFilesPath() + lang() + "/";
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path, { recursive: true });
-    console.log("Diretório criado", fs.existsSync(path), path);
-  }
-  if (p != undefined) {
-    path = path + p;
-  }
-  return dir(path);
-}
 
 function getJSONFile(file) {
   try {
@@ -445,9 +384,4 @@ function array2jsonfile(params) {
     str2 = str2 + chr;
   }
   return str2;
-}
-
-function dir(dir) {
-  dir = dir.replace(/[\//]/gis, "/").replace(/\/\//gis, "/");
-  return dir;
 }
