@@ -55,6 +55,7 @@ let buildCode = fs.readFileSync(Fs.getAppPath('public/buildcode.txt'));
 console.log("Build Code:", buildCode);
 console.log("É ambiente de desenvolvimento?", isDevelopment);
 console.log("É portable?", isPortable);
+console.log("Plataforma", process.platform);
 console.log("Diretório do Aplicativo:", process.cwd());
 console.log("Diretório Local:", Fs.getAppBasePath());
 console.log("Diretório Portable:", process.env.PORTABLE_EXECUTABLE_DIR);

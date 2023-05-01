@@ -1,16 +1,17 @@
 appId: com.louvorja.app
 productName: LouvorJA
 win:
+  #https://www.electron.build/configuration/win
   target:
     - nsis
     - portable
-  #target: nsis
-  #artifactName: "Setup.exe"
-  #artifactName: '${productName}_portable_${version}.${ext}'
   icon: public/favicon.png
 mac:
   icon: public/favicon.png
 linux:
+  #https://www.electron.build/configuration/linux
+  target: AppImage
+  category: Utility
   icon: public/favicon.png
 nsis:
   oneClick: false
