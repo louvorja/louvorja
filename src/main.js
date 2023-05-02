@@ -68,6 +68,9 @@ new Vue({
       ipcRenderer.on('maximize', (event, data) => {
         self.maximize = data;
       });
+      ipcRenderer.on('loaded', (event, data) => {
+        document.getElementById("preload").style.display = 'none'
+      });
       //ipcRenderer.on('server', (event, data) => {
       //  self.server = data;
       //});
@@ -185,7 +188,6 @@ new Vue({
         ipcRenderer.send('config', self.$store.state.lang);
       }
 
-      document.getElementById("preload").style.display = 'none'
 
     } else {
 

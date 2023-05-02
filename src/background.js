@@ -51,8 +51,12 @@ console.warn = function (...args) {
 };
 /* ****************************************************************** */
 
-let buildCode = fs.readFileSync(Fs.getAppPath('public/buildcode.txt'));
-console.log("Build Code:", buildCode);
+if (fs.existsSync(Fs.getAppPath('public/buildcode.txt'))) {
+  let buildCode = fs.readFileSync(Fs.getAppPath('public/buildcode.txt'));
+  console.log("Build Code:", buildCode);
+} else {
+  console.log("Build Code não localizado");
+}
 console.log("É ambiente de desenvolvimento?", isDevelopment);
 console.log("É portable?", isPortable);
 console.log("Plataforma", process.platform);
@@ -122,9 +126,7 @@ async function createWindow(i, route) {
 
     win[i].webContents.on('did-finish-load', () => {
       console.log('Janela', i, 'carregada 100%')
-      if (loadingScreen) {
-        closeLoadingScreen();
-      }
+      win[i].webContents.send('loaded');
     })
   }
 
@@ -143,9 +145,14 @@ async function createWindow(i, route) {
   if (create) {
     win[i].maximize()
     win[i].show()
+    if (loadingScreen) {
+      closeLoadingScreen();
+    }
 
     win[i].on('resize', function () {
-      win[i].webContents.send('maximize', BrowserWindow.getFocusedWindow().isMaximized() || false);
+      if (BrowserWindow.getFocusedWindow()) {
+        win[i].webContents.send('maximize', BrowserWindow.getFocusedWindow().isMaximized() || false);
+      }
     });
 
   }
@@ -288,10 +295,12 @@ ipcMain.on('minimize', () => {
   BrowserWindow.getFocusedWindow().minimize()
 })
 ipcMain.on('maximize', () => {
-  if (!BrowserWindow.getFocusedWindow().isMaximized()) {
-    BrowserWindow.getFocusedWindow().maximize();
-  } else {
-    BrowserWindow.getFocusedWindow().unmaximize();
+  if (BrowserWindow.getFocusedWindow()) {
+    if (!BrowserWindow.getFocusedWindow().isMaximized()) {
+      BrowserWindow.getFocusedWindow().maximize();
+    } else {
+      BrowserWindow.getFocusedWindow().unmaximize();
+    }
   }
 })
 ipcMain.on('close', () => {
