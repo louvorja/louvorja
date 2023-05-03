@@ -8,6 +8,8 @@ win:
   #artifactName: '${productName} Setup ${version}.${ext}'
   icon: public/favicon.png
 mac:
+  #https://www.electron.build/configuration/mac
+  category: public.app-category.video
   icon: public/favicon.png
 linux:
   #https://www.electron.build/configuration/linux
@@ -28,3 +30,5 @@ directories:
     win: dist_electron/win
     mac: dist_electron/mac
     linux: dist_electron/linux
+
+#https://www.electron.build/multi-platform-build
