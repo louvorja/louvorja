@@ -6,7 +6,7 @@ Software de projeção de letras de músicas com centenas de músicas do Hinári
 
 ## Instalação e compilação do Projeto
 
-Necessário ter o [Node](https://nodejs.org/)] instalado.
+Necessário ter o [Node](https://nodejs.org/) instalado.
 
 Após baixar o projeto em seu repositório local, executar o comando abaixo para instalar as dependências.
 ```
