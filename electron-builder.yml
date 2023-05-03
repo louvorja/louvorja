@@ -13,7 +13,11 @@ mac:
   icon: public/favicon.png
 linux:
   #https://www.electron.build/configuration/linux
-  target: AppImage
+  target:
+    - AppImage
+    - snap
+    - deb
+    - rpm
   #category: Utility
   category: AudioVideo
   icon: public/favicon.png
