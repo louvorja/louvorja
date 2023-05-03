@@ -62,9 +62,9 @@ if (fs.existsSync(Fs.getAppBasePath('.debug'))) {
 console.log("É ambiente de desenvolvimento?", isDevelopment);
 console.log("É portable?", isPortable);
 console.log("Plataforma", process.platform);
-console.log("Diretório do Aplicativo:", Fs.getAppPath());
-console.log("Diretório Local:", Fs.getAppBasePath());
-console.log("Diretório Portable:", process.env.PORTABLE_EXECUTABLE_DIR);
+console.log("Diretório do Aplicativo (getAppPath):", Fs.getAppPath());
+console.log("Diretório Local (getAppBasePath):", Fs.getAppBasePath());
+console.log("Diretório Portable (PORTABLE_EXECUTABLE_DIR):", process.env.PORTABLE_EXECUTABLE_DIR);
 console.log("Diretório Fonte:", Fs.getAppPath("fonts/din-condensed-bold.ttf"));
 
 let win = [];
