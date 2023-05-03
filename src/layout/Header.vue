@@ -51,14 +51,18 @@
           <v-icon :size="15">mdi-magnify</v-icon>
         </v-btn>
 
-        <v-divider class="mx-2" vertical />
+        <v-divider vertical />
 
         <!-- Seletor de Idioma -->
         <div class="text-center mx-2">
           <v-menu offset-y left>
             <template v-slot:activator="{ on, attrs }">
               <v-btn small plain v-bind="attrs" v-on="on">
-                <img :src="img(`flags/${flag(lang)}.svg`)" />
+                <img
+                  :height="15"
+                  :src="img(`flags/${flag(lang)}.svg`)"
+                  style="margin-right: 1px"
+                />
                 {{ lang }}
               </v-btn>
             </template>
@@ -80,7 +84,7 @@
         </div>
 
         <!-- Divisor -->
-        <v-divider class="mx-2" vertical v-if="$store.state.download.show" />
+        <v-divider vertical v-if="$store.state.download.show" />
 
         <!-- Botão de Download -->
         <div class="text-center mx-2" v-if="$store.state.download.show">
@@ -167,7 +171,7 @@
         </div>
 
         <!-- Divisor -->
-        <v-divider class="mx-2" vertical v-if="$store.state.desktop" />
+        <v-divider vertical v-if="$store.state.desktop" />
 
         <!-- Botões de Minimizar, Maximizar, Restaurar e Fechar -->
         <v-btn x-small plain @click="minimize()" v-if="$store.state.desktop">
