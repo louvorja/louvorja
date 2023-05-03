@@ -24,7 +24,7 @@ Para visualizar a versão desktop do projeto no ambiente de desenvolvimento, exe
 npm run electron:serve
 ```
 
-### Compiles and minifies for production
+### Compilação para o ambiente de produção
 Para compilar o projeto para o ambiente de produção, executar:
 ```
 npm run build
