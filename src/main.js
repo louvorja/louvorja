@@ -8,7 +8,6 @@ import store from './store/index.js'
 
 import './plugins/vue-sessionstorage.js'
 import './plugins/vue-json-component.js';
-import './plugins/vue-flag-icon.js';
 import './plugins/vue-fullscreen.js';
 import './plugins/vue-shortkey.js'
 
@@ -39,7 +38,7 @@ new Vue({
   computed,
   watch,
   mounted() {
-    this.debug = DevTools.debug();
+    //this.debug = DevTools.debug();
 
     this.def = JSON.parse(JSON.stringify(this.data));
     //this.def = Object.assign({}, this.data);
@@ -50,6 +49,9 @@ new Vue({
       // É UMA APLICAÇÃO DESKTOP - INICIA COMUNICAÇÃO COM A MÁQUINA
       DevTools.write("Aplicação DESKTOP")
 
+      ipcRenderer.on('debug', function (event, data) {
+        self.debug = data;
+      });
       ipcRenderer.on('portable', function (event, data) {
         self.portable = data;
       });
@@ -61,6 +63,9 @@ new Vue({
       });
       ipcRenderer.on('platform', (event, data) => {
         self.platform = data;
+      });
+      ipcRenderer.on('development', (event, data) => {
+        self.development = data;
       });
       ipcRenderer.on('path', (event, data) => {
         self.path = data;
@@ -193,6 +198,8 @@ new Vue({
 
       // NÃO É UMA APLICAÇÃO DESKTOP
       DevTools.write("Não é aplicação DESKTOP")
+
+      this.debug = DevTools.debug();
 
       if (localStorage.data !== undefined) {
         var c = JSON.parse(localStorage.data);

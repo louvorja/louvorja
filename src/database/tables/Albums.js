@@ -1,3 +1,4 @@
+const Fs = require("../../backend/Fs");
 const knex = require("../knex");
 const Data = require("../../helpers/DB");
 
@@ -18,7 +19,7 @@ module.exports = {
                     'albums.id_album',
                     'albums.name',
                     'albums.id_file_image',
-                    knex.raw('files.subdirectory||files.file_name as url_image'),
+                    knex.raw(`replace("${Fs.getAppFilesLangPath('#')}","#",${table}.id_language)||files.subdirectory||files.file_name as url_image`),
                     'files.version as image_version',
                     'albums.id_language',
                     'albums.color',
@@ -74,7 +75,7 @@ module.exports = {
                     'albums.id_album',
                     'albums.name',
                     'albums.id_file_image',
-                    knex.raw('files.subdirectory||files.file_name as url_image'),
+                    knex.raw(`replace("${Fs.getAppFilesLangPath('#')}","#",${table}.id_language)||files.subdirectory||files.file_name as url_image`),
                     'files.version as image_version',
                     'albums.id_language',
                     'albums.color',
@@ -97,13 +98,13 @@ module.exports = {
                         'albums_musics.track',
                         'musics.name',
                         'musics.id_file_image',
-                        knex.raw('files_image.subdirectory||files_image.file_name as url_image'),
+                        knex.raw(`replace("${Fs.getAppFilesLangPath('#')}","#",musics.id_language)||files_image.subdirectory||files_image.file_name as url_image`),
                         'files_image.version as image_version',
                         'musics.id_file_music',
-                        knex.raw('files_music.subdirectory||files_music.file_name as url_music'),
+                        knex.raw(`replace("${Fs.getAppFilesLangPath('#')}","#",musics.id_language)||files_music.subdirectory||files_music.file_name as url_music`),
                         'files_music.version as music_version',
                         'musics.id_file_instrumental_music',
-                        knex.raw('files_instrumental_music.subdirectory||files_instrumental_music.file_name as url_instrumental_music'),
+                        knex.raw(`replace("${Fs.getAppFilesLangPath('#')}","#",musics.id_language)||files_instrumental_music.subdirectory||files_instrumental_music.file_name as url_instrumental_music`),
                         'files_instrumental_music.version as instrumental_music_version',
                         'musics.id_language',
                         'musics.created_at',

@@ -1,5 +1,8 @@
 <template>
-  <v-app :dark="$root.data.layout.dark">
+  <v-app :dark="data.layout.dark">
+    <app-fonts-desktop v-if="desktop && !development" />
+    <app-fonts v-else />
+
     <app-side-bar />
     <app-dialog />
     <app-store />
@@ -18,6 +21,7 @@
         </v-main>
         <app-player />
         <app-footer />
+        <app-dev-tools v-if="debug" />
       </v-layout>
       <app-music-bar />
     </v-layout>
@@ -38,13 +42,19 @@ export default {
     AppPlayer: () => import("@/layout/Player"),
     AppFooter: () => import("@/layout/Footer"),
     AppMusicBar: () => import("@/layout/Music"),
+    AppDevTools: () => import("@/layout/DevTools"),
+    AppFonts: () => import("@/layout/Fonts"),
+    AppFontsDesktop: () => import("@/layout/FontsDesktop"),
   },
   created() {
     document.title = "Louvor JA";
   },
+  data() {
+    return this.$store.state;
+  },
   computed: {
     tabs: function () {
-      return this.$root.openpages.map((item) => {
+      return this.openpages.map((item) => {
         return item.name;
       });
     },
@@ -52,9 +62,3 @@ export default {
 };
 </script>
 
-<style>
-@font-face {
-  font-family: din-condensed-bold;
-  src: url("~@/assets/fonts/din-condensed-bold.ttf");
-}
-</style>

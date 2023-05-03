@@ -33,6 +33,12 @@ button.bt-column {
     overflow: auto !important;
 }
 
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /*:root{
     --primary: #29569b !important;
     --primary-hover: #275291 !important;

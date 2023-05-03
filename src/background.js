@@ -1,6 +1,6 @@
 import { app, protocol, BrowserWindow, screen, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+//import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 
 const Config = require("./backend/Config");
 const Fs = require("./backend/Fs");
@@ -16,7 +16,6 @@ const isDevelopment = Config.isDevelopment()
 const isPortable = Config.isPortable();
 
 let loadingScreen;
-let tmrLoadingScreen;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -57,12 +56,16 @@ if (fs.existsSync(Fs.getAppPath('public/buildcode.txt'))) {
 } else {
   console.log("Build Code não localizado");
 }
+if (fs.existsSync(Fs.getAppBasePath('.debug'))) {
+  console.log("Arquivo", Fs.getAppBasePath('.debug'), "localizado", "<< MODO DESENVOLVIMENTO ATIVADO >>")
+}
 console.log("É ambiente de desenvolvimento?", isDevelopment);
 console.log("É portable?", isPortable);
 console.log("Plataforma", process.platform);
-console.log("Diretório do Aplicativo:", process.cwd());
+console.log("Diretório do Aplicativo:", Fs.getAppPath());
 console.log("Diretório Local:", Fs.getAppBasePath());
 console.log("Diretório Portable:", process.env.PORTABLE_EXECUTABLE_DIR);
+console.log("Diretório Fonte:", Fs.getAppPath("fonts/din-condensed-bold.ttf"));
 
 let win = [];
 async function activeWindow() {
@@ -79,20 +82,15 @@ function createLoadingScreen() {
     height: 300,
     transparent: true,
     frame: false,
-    icon: Fs.getAppPath('public/favicon.ico'),
-    //alwaysOnTop: true,
+    icon: Fs.getAppPath('public/favicon.png'),
   });
   loadingScreen.maximize()
 
   loadingScreen.loadFile(Fs.getAppPath('public/loading.html'));
   loadingScreen.on('closed', () => (loadingScreen = null));
-
-  tmrLoadingScreen = setInterval(function () { loadingScreen.focus(); }, 1);
 }
 function closeLoadingScreen() {
   console.log("Fechando Tela de Carregamento");
-
-  clearInterval(tmrLoadingScreen);
   loadingScreen.close();
 }
 
@@ -113,13 +111,13 @@ async function createWindow(i, route) {
       titlebarStyle: 'hidden',
       frame: false,
       show: false,
-      icon: Fs.getAppPath('public/favicon.ico'),
+      icon: Fs.getAppPath('public/favicon.png'),
       title: "Louvor JA",
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
         webSecurity: false,
-        icon: Fs.getAppPath('public/favicon.ico'),
+        icon: Fs.getAppPath('public/favicon.png'),
         preload: Fs.getAppPath('public/preload.js'),
       },
     })
@@ -138,7 +136,9 @@ async function createWindow(i, route) {
     createProtocol('app')
     // Load the index.html when not in development
     win[i].loadURL('app://./index.html' + route)
-    win[i].webContents.openDevTools()
+    if (isDevelopment) {
+      win[i].webContents.openDevTools()
+    }
   }
 
   console.log("Janela Criada?", create)
@@ -182,6 +182,7 @@ app.on('activate', () => {
 app.on('ready', async () => {
   console.log('app ==> ready')
 
+  /*
   if (isDevelopment && !process.env.IS_TEST) {
     console.log('Ambiente de DEV. Instalando VUEJS_DEVTOOLS.')
 
@@ -191,7 +192,7 @@ app.on('ready', async () => {
     } catch (e) {
       console.error('Vue Devtools failed to install:', e.toString())
     }
-  }
+  }*/
   createLoadingScreen();
   activeWindow()
 })
@@ -313,12 +314,18 @@ ipcMain.on('config', (event, app_lang) => {
   lang(app_lang);
 
   event.reply('portable', isPortable);
+  event.reply('development', isDevelopment);
   event.reply('displays', screen.getAllDisplays());
   event.reply('ip', ip.address());
   event.reply('platform', process.platform);
   event.reply('data', getJSONFile(Fs.getAppBasePath('config.json')));
-  event.reply('path', { base: Fs.getAppBasePath(), files: Fs.getAppFilesPath(), files_lang: Fs.getAppFilesLangPath(lang()) });
-
+  event.reply('path', {
+    app_path: Fs.getAppPath(),
+    base: Fs.getAppBasePath(),
+    files: Fs.getAppFilesPath(),
+    files_lang: Fs.getAppFilesLangPath(lang())
+  });
+  event.reply('debug', isDevelopment);
 })
 
 ipcMain.on('start_db', async (event, port) => {
@@ -418,6 +425,16 @@ ipcMain.on('download', (event, file) => {
   req.on('end', function () {
     event.reply('download', 'complete');
   });
+});
+ipcMain.on('devtools', (event, file) => {
+  console.log("DevTools")
+  if (win[0].webContents.isDevToolsOpened()) {
+    console.log("Fecha DevTools")
+    win[0].webContents.closeDevTools();
+  } else {
+    console.log("Abre DevTools")
+    win[0].webContents.openDevTools();
+  }
 });
 
 

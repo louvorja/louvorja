@@ -62,7 +62,7 @@ export default {
       if (this.image) {
         return Object.assign({
           backgroundSize: "cover",
-          backgroundImage: `url(${this.image})`,
+          backgroundImage: `url('${this.image}')`,
         });
       } else {
         return {};

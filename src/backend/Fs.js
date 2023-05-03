@@ -6,14 +6,14 @@ const Config = require("./Config");
 app.setAppPath(process.cwd());
 
 export function getAppPath(p) {
-    let path = app.getAppPath() + '/';
+    let path = app.getAppPath().replace(/\\/g, '/') + '/';
     if (p != undefined) {
         path = path + p;
     }
     return this.dir(path);
 }
 export function getAppDataPath(p) {
-    let path = app.getPath('appData') + '/';
+    let path = app.getPath('appData').replace(/\\/g, '/') + '/';
     if (p != undefined) {
         path = path + p;
     }
@@ -82,6 +82,6 @@ export function getAppFilesLangPath(lang, p) {
 
 
 export function dir(dir) {
-    dir = dir.replace(/[\//]/gis, "/").replace(/\/\//gis, "/");
+    dir = dir.replace(/\\/g, '/').replace(/\/\//gis, '/');
     return dir;
 }

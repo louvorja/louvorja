@@ -262,7 +262,7 @@ export default {
         }
         return item;
       });
-      return slides.filter((item) => item.show_slide === 1);
+      return slides.filter((item) => item.show_slide == 1);
     },
     text: function () {
       if (!this.slides || !this.slides[this.media.slide]) {

@@ -8,8 +8,10 @@ const Data = require("./Data");
 const IPC = require("./IPC");
 
 let tmr_download;
+let sync = false;
 
 export function start() {
+    sync = false;
     DevTools.write('Inicia sincronização de dados');
 
     store.state.download.id_album = null;
@@ -24,6 +26,11 @@ export function end() {
     this.hide_download_info();
 
     DevTools.write('Fim da sincronização de dados');
+
+    if (sync) {
+        DevTools.write('Verifica novamente se tem novos arquivos a serem baixados.');
+        this.start();
+    }
 }
 export function lang() {
     return store.state.lang;
@@ -262,6 +269,7 @@ export function download_album(id_album, callback = function () { }, table_index
 }
 
 export function download_data(table, filter = {}, callback = function () { }, page = 1) {
+    sync = true;
     DevTools.write('Baixando dados');
     DevTools.write(`%c${table}`, 'color:green', page);
 
@@ -301,10 +309,9 @@ export function download_data(table, filter = {}, callback = function () { }, pa
 export function check_files(callback = function () { }) {
     DevTools.write('Verificando arquivos');
 
-    DB.get("files", null, (resp, ret) => {
+    DB.get("files", { limit: -1 }, (resp, ret) => {
 
         if (resp) {
-
             let file_download = ret.filter(file => {
                 return !store.state.data.downloads.downloaded.files[file.id_file]
                     || store.state.data.downloads.downloaded.files[file.id_file] !== file.version;
@@ -337,6 +344,7 @@ export function check_files(callback = function () { }) {
 }
 
 export function download_file(file, callback = function () { }) {
+    sync = true;
     DevTools.write('Baixando arquivo');
     DevTools.write(`%c${file.file_name}`, 'color:green');
 

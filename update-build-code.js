@@ -1,11 +1,7 @@
 const fs = require('fs');
-//const packageJson = JSON.parse(fs.readFileSync('./package.json'));
 
-const now = new Date();
-const buildCode = now.toLocaleString().replace(/[^\d]/g, '.');
-
-//packageJson.buildCode = buildCode;
-//fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2));
+const date = new Date();
+const buildCode = `${date.getFullYear()}.${(date.getMonth() + 1)}.${date.getDate()}.${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`;
 
 fs.writeFileSync('./public/buildcode.txt', buildCode);
 

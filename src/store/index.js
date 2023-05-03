@@ -10,8 +10,9 @@ export default new Vuex.Store({
     config_web: null,
     lang: null,
 
-    path: { base: "", files: "" },
+    path: { app_path: "", base: "", files: "", files_lang: "" },
     displays: [],
+    development: false,
     portable: false,
     ip: "",
     //server: {status: false},

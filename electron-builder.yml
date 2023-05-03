@@ -5,15 +5,18 @@ win:
   target:
     - nsis
     - portable
+  #artifactName: '${productName} Setup ${version}.${ext}'
   icon: public/favicon.png
 mac:
   icon: public/favicon.png
 linux:
   #https://www.electron.build/configuration/linux
   target: AppImage
-  category: Utility
+  #category: Utility
+  category: AudioVideo
   icon: public/favicon.png
 nsis:
+  #https://www.electron.build/configuration/nsis
   oneClick: false
   allowElevation: true
   perMachine: true

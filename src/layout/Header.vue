@@ -1,64 +1,78 @@
 <template>
   <header>
     <v-card rounded="0">
-      <v-toolbar
+      <v-system-bar
         :class="!sidebar ? 'headerbar' : ''"
         :color="$store.state.data.layout.color"
         dark
         flat
       >
-        <v-btn icon>
+        <v-btn small icon>
           <ico
             @click.native="
               $store.state.sidebar.geral = !$store.state.sidebar.geral
             "
             src="louvorja"
-            size="40"
+            size="20"
           />
         </v-btn>
-        <v-app-bar-nav-icon
+        <v-btn
+          x-small
+          plain
+          class="mx-2"
           @click.native="
             $store.state.sidebar.geral = !$store.state.sidebar.geral
           "
         >
-        </v-app-bar-nav-icon>
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
 
         <!-- Título -->
-        <v-toolbar-title class="ml-5">{{ $t("app.name") }}</v-toolbar-title>
-        <v-toolbar-title v-if="debug" class="ml-5">[ DEBUG ]</v-toolbar-title>
+        <span class="ellipsis">{{ $t("app.name") }}</span>
+        <span v-if="debug" class="ml-5 ellipsis">[ DEBUG ]</span>
 
         <!-- Espaçador -->
         <v-spacer></v-spacer>
 
         <!-- Botão Home -->
-        <v-btn icon to="/"><v-icon>mdi-home-circle-outline</v-icon></v-btn>
+        <v-btn x-small text class="mx-2" to="/">
+          <v-icon :size="15">mdi-home-circle-outline</v-icon>
+        </v-btn>
 
         <!-- Botão de Busca -->
         <v-btn
-          icon
+          x-small
+          plain
+          class="mx-2"
           @click="search()"
           v-shortkey="['ctrl', 'f']"
           @shortkey="search()"
         >
-          <v-icon>mdi-magnify</v-icon>
+          <v-icon :size="15">mdi-magnify</v-icon>
         </v-btn>
 
+        <v-divider class="mx-2" vertical />
+
         <!-- Seletor de Idioma -->
-        <div class="text-center">
+        <div class="text-center mx-2">
           <v-menu offset-y left>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on">
-                <flag :iso="flag(lang)" />
+              <v-btn small plain v-bind="attrs" v-on="on">
+                <img :src="img(`flags/${flag(lang)}.svg`)" />
                 {{ lang }}
               </v-btn>
             </template>
             <v-list>
               <v-list-item @click="changeLocale('pt')">
-                <v-list-item-icon><flag iso="br" /></v-list-item-icon>
+                <v-list-item-icon>
+                  <img :src="img(`flags/br.svg`)" />
+                </v-list-item-icon>
                 <v-list-item-title>Português</v-list-item-title>
               </v-list-item>
               <v-list-item @click="changeLocale('es')">
-                <v-list-item-icon><flag iso="es" /></v-list-item-icon>
+                <v-list-item-icon>
+                  <img :src="img(`flags/es.svg`)" />
+                </v-list-item-icon>
                 <v-list-item-title>Espanhol</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -69,7 +83,7 @@
         <v-divider class="mx-2" vertical v-if="$store.state.download.show" />
 
         <!-- Botão de Download -->
-        <div class="text-center" v-if="$store.state.download.show">
+        <div class="text-center mx-2" v-if="$store.state.download.show">
           <v-menu offset-y left>
             <template v-slot:activator="{ on, attrs }">
               <v-progress-circular
@@ -77,6 +91,7 @@
                   !$store.state.download.max_value ||
                   !$store.state.download.value
                 "
+                :size="23"
                 :width="2"
                 :value="
                   (($store.state.download.value || 0) /
@@ -91,8 +106,10 @@
                 "
                 color="white"
               >
-                <v-btn icon v-bind="attrs" v-on="on">
-                  <v-icon>mdi-download</v-icon>
+                <v-btn x-small plain v-bind="attrs" v-on="on">
+                  <v-icon :size="13" style="padding-left: 2px">
+                    mdi-download
+                  </v-icon>
                 </v-btn>
               </v-progress-circular>
             </template>
@@ -153,32 +170,35 @@
         <v-divider class="mx-2" vertical v-if="$store.state.desktop" />
 
         <!-- Botões de Minimizar, Maximizar, Restaurar e Fechar -->
-        <v-btn plain @click="minimize()" v-if="$store.state.desktop">
-          <v-icon>mdi-window-minimize</v-icon>
+        <v-btn x-small plain @click="minimize()" v-if="$store.state.desktop">
+          <v-icon :size="15">mdi-window-minimize</v-icon>
         </v-btn>
         <v-btn
+          x-small
           plain
           @click="maximize()"
           v-if="$store.state.desktop && $store.state.maximize"
         >
-          <v-icon>mdi-window-restore</v-icon>
+          <v-icon :size="15">mdi-window-restore</v-icon>
         </v-btn>
         <v-btn
+          x-small
           plain
           @click="maximize()"
           v-if="$store.state.desktop && !$store.state.maximize"
         >
-          <v-icon>mdi-window-maximize</v-icon>
+          <v-icon :size="15">mdi-window-maximize</v-icon>
         </v-btn>
         <v-btn
+          x-small
           plain
           class="btn-close"
           @click="close()"
           v-if="$store.state.desktop"
         >
-          <v-icon>mdi-window-close</v-icon>
+          <v-icon :size="15">mdi-window-close</v-icon>
         </v-btn>
-      </v-toolbar>
+      </v-system-bar>
       <v-tabs
         v-model="$store.state.active_header_tab"
         dark
@@ -263,6 +283,7 @@ import filters from "@/filters";
 
 const System = require("../helpers/System.js");
 const Locale = require("../helpers/Locale.js");
+const Files = require("../helpers/Files.js");
 
 export default {
   filters,
@@ -363,6 +384,9 @@ export default {
     },
     close() {
       System.close();
+    },
+    img: function (dir) {
+      return Files.img(dir);
     },
   },
 };

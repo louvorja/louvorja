@@ -15,6 +15,16 @@ module.exports = defineConfig({
             from: "public",
             to: "public",
             filter: ["**/*"]
+          },
+          {
+            from: "src/assets/fonts",
+            to: "fonts",
+            filter: ["**/*"]
+          },
+          {
+            from: "src/assets/imgs",
+            to: "imgs",
+            filter: ["**/*"]
           }
         ]
       },
