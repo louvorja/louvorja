@@ -10,10 +10,28 @@ WORKDIR /app
 COPY . .
 
 # Instale as dependências do projeto
-RUN npm install
+RUN npm install --verbose
+#RUN npm install --verbose --force --legacy-peer-deps
 
 # Compile o aplicativo para a plataforma de destino (Linux)
-RUN npm run build:linux
+RUN npm run build:linux --verbose
 
 # ************************ INSTRUÇÕES PARA RODAR *************************
-# docker build -t my-electron-app .
+
+# ** Criar a imagem Docker **
+# docker build -t electron-app .
+
+# ** Executar o contêiner Docker **
+# docker run --rm -it -v $(pwd):/app electron-app
+
+# ** Copiar esses arquivos para o seu host **
+# docker cp [CONTAINER ID]:/app/dist/linux-unpacked .
+
+
+# ************************ OUTRAS INSTRUÇÕES *************************
+
+# ** Remover imagens e containers não utlizados **
+# docker system prune
+
+# ** Listar imagens **
+# docker ps -a
