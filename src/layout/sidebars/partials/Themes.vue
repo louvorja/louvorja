@@ -2,17 +2,30 @@
   <div>
     <div class="px-2" v-if="skins">
       <div v-for="list in skins" :key="list.title" class="mb-3">
-        <div class="subtitle-1 font-weight-medium">{{ list.title }}</div>
+        <div class="subtitle-1 font-weight-medium">{{ $t(list.title) }}</div>
         <v-btn
-          icon
           v-for="skin in list.list"
+          icon
+          density="comfortable"
+          :variant="
+            $store.state.data.layout.id == skin.id ? 'outlined' : 'text'
+          "
           :key="skin.id"
+          class="mx-1"
           @click="changeTheme(skin)"
-          :outlined="$root.data.layout.id == skin.id"
         >
           <v-avatar :color="skin.color" size="16"> </v-avatar>
         </v-btn>
       </div>
+    </div>
+
+    <div v-if="$store.state.debug">
+      <v-divider />
+      <div class="subtitle-1 font-weight-medium">Recurso do Desenvolvedor</div>
+      <div class="subtitle-1 font-weight-medium" style="font-size: 12px">
+        Editor de Tema
+      </div>
+      <v-color-picker v-model="$store.state.data.layout.color" />
     </div>
   </div>
 </template>
@@ -35,8 +48,8 @@ export default {
   computed: {
     skins: function () {
       return [
-        { title: "Temas Claros", list: this.skins_light },
-        { title: "Temas Escuros", list: this.skins_dark },
+        { title: "light-themes", list: this.skins_light },
+        { title: "dark-themes", list: this.skins_dark },
       ];
     },
     skins_light: function () {

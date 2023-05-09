@@ -37,6 +37,15 @@ button.bt-column {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    width: inherit;
+}
+
+.nowrap {
+    white-space: nowrap
+}
+
+.pointer {
+    cursor: pointer;
 }
 
 /*:root{

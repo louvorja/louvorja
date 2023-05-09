@@ -1,11 +1,31 @@
 <template>
-  <v-card flat class="d-flex flex-column h-100">
-    <v-card-title>{{ $t("collections") }}</v-card-title>
+  <v-card
+    variant="flat"
+    :title="$t('collections')"
+    style="height: inherit; display: flex; flex-direction: column"
+    :theme="$store.state.data.layout.dark ? 'dark' : ''"
+    :rounded="0"
+  >
     <v-divider class="mx-4" v-if="!loading_categories"></v-divider>
-    <v-progress-linear indeterminate v-if="loading_categories" />
-    <v-alert type="error" v-if="error" class="ma-3">{{ error }}</v-alert>
-    <v-card-text>
-      <v-tabs show-arrows v-if="!loading_categories">
+    <div>
+      <v-progress-linear
+        class="mx-4"
+        :color="$store.state.data.layout.color"
+        indeterminate
+        v-if="loading_categories"
+      />
+      <v-alert type="error" v-if="error" class="ma-3">{{ error }}</v-alert>
+
+      <v-tabs
+        show-arrows
+        v-if="!loading_categories"
+        :color="
+          !$store.state.data.layout.dark ? $store.state.data.layout.color : ''
+        "
+        :bg-color="
+          $store.state.data.layout.dark ? $store.state.data.layout.color : ''
+        "
+      >
         <v-tab @click="setCategory(all_categories)">
           {{ $t("all-collections") }}
         </v-tab>
@@ -17,28 +37,37 @@
           {{ category.name }}
         </v-tab>
       </v-tabs>
+    </div>
+
+    <v-card-text
+      v-if="!loading_categories && loading"
+      style="
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <v-progress-circular
+        :color="$store.state.data.layout.color"
+        indeterminate
+      />
     </v-card-text>
 
     <v-card-text
-      style="height: 0px"
-      class="flex-grow-1 flex-shrink-1 overflow d-flex flex-wrap justify-center"
+      v-if="!loading_categories && !loading"
+      style="
+        flex-grow: 1;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+      "
+      class="overflow-auto"
     >
-      <!-- LOADING -->
       <v-card
-        v-show="loading"
-        v-for="index in 4"
-        :key="index"
-        width="200px"
-        height="255px"
-        class="ma-2"
-      >
-        <v-skeleton-loader class="mx-auto" type="card" />
-      </v-card>
-
-      <!-- ITEMS -->
-      <v-card
-        v-for="(album, index) in albums"
-        :key="album.id_album + '_' + index"
+        v-for="album in albums_list"
+        :key="album.id_album"
         width="200px"
         class="ma-2"
       >
@@ -48,41 +77,77 @@
           gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
           height="200px"
           :style="
-            !downloaded_albums.includes(album.id_album)
-              ? 'filter: grayscale(100%);'
-              : ''
+            downloaded_albums && downloaded_albums.includes(album.id_album)
+              ? ''
+              : 'filter: grayscale(100%);'
           "
+        />
+        <v-card-title
+          style="font-size: 16px; padding-top: 0; padding-bottom: 0"
         >
-          <v-card-title v-text="album.name" style="word-break: initial" />
-        </v-img>
+          {{ album.name }}
+        </v-card-title>
+        <v-card-subtitle
+          style="padding-top: 0; padding-bottom: 0"
+          v-show="typeof id_category == 'string'"
+        >
+          {{ album.subtitle }}
+        </v-card-subtitle>
+
+        <v-spacer />
 
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer />
 
-          <v-btn v-if="current_album == album.id_album" icon>
+          <v-btn
+            v-if="current_album == album.id_album"
+            density="comfortable"
+            icon
+          >
             <v-progress-circular :size="22" indeterminate color="amber">
               <v-icon color="amber" :size="15">mdi-download</v-icon>
             </v-progress-circular>
           </v-btn>
-          <v-btn v-else-if="downloaded_albums.includes(album.id_album)" icon>
+          <v-btn
+            v-else-if="
+              downloaded_albums && downloaded_albums.includes(album.id_album)
+            "
+            density="comfortable"
+            icon
+          >
             <v-icon color="success">mdi-check-bold</v-icon>
           </v-btn>
           <v-hover
-            v-slot="{ hover }"
-            v-else-if="pending_albums.includes(album.id_album)"
+            v-else-if="
+              pending_albums && pending_albums.includes(album.id_album)
+            "
           >
-            <v-btn @click="cancel_download(album)" icon>
-              <v-icon v-if="hover" color="red">mdi-close-circle-outline</v-icon>
-              <v-progress-circular
-                v-else
-                :size="22"
-                indeterminate
-                color="amber"
-              />
-            </v-btn>
+            <template v-slot:default="{ isHovering, props }">
+              <v-btn
+                density="comfortable"
+                @click="cancel_download(album)"
+                icon
+                v-bind="props"
+              >
+                <v-icon v-if="isHovering" color="red">
+                  mdi-close-circle-outline
+                </v-icon>
+                <v-progress-circular
+                  v-else
+                  :size="22"
+                  indeterminate
+                  color="amber"
+                />
+              </v-btn>
+            </template>
           </v-hover>
-          <v-btn v-else @click="download_album(album)" icon>
-            <v-icon color="primary">mdi-download</v-icon>
+          <v-btn
+            v-else
+            density="comfortable"
+            @click="download_album(album)"
+            icon
+          >
+            <v-icon color="info">mdi-download</v-icon>
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -120,16 +185,27 @@ export default {
       return this.$store.state.data.downloads.downloaded.albums[this.lang];
     },
     pending_albums: function () {
-      return this.$store.state.data.downloads.albums[this.lang].filter(
-        (item) => {
-          return !this.$store.state.data.downloads.downloaded.albums[
-            this.lang
-          ].includes(item);
-        }
+      let albums = this.$store.state.data.downloads.albums[this.lang];
+      return (
+        albums &&
+        albums.filter((item) => {
+          let downloaded =
+            this.$store.state.data.downloads.downloaded.albums[this.lang];
+          return !downloaded || !downloaded.includes(item);
+        })
       );
     },
     current_album: function () {
       return this.$store.state.download.id_album;
+    },
+    albums_list: function () {
+      return this.albums.filter((value, index, array) => {
+        let ids = array.map((item) => {
+          return item.id_album;
+        });
+        let id = value.id_album;
+        return ids.indexOf(id) === index;
+      });
     },
   },
   watch: {
@@ -196,6 +272,9 @@ export default {
         `Deseja fazer o download do álbum "${album.name}"?`,
         (resp) => {
           if (resp == "yes") {
+            if (!this.$store.state.data.downloads.albums[this.lang]) {
+              this.$store.state.data.downloads.albums[this.lang] = [];
+            }
             this.$store.state.data.downloads.albums[this.lang].push(
               album.id_album
             );

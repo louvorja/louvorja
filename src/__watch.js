@@ -35,7 +35,8 @@ export default {
         deep: true
     },
     $route(to) {
-        var self = this;
+        console.log("to")
+        /*var self = this;
         this.page = to.name;
         this.show_arrows = false;
         var route = (this.$router.options.routes.find((element) => element.name === to.name));
@@ -52,6 +53,6 @@ export default {
                 self.active_header_tab = parseInt(indx);
                 //console.log("SELF",self.active_header_tab)
             }
-        }, 10)
+        }, 10)*/
     }
 }

@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
-import VueFullscreen from 'vue-fullscreen'
+import JSONView from 'vue-json-component';
 
 const app = createApp({});
-app.use(VueFullscreen);
+app.use(JSONView);
 export default app;

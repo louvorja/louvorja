@@ -12,7 +12,7 @@
         "label-hymn-name-or-number": "Digite o nome ou número do hino",
         "label-song-name": "Digite o nome da música"
     },
-    "initials":{
+    "initials": {
         "sung": "CA",
         "instrumental": "PB",
         "without-audio": "SA"
@@ -41,7 +41,7 @@
     "number": "Número",
     "title": "Título",
     "album": "Álbum",
-    "slide":"Slide",
+    "slide": "Slide",
     "instrumental-slide": "Slide Playback",
     "instrumental": "Playback",
     "sung": "Cantado",
@@ -53,10 +53,15 @@
     "version": "Versão",
     "track": "Faixa",
     "close": "Fechar",
-    "annual-collections":"Coletâneas Anuais",
-    "various-collections":"Coletâneas Diversas",
-    "all-collections":"Todas as Coletâneas",
-    "my-downloads":"Meus Downloads",
-    "download-center":"Centro de Downloads",
-    "database": "Banco de Dados"
+    "annual-collections": "Coletâneas Anuais",
+    "various-collections": "Coletâneas Diversas",
+    "all-collections": "Todas as Coletâneas",
+    "my-downloads": "Meus Downloads",
+    "download-center": "Centro de Downloads",
+    "database": "Banco de Dados",
+    "configs": "Configurações",
+    "skin": "Aparência",
+    "streaming": "Transmissão",
+    "light-themes": "Temas Claros",
+    "dark-themes": "Temas Escuros"
 }

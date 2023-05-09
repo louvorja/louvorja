@@ -1,7 +1,4 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter)
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 const routes = [
   {
@@ -96,13 +93,15 @@ const routes = [
     component: () => import('@/views/SlideEditor.vue')
   },
   {
-    path: '*',
+    path: '/:catchAll(.*)',
     redirect: '/'
   }
 ]
 
-const router = new VueRouter({
+const router = createRouter({
+  //history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 })
 
-export default router
+export default router;

@@ -1,115 +1,95 @@
 <template>
   <v-dialog v-model="store.show" max-width="80%" persistent>
     <v-card>
-      <v-layout column fill-height style="height: 90vh">
-        <v-card dark flat outlined tile style="border: 0">
-          <v-toolbar dark flat color="#1E1E1E">
-            <v-icon>mdi-briefcase-download</v-icon>
-            <v-toolbar-title class="ml-5">{{ $t("download-center") }}</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn plain @click="close()">
-              <v-icon>mdi-window-close</v-icon>
-            </v-btn>
-          </v-toolbar>
-        </v-card>
-        <v-row no-gutters style="flex-wrap: nowrap">
-          <v-card
-            dark
-            flat
-            outlined
-            tile
-            class="d-flex flex-column"
-            style="border: 0"
-          >
-            <v-btn
-              depressed
-              x-small
-              class="bt-column btn-navigation"
+      <v-toolbar
+        theme="dark"
+        :color="$store.state.data.layout.color"
+        :title="$t('download-center')"
+        density="compact"
+      >
+        <template v-slot:prepend>
+          <v-icon>mdi-briefcase-download</v-icon>
+        </template>
+        <template v-slot:append>
+          <v-btn icon @click="close()">
+            <v-icon>mdi-window-close</v-icon>
+          </v-btn>
+        </template>
+      </v-toolbar>
+
+      <v-layout>
+        <v-navigation-drawer
+          theme="dark"
+          :color="$store.state.data.layout.color"
+          permanent
+        >
+          <v-list color="transparent">
+            <v-list-item
+              prepend-icon="mdi-home"
+              :title="$t('home')"
               :class="component == 'home' ? 'active' : ''"
+              :active="component == 'home'"
               @click="page('home')"
-            >
-              <v-icon dark> mdi-home </v-icon>
-              <span class="pt-2 font-weight-light">{{ $t("home") }}</span>
-            </v-btn>
-            <v-btn
-              depressed
-              x-small
-              class="bt-column btn-navigation"
+            />
+            <v-list-item
+              prepend-icon="mdi-music-clef-treble"
+              :title="$t('hymnals')"
               :class="component == 'hymnals' ? 'active' : ''"
+              :active="component == 'hymnals'"
               @click="page('hymnals')"
-            >
-              <v-icon dark> mdi-music-clef-treble </v-icon>
-              <span class="pt-2 font-weight-light">
-                {{ $t("hymnals") }}
-              </span>
-            </v-btn>
-            <v-btn
-              depressed
-              x-small
-              class="bt-column btn-navigation"
+            />
+            <v-list-item
+              prepend-icon="mdi-music"
+              :title="$t('collections')"
               :class="component == 'collections' ? 'active' : ''"
+              :active="component == 'collections'"
               @click="page('collections')"
-            >
-              <v-icon dark> mdi-music </v-icon>
-              <span class="pt-2 font-weight-light">
-                {{ $t("collections") }}
-              </span>
-            </v-btn>
-            <v-btn
-              depressed
-              x-small
-              class="bt-column btn-navigation"
+            />
+            <v-list-item
+              prepend-icon="mdi-book-cross"
+              :title="$t('bibles')"
               :class="component == 'bibles' ? 'active' : ''"
+              :active="component == 'bibles'"
               @click="page('bibles')"
-            >
-              <v-icon dark> mdi-book-cross </v-icon>
-              <span class="pt-2 font-weight-light">{{ $t("bibles") }}</span>
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn
-              depressed
-              x-small
-              class="bt-column btn-navigation"
-              :class="component == 'downloads' ? 'active' : ''"
-              @click="page('downloads')"
-            >
-              <v-icon dark> mdi-download </v-icon>
-              <span class="pt-2 font-weight-light">
-                {{ $t("my-downloads") }}
-              </span>
-            </v-btn>
-          </v-card>
-          <v-col
-            cols="1"
-            style="min-width: 100px; max-width: 100%"
-            class="flex-grow-1 flex-shrink-0"
-          >
-            <component :is="component" />
-          </v-col>
-        </v-row>
+            />
+          </v-list>
+
+          <template v-slot:append>
+            <v-list color="transparent">
+              <v-list-item
+                prepend-icon="mdi-download"
+                :title="$t('my-downloads')"
+                :class="component == 'downloads' ? 'active' : ''"
+                :active="component == 'downloads'"
+                @click="page('downloads')"
+              />
+            </v-list>
+          </template>
+        </v-navigation-drawer>
+        <v-main style="height: 80vh">
+          <component :is="component" />
+        </v-main>
       </v-layout>
     </v-card>
   </v-dialog>
 </template>
 
 <style scoped>
-.btn-navigation:not(.active) {
-  background-color: #1e1e1e;
-}
-button.bt-column {
-  padding-top: 40px !important;
-  padding-bottom: 40px !important;
+.active {
+  color: #fff !important;
 }
 </style>
 
 <script>
+import { defineAsyncComponent } from "vue";
+
 export default {
   components: {
-    home: () => import(`./Home`),
-    hymnals: () => import(`./Hymnals`),
-    collections: () => import(`./Collections`),
-    bibles: () => import(`./Bibles`),
-    downloads: () => import(`./Downloads`),
+    home: defineAsyncComponent(() => import(`./Home`)),
+    hymnals: defineAsyncComponent(() => import(`./Hymnals`)),
+    collections: defineAsyncComponent(() => import(`./Collections`)),
+    bibles: defineAsyncComponent(() => import(`./Bibles`)),
+    downloads: defineAsyncComponent(() => import(`./Downloads`)),
   },
   data() {
     return {

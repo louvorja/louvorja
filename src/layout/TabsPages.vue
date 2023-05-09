@@ -1,88 +1,128 @@
 <template>
-  <v-slide-group :show-arrows="show_arrows" class="mt-1 tabs">
-    <draggable class="draggable" v-model="openpages">
-      <transition-group
-        class="transition-group"
-        type="transition"
-        name="flip-list"
-      >
-        <v-btn
-          v-for="pg in openpages"
-          depressed
-          :key="pg.name"
-          :active="pg.name == page"
-          :outlined="pg.name == page"
-          :plain="pg.name == page"
-          :data-page="pg.name"
-          :to="pg.name"
-          x-small
-          style="
-            margin-left: 3px;
-            margin-top: 3px;
-            padding-top: 3px;
-            padding-bottom: 3px;
-          "
+  <v-slide-group
+    show-arrows
+    class="pt-1 tabs"
+    :class="{
+      dark: $store.state.data.layout.dark,
+      line: $store.state.page != 'home',
+    }"
+  >
+    <draggable
+      class="draggable"
+      v-model="$store.state.openpages"
+      :key="$store.state.openpages.length"
+    >
+      <template v-slot:item="{ item }">
+        <v-card
+          :to="item.name"
+          class="tab pointer"
+          :class="item.name == $store.state.page ? 'active' : 'inactive'"
+          style="margin-left: 2px"
+          :variant="item.name == $store.state.page ? 'outlined' : 'plain'"
         >
-          <ico :src="pg.icon" size="16" />
-          <span class="ml-2 mr-2">{{ $t(pg.name) }}</span>
-          <span v-if="tabs_dot.indexOf(pg.name) >= 0">
-            <v-badge dot color="red"></v-badge>
-          </span>
-          <v-btn icon href="#" @click.prevent="closeTab(pg.name)" class="ml-2">
-            <v-icon x-small>mdi-close</v-icon>
-          </v-btn>
-        </v-btn>
-      </transition-group>
+          <template v-slot:prepend>
+            <ico :src="item.icon" size="16" />
+          </template>
+          <template v-slot:append>
+            <v-btn
+              size="small"
+              :style="
+                $store.state.data.layout.dark
+                  ? 'color: #FFFFFF !important'
+                  : 'color: #000000 !important'
+              "
+              variant="plain"
+              icon="mdi-close"
+              class="text-white"
+              @click.prevent="closeTab(item.name)"
+            />
+          </template>
+          <template v-slot:title>
+            <span class="text-button" style="font-size: 10px !important">
+              {{ $t(item.name) }}
+            </span>
+          </template>
+        </v-card>
+      </template>
     </draggable>
   </v-slide-group>
 </template>
 
 <style scoped>
-.tabs:before {
+.draggable {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.inactive {
+  background-color: #e5e5e5;
+}
+.tabs {
+  position: relative;
+}
+.tabs.line::before {
   content: "" !important;
   position: absolute !important;
   width: 100% !important;
   height: 1px !important;
-  top: 23px !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.87) !important;
   left: 0 !important;
+  bottom: 0 !important;
 }
-.tabs .v-btn--active {
-  margin-top: 4px !important;
+.tabs .active {
   border-bottom: 1px #fff solid !important;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
-
-.draggable,
-.transition-group {
-  width: 100% !important;
+.tabs.dark {
+  background-color: #212121 !important;
+}
+.tabs.dark .active {
+  color: #fff !important;
+  background-color: #373737 !important;
+}
+.tabs.dark .inactive {
+  color: #fff !important;
+  background-color: #373737 !important;
+}
+.tabs.dark .active,
+.tabs.line.dark::before {
+  border-color: #777 !important;
+}
+.tabs.dark .inactive {
+  border-bottom: 1px #777 solid !important;
+}
+</style>
+<style>
+.tab .v-card-item {
+  height: 20px !important;
   display: flex !important;
 }
 </style>
 
 <script>
-import draggable from "vuedraggable";
+import { defineAsyncComponent } from "vue";
+import Draggable from "vue3-draggable";
 
 export default {
   data() {
-    return this.$store.state;
+    return {};
   },
   components: {
-    ico: () => import(`@/components/Icon`),
-    draggable,
+    Draggable,
+    ico: defineAsyncComponent(() => import(`@/components/Icon`)),
   },
+
   methods: {
     closeTab: function (page) {
-      if (this.tabs_dot.indexOf(page) >= 0) {
+      /*if (this.tabs_dot.indexOf(page) >= 0) {
         this.dialog.show = true;
         this.dialog.title = $t("task-in-progress");
         this.dialog.text = $t("message.task-in-progress") + ".";
         this.dialog.buttons = [{ text: "Ok", value: "ok" }];
         this.dialog.value = "";
         return;
-      }
-      var open = false;
+      }*/
+      let open = false;
       this.show_arrows = false;
       if (this.$route.name == page) {
         open = true;
@@ -100,22 +140,5 @@ export default {
       }
     },
   },
-  watch: {
-    openpages: {
-      handler: function () {
-        this.$session.set("openpages", this.openpages);
-      },
-      deep: true,
-    },
-  },
-  mounted() {
-    if (this.$session.get("openpages") !== undefined) {
-      this.openpages = this.$session.get("openpages");
-    }
-  },
-  /*beforeRouteUpdate(to, from, next){
-  console.log(to, from);
-  next();
-},*/
 };
 </script>

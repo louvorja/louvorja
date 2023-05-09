@@ -1,28 +1,54 @@
 <template>
-  <v-btn text :to="cto">
-    <div
-      class="d-flex flex-column align-items-center"
-      style="align-items: center"
-    >
-      <ico :src="cico" :class="iconClass" size="40" />
-      <div class="label" :style="{ fontSize: '11px', paddingTop: '4px' }">
-        {{ $t(clabel) }}
-      </div>
+  <v-card
+    :to="cto"
+    flat
+    class="px-2 pt-2 button"
+    :class="{
+      active: this.$route.path === cto,
+      dark: $store.state.data.layout.dark,
+    }"
+    style="
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      flex-direction: column;
+      justify-content: center;
+    "
+  >
+    <ico :src="cico" :class="iconClass" size="40" />
+    <div class="text-button">
+      {{ $t(clabel) }}
     </div>
-  </v-btn>
+  </v-card>
 </template>
 
 <style scoped>
-.v-btn {
-  height: 72px !important;
+.text-button {
+  font-size: 11px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 2;
+}
+.button {
+  cursor: pointer !important;
+}
+.button:hover,
+.button.active {
+  background-color: #ededed !important;
+}
+.button:hover.dark,
+.button.active.dark {
+  background-color: #303030 !important;
 }
 </style>
 
 <script>
+import { defineAsyncComponent } from "vue";
+
 export default {
   props: ["route", "icon", "label", "to", "icon-class"],
   components: {
-    ico: () => import(`@/components/Icon`),
+    ico: defineAsyncComponent(() => import(`@/components/Icon`)),
   },
   computed: {
     cico: function () {

@@ -2,77 +2,91 @@
   <v-navigation-drawer
     v-model="$store.state.sidebar.geral"
     absolute
-    left
+    location="left"
     temporary
     :width="width"
-    :dark="$store.state.data.layout.dark"
+    :theme="$store.state.data.layout.dark ? 'dark' : ''"
   >
-    <v-tabs
-      vertical
-      v-model="active_menu"
-      :color="$store.state.data.layout.color"
-      :dark="$store.state.data.layout.dark"
-    >
-      <v-tab
-        v-for="(m, index) in menu_list"
-        :key="m.tab"
-        style="justify-content: start"
-        :data-id="index"
-        @click="action(m)"
+    <div class="d-flex flex-row">
+      <v-tabs
+        direction="vertical"
+        v-model="active_menu"
+        :color="
+          !$store.state.data.layout.dark ? $store.state.data.layout.color : ''
+        "
+        :style="`width:${width_menu_min}px`"
       >
-        <v-icon left> {{ m.icon }} </v-icon>
-        {{ m.tab }}
-      </v-tab>
+        <v-tab
+          v-for="tab in menu_list"
+          :key="tab.name"
+          :value="tab.name"
+          @click="action(tab)"
+        >
+          <v-icon start> {{ tab.icon }} </v-icon>
+          <span style="font-size: 12px">{{ $t(tab.name) }}</span>
+        </v-tab>
+      </v-tabs>
 
-      <v-tabs-items v-model="active_menu" :dark="$store.state.data.layout.dark">
-        <v-tab-item v-for="m in menu" :key="m.tab">
-          <!--<div v-if="m.component">-->
-          <div class="text-h6 mt-3">
-            {{ m.tab }}
-          </div>
-          <v-divider class="my-3"></v-divider>
-          <component v-bind="menu" :is="m.component"></component>
-          <!--  </div>-->
-        </v-tab-item>
-      </v-tabs-items>
-    </v-tabs>
+      <v-window
+        v-model="active_menu"
+        :style="`width:${width - width_menu_min}px`"
+      >
+        <v-window-item
+          v-for="tab in menu_list"
+          :key="tab.name"
+          :value="tab.name"
+        >
+          <v-card flat>
+            <v-card-title>{{ $t(tab.name) }}</v-card-title>
+            <v-divider class="my-2"></v-divider>
+            <component v-if="tab.component" :is="tab.component" />
+          </v-card>
+        </v-window-item>
+      </v-window>
+    </div>
   </v-navigation-drawer>
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
+
 export default {
+  components: {
+    config: defineAsyncComponent(() => import(`./partials/Config`)),
+    themes: defineAsyncComponent(() => import(`./partials/Themes`)),
+    database: defineAsyncComponent(() => import(`./partials/DataBase`)),
+  },
   data() {
     return {
       active_menu: 0,
-      width_menu_min: "192px",
-      width_menu_open: "490px",
+      width_menu_min: 220,
+      width_menu_open: 550,
       menu: [
         {
-          tab: "Configurações",
+          name: "configs",
           icon: "mdi-account",
           component: "config",
-          //width: "95%",
+          //width: 95,
         },
         {
-          tab: "Aparência",
+          name: "skin",
           icon: "mdi-palette",
           component: "themes",
         },
         {
-          tab: "Transmissão",
+          name: "streaming",
           icon: "mdi-access-point",
-          //content: "server",
           component: "themes",
           desktop: true,
         },
         {
-          tab: this.$t("download-center"),
+          name: "download-center",
           icon: "mdi-briefcase-download",
           click: "this.store()",
           desktop: true,
         },
         {
-          tab: this.$t("database"),
+          name: "database",
           icon: "mdi-database",
           component: "database",
           desktop: true,
@@ -82,8 +96,9 @@ export default {
   },
   computed: {
     width: function () {
-      return this.menu[this.active_menu].component
-        ? this.menu[this.active_menu].width || this.width_menu_open
+      let menu = this.menu.find((item) => item.name === this.active_menu);
+      return this.active_menu && menu && menu.component
+        ? menu.width || this.width_menu_open
         : this.width_menu_min;
     },
     desktop: function () {
@@ -94,11 +109,6 @@ export default {
         ? this.menu
         : this.menu.filter((menu) => !menu.desktop);
     },
-  },
-  components: {
-    config: () => import(`./partials/Config`),
-    themes: () => import(`./partials/Themes`),
-    database: () => import(`./partials/DataBase`),
   },
   methods: {
     action: function (item) {

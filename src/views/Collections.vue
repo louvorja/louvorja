@@ -1,72 +1,87 @@
 <template>
-  <div class="d-flex flex-column" style="height: 100%">
-    <v-progress-linear indeterminate v-if="loading" />
+  <v-layout style="height: inherit">
+    <v-navigation-drawer
+      permanent
+      :theme="$store.state.data.layout.dark ? 'dark' : ''"
+    >
+      <v-list color="transparent">
+        <v-progress-linear
+          :color="$store.state.data.layout.color"
+          indeterminate
+          v-if="loading_categories"
+        />
+        <v-list-item
+          v-for="category in categories"
+          :key="category.id_category"
+          :title="category.name"
+          :style="{
+            color:
+              id_category == category.slug
+                ? (!$store.state.data.layout.dark
+                    ? $store.state.data.layout.color
+                    : '#FFF') + ' !important'
+                : '',
+          }"
+          :active="id_category == category.slug"
+          @click="setCategory(category.slug)"
+        />
+      </v-list>
 
-    <v-alert type="error" v-if="error" class="ma-3">{{ error }}</v-alert>
-    <div class="d-flex flex-no-wrap" style="height: inherit">
-      <div>
-        <v-navigation-drawer permanent :width="170" dark>
-          <v-list dense nav>
-            <v-list-item
-              link
-              v-for="category in categories"
-              :key="category.id_category"
-              @click="setCategory(category.slug)"
-            >
-              <v-list-item-content>
-                <v-list-item-title>{{ category.name }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item link @click="setCategory(all_categories)">
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ $t("all-collections") }}
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-navigation-drawer>
-      </div>
-
-      <div
-        id="content_scroll"
-        class="pa-3 w-100 d-flex flex-wrap justify-center"
-        style="height: 100%; max-height: 100%; overflow: auto; flex-grow: 1"
+      <template v-slot:append>
+        <v-list color="transparent">
+          <v-list-item
+            :title="$t('all-collections')"
+            :style="{
+              color:
+                typeof id_category == 'object'
+                  ? (!$store.state.data.layout.dark
+                      ? $store.state.data.layout.color
+                      : '#FFF') + ' !important'
+                  : '',
+            }"
+            :active="typeof id_category == 'object'"
+            @click="setCategory(all_categories)"
+          />
+        </v-list>
+      </template>
+    </v-navigation-drawer>
+    <v-main
+      class="overflow-auto d-flex flex-wrap align-center justify-center"
+      :style="$store.state.data.layout.dark ? 'background:#2E2E2E;' : ''"
+    >
+      <v-progress-circular
+        :color="$store.state.data.layout.color"
+        indeterminate
+        v-if="loading"
+      />
+      <v-card
+        style="min-width: 300px; max-width: 300px"
+        theme="dark"
+        v-for="album in albums_list"
+        :key="album.id_album"
+        width="320"
+        class="ma-2"
+        :color="album.color || '#385F73'"
+        dark
+        @click="openAlbum(album)"
       >
-        <v-card
-          style="min-width: 300px; max-width: 300px"
-          v-for="(album, index) in albums"
-          :key="index"
-          width="320"
-          class="ma-2"
-          :color="album.color || '#385F73'"
-          dark
-          @click="openAlbum(album)"
-        >
-          <div class="d-flex flex-no-wrap justify-space-between align-center">
-            <v-avatar class="ma-3" size="125" tile>
-              <v-img :src="album.url_image" />
-            </v-avatar>
-            <div class="flex-grow-1 d-flex flex-column">
-              <div class="text-h6 pt-2" v-text="album.name" />
+        <div class="d-flex flex-no-wrap justify-space-between align-center">
+          <v-avatar class="ma-3" size="125" tile rounded="0">
+            <v-img :src="album.url_image" />
+          </v-avatar>
+          <div class="flex-grow-1 d-flex flex-column">
+            <div class="text-h6 pt-2" v-text="album.name" />
 
-              <div class="h6" v-text="album.subtitle" />
-              <!--
-              <v-spacer />
-              <v-divider />
-
-              <div class="pb-2">
-                <v-btn fab icon height="40px" right width="40px">
-                  <v-icon>mdi-play</v-icon>
-                </v-btn>
-              </div>
-              -->
-            </div>
+            <div
+              class="h6"
+              v-text="album.subtitle"
+              v-show="typeof id_category == 'string'"
+            />
           </div>
-        </v-card>
-      </div>
-    </div>
-  </div>
+        </div>
+      </v-card>
+    </v-main>
+  </v-layout>
 </template>
 
 <script>
@@ -80,7 +95,9 @@ export default {
   components: {},
   data() {
     return {
+      active_menu: 0,
       search: null,
+      loading_categories: true,
       loading: true,
       albums: [],
       categories: [],
@@ -92,6 +109,15 @@ export default {
     all_categories: function () {
       return this.categories.map((item) => {
         return item.slug;
+      });
+    },
+    albums_list: function () {
+      return this.albums.filter((value, index, array) => {
+        let ids = array.map((item) => {
+          return item.id_album;
+        });
+        let id = value.id_album;
+        return ids.indexOf(id) === index;
       });
     },
   },
@@ -110,7 +136,7 @@ export default {
   methods: {
     loadCategories: async function () {
       this.error = null;
-      this.loading = true;
+      this.loading_categories = true;
       this.id_category = null;
       Categories.list(
         {
@@ -127,7 +153,7 @@ export default {
           } else {
             this.error = data;
           }
-          this.loading = false;
+          this.loading_categories = false;
         }
       );
     },

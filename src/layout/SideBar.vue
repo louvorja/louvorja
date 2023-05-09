@@ -1,19 +1,25 @@
 <template>
   <div>
-    <system/>
+    <system />
     <stopwatch v-if="page == 'stopwatch'" />
   </div>
 </template>
 
 
 <script>
+import { defineAsyncComponent } from "vue";
+
 export default {
+  components: {
+    system: defineAsyncComponent(() =>
+      import("@/layout/sidebars/SystemSidebar")
+    ),
+    stopwatch: defineAsyncComponent(() =>
+      import("@/layout/sidebars/StopwatchSidebar")
+    ),
+  },
   data() {
     return this.$store.state;
-  },
-  components: {
-    system: () => import(`@/layout/sidebars/SystemSidebar`),
-    stopwatch: () => import(`@/layout/sidebars/StopwatchSidebar`),
   },
 };
 </script>
