@@ -257,7 +257,7 @@ export default {
       alert("Busca em construção");
     },
     changeLocale: function (lang) {
-      this.$store.state.lang = Locale.change(lang);
+      Locale.change(lang, this.$vuetify, this.$i18n);
     },
     flag: function (lang) {
       return Locale.flag(lang);

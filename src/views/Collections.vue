@@ -85,13 +85,13 @@
 </template>
 
 <script>
-const Albums = require("@/controllers/Albums.js");
 const Categories = require("@/controllers/Categories.js");
-
+const Albums = require("@/controllers/Albums.js");
 const Album = require("@/helpers/Album.js");
+const Dialog = require("@/helpers/Dialog.js");
+const Storage = require("@/helpers/Storage.js");
 
 export default {
-  name: "collections",
   components: {},
   data() {
     return {
@@ -102,10 +102,15 @@ export default {
       albums: [],
       categories: [],
       id_category: null,
-      error: null,
     };
   },
   computed: {
+    page: function () {
+      return this.$route.name;
+    },
+    lang: function () {
+      return this.$store.state.data.lang;
+    },
     all_categories: function () {
       return this.categories.map((item) => {
         return item.slug;
@@ -123,21 +128,24 @@ export default {
   },
   watch: {
     async lang() {
+      Storage.remove(`${this.page}:categories`);
+      Storage.remove(`${this.page}:id_category`);
       this.categories = [];
       this.albums = [];
       this.id_category = null;
       await this.loadCategories();
     },
     async id_category() {
+      Storage.set(`${this.page}:id_category`, this.id_category);
       this.albums = [];
       await this.loadData();
     },
   },
   methods: {
     loadCategories: async function () {
-      this.error = null;
-      this.loading_categories = true;
-      this.id_category = null;
+      this.categories = Storage.get(`${this.page}:categories`, []);
+      this.loading_categories = this.loading_categories.length <= 0;
+      this.id_category = Storage.get(`${this.page}:id_category`);
       Categories.list(
         {
           limit: -1,
@@ -147,11 +155,12 @@ export default {
         (resp, data) => {
           if (resp) {
             this.categories = data;
-            if (this.categories.length > 0) {
+            if (this.categories.length > 0 && !this.id_category) {
               this.id_category = this.categories[0].slug;
             }
+            Storage.set(`${this.page}:categories`, data);
           } else {
-            this.error = data;
+            Dialog.error("Erro ao carregar dados", data);
           }
           this.loading_categories = false;
         }
@@ -161,8 +170,9 @@ export default {
       if (!this.id_category) {
         return;
       }
-      this.error = null;
-      this.loading = true;
+
+      this.albums = Storage.get(`${this.page}:${this.id_category}:albums`, []);
+      this.loading = this.albums.length <= 0;
       Albums.list(
         {
           limit: -1,
@@ -173,8 +183,9 @@ export default {
         (resp, data) => {
           if (resp) {
             this.albums = data;
+            Storage.set(`${this.page}:${this.id_category}:albums`, data);
           } else {
-            this.error = data;
+            Dialog.error("Erro ao carregar dados", data);
           }
           this.loading = false;
         }

@@ -1,5 +1,3 @@
-import store from '../store'
-
 export function hms_to_seconds(hms) {
     if (hms == undefined) {
         return 0;

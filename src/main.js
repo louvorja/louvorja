@@ -50,20 +50,6 @@ const app = createApp(
         },
         deep: true,
       },
-      /* lang: function () {
-         this.$vuetify.lang.current = this.$store.state.lang;
-         this.$i18n.locale = this.$store.state.lang;
-         this.$store.state.data.lang = this.$store.state.lang;
- 
-         let self = this;
-         if (this.desktop) {
-           setTimeout(function () {
-             if (self.$store.state.lang) {
-               ipcRenderer.send('config', self.$store.state.lang);
-             }
-           }, 1000);
-         }
-       },*/
       $route(to) {
         //DevTools.write("Watcher", "route", to);
         let self = this;
@@ -275,7 +261,7 @@ const app = createApp(
       }
 
       // CARREGA IDIOMA
-      this.lang = Locale.change(self.data.lang);
+      Locale.change(self.data.lang, this.$vuetify, this.$i18n);
 
       //SALVAR CONFIG
       setInterval(function () {

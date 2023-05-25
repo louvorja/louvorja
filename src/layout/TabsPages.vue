@@ -102,6 +102,8 @@
 <script>
 import { defineAsyncComponent } from "vue";
 import Draggable from "vue3-draggable";
+const DevTools = require("@/helpers/DevTools.js");
+const Storage = require("@/helpers/Storage.js");
 
 export default {
   data() {
@@ -122,6 +124,9 @@ export default {
         this.dialog.value = "";
         return;
       }*/
+      DevTools.write("close:", page);
+      Storage.removeAll(page);
+
       let open = false;
       this.show_arrows = false;
       if (this.$route.name == page) {

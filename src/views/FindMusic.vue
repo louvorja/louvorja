@@ -78,9 +78,9 @@ import { defineAsyncComponent } from "vue";
 const Album = require("@/helpers/Album.js");
 const Musics = require("@/controllers/Musics.js");
 const Dialog = require("@/helpers/Dialog.js");
+const Storage = require("@/helpers/Storage.js");
 
 export default {
-  name: "find-musics",
   components: {
     MusicBar: defineAsyncComponent(() => import("@/components/MusicBar")),
   },
@@ -104,6 +104,9 @@ export default {
     };
   },
   computed: {
+    page: function () {
+      return this.$route.name;
+    },
     lang: function () {
       return this.$store.state.data.lang;
     },
@@ -120,18 +123,24 @@ export default {
   },
   watch: {
     async lang() {
+      Storage.remove(`${this.page}:musics`);
       this.musics = [];
       await this.loadData();
+    },
+    search() {
+      Storage.set(`${this.page}:search`, this.search);
     },
   },
   methods: {
     loadData: async function () {
-      this.loading = true;
+      this.musics = Storage.get(`${this.page}:musics`, []);
+      this.loading = this.musics.length <= 0;
       Musics.list(
         { limit: -1, sort_by: "name", with_albums: 1 },
         (resp, data) => {
           if (resp) {
             this.musics = data;
+            Storage.set(`${this.page}:musics`, data);
           } else {
             Dialog.error("Erro ao carregar dados", data);
           }
@@ -145,6 +154,7 @@ export default {
     },
   },
   mounted: async function () {
+    this.search = Storage.get(`${this.page}:search`, "");
     await this.loadData();
   },
 };
