@@ -8,6 +8,10 @@ export default createStore({
       config_web: null,
       lang: null,
 
+      window: {
+        router_view: { height: 0 }
+      },
+
       path: { app_path: "", base: "", files: "", files_lang: "" },
       displays: [],
       development: false,

@@ -1,100 +1,105 @@
 <template>
   <div class="d-flex">
     <v-spacer />
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
+    <v-tooltip :text="$t('slide')" location="bottom" v-if="visible">
+      <template v-slot:activator="{ props }">
         <v-btn
-          icon
-          :color="$store.state.data.layout.color"
-          v-on="on"
+          variant="text"
+          icon="mdi-play-box-multiple"
+          size="small"
           @click="openMusic($attrs, { audio: 1 })"
+          :color="color"
           :disabled="!$attrs.url_music"
-        >
-          <v-icon>mdi-play-box-multiple</v-icon>
-        </v-btn>
+          v-bind="props"
+        />
       </template>
-      <span>{{ $t("slide") }}</span>
     </v-tooltip>
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
-        <v-btn
-          icon
-          :color="$store.state.data.layout.color"
-          v-on="on"
-          @click="openMusic($attrs, { audio: 2 })"
-          :disabled="!$attrs.url_instrumental_music"
-        >
-          <v-icon>mdi-play-box-multiple-outline</v-icon>
-        </v-btn>
-      </template>
-      <span>{{ $t("instrumental-slide") }}</span>
-    </v-tooltip>
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
-        <v-btn
-          icon
-          :color="$store.state.data.layout.color"
-          v-on="on"
-          @click="openMusic($attrs, { audio: 0 })"
-        >
-          <v-icon>mdi-checkbox-multiple-blank-outline</v-icon>
-        </v-btn>
-      </template>
-      <span>{{ $t("slide-without-audio") }}</span>
-    </v-tooltip>
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
-        <v-btn
-          icon
-          :color="$store.state.data.layout.color"
-          v-on="on"
-          @click="openPlayer($attrs, { audio: 1 })"
-          :disabled="!$attrs.url_music"
-        >
-          <v-icon>mdi-file-music</v-icon>
-        </v-btn>
-      </template>
-      <span>{{ $t("listen-to-music") }}</span>
-    </v-tooltip>
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
-        <v-btn
-          icon
-          :color="$store.state.data.layout.color"
-          v-on="on"
-          @click="openPlayer($attrs, { audio: 2 })"
-          :disabled="!$attrs.url_instrumental_music"
-        >
-          <v-icon>mdi-file-music-outline</v-icon>
-        </v-btn>
-      </template>
-      <span>{{ $t("listen-to-instrumental-music") }}</span>
-    </v-tooltip>
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
-        <v-btn
-          icon
-          :color="$store.state.data.layout.color"
-          v-on="on"
-          @click="openLyric($attrs)"
-        >
-          <v-icon>mdi-text-box-outline</v-icon>
-        </v-btn>
-      </template>
-      <span>{{ $t("lyrics") }}</span>
-    </v-tooltip>
-    <!--
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
-        <v-btn icon :color="$store.state.data.layout.color" v-on="on">
-          <v-icon>mdi-playlist-music</v-icon>
-        </v-btn>
-      </template>
-      <span>Adicionar à Playlist</span>
-    </v-tooltip>
-    -->
 
-    <!--{{ $attrs }}-->
+    <v-tooltip
+      :text="$t('instrumental-slide')"
+      location="bottom"
+      v-if="visible"
+    >
+      <template v-slot:activator="{ props }">
+        <v-btn
+          variant="text"
+          icon="mdi-play-box-multiple-outline"
+          size="small"
+          @click="openMusic($attrs, { audio: 2 })"
+          :color="color"
+          :disabled="!$attrs.url_instrumental_music"
+          v-bind="props"
+        />
+      </template>
+    </v-tooltip>
+
+    <v-tooltip
+      :text="$t('slide-without-audio')"
+      location="bottom"
+      v-if="visible"
+    >
+      <template v-slot:activator="{ props }">
+        <v-btn
+          variant="text"
+          icon="mdi-checkbox-multiple-blank-outline"
+          size="small"
+          @click="openMusic($attrs, { audio: 0 })"
+          :color="color"
+          v-bind="props"
+        />
+      </template>
+    </v-tooltip>
+
+    <v-tooltip :text="$t('listen-to-music')" location="bottom" v-if="visible">
+      <template v-slot:activator="{ props }">
+        <v-btn
+          variant="text"
+          icon="mdi-file-music"
+          size="small"
+          @click="openPlayer($attrs, { audio: 1 })"
+          :color="color"
+          :disabled="!$attrs.url_music"
+          v-bind="props"
+        />
+      </template>
+    </v-tooltip>
+
+    <v-tooltip
+      :text="$t('listen-to-instrumental-music')"
+      location="bottom"
+      v-if="visible"
+    >
+      <template v-slot:activator="{ props }">
+        <v-btn
+          variant="text"
+          icon="mdi-file-music-outline"
+          size="small"
+          @click="openPlayer($attrs, { audio: 2 })"
+          :color="color"
+          :disabled="!$attrs.url_instrumental_music"
+          v-bind="props"
+        />
+      </template>
+    </v-tooltip>
+
+    <v-tooltip :text="$t('lyrics')" location="bottom" v-if="visible">
+      <template v-slot:activator="{ props }">
+        <v-btn
+          variant="text"
+          icon="mdi-text-box-outline"
+          size="small"
+          @click="openLyric($attrs)"
+          :color="color"
+          :disabled="!$attrs.url_instrumental_music"
+          v-bind="props"
+        />
+      </template>
+    </v-tooltip>
+
+    <!--
+      //fururamente, quando tiver opção de playlist personalizada
+      mdi-playlist-music
+    -->
   </div>
 </template>
 
@@ -103,19 +108,38 @@ const Audio = require("@/helpers/Audio.js");
 
 export default {
   inheritAttrs: false,
+  data() {
+    return {
+      visible: false,
+    };
+  },
+  computed: {
+    color: function () {
+      return this.$store.state.data.layout.dark
+        ? "#FFFFFF"
+        : this.$store.state.data.layout.color;
+    },
+    test: function () {},
+  },
   methods: {
     openMusic: function (obj, options = {}) {
       Audio.open(obj, options);
-      this.$emit("music", true);
+      //this.$emit("music", true);
     },
     openPlayer: function (obj, options = {}) {
       Audio.player(obj, options);
-      this.$emit("player", true);
+      //this.$emit("player", true);
     },
     openLyric: function (obj, options = {}) {
       Audio.lyric(obj, options);
-      this.$emit("lyric", true);
+      //this.$emit("lyric", true);
     },
+  },
+  mounted: async function () {
+    let self = this;
+    setTimeout(function () {
+      self.visible = true;
+    }, 50);
   },
 };
 </script>

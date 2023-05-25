@@ -1,93 +1,92 @@
 <template>
-  <div class="d-flex flex-column" style="height: 100%">
-    <div class="pa-3">
-      <l-input
-        type="text"
-        v-model="search"
-        :label="$t('message.label-hymn-name-or-number')"
-        append-icon="mdi-magnify"
-        :error="!loading && musics.length > 0 && pagination.itemsLength === 0"
-      />
-    </div>
-    <div v-if="desktop && !loading && musics.length <= 0">
-      <v-alert
-        border="bottom"
-        colored-border
-        type="warning"
-        elevation="2"
-        class="mx-4"
-      >
-        {{ $t("message.hymnal-not-downloaded") }}
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="warning" @click="loadData">
-            {{ $t("refresh-page") }}
-          </v-btn>
-          <v-btn color="info" @click="$store.state.store.show = true">
-            {{ $t("access-store") }}
-          </v-btn>
-        </v-card-actions>
-      </v-alert>
-    </div>
-
-    <v-alert type="error" v-if="error" class="mx-3">{{ error }}</v-alert>
-
-    <div
-      id="content_scroll"
-      class="pa-3"
-      style="height: 100%; max-height: 100%; overflow: auto"
-      @scroll="scroll"
+  <v-card
+    :theme="$store.state.data.layout.dark ? 'dark' : ''"
+    :rounded="0"
+    class="h-100"
+  >
+    <v-alert
+      v-if="desktop && !loading && musics.length <= 0"
+      border="bottom"
+      type="warning"
+      class="ma-4 minus-height"
+      :text="$t('message.hymnal-not-downloaded')"
     >
-      <v-data-table
-        :headers="fields"
-        :items="musics"
-        :items-per-page="items_page"
-        :search="search"
-        :custom-filter="filterPerfectMatch"
-        :loading="loading"
-        :disable-pagination="false"
-        :no-data-text="$t('message.no-data-text')"
-        :no-results-text="$t('message.no-results-text')"
-        :loading-text="$t('message.loading-text')"
-        dense
-        @pagination="pagination = $event"
-      >
-        <template v-slot:[`item.options`]="{ item }">
-          <music-bar v-bind="{ ...item, album: $t('hymnal') }" v-if="true" />
-        </template>
-      </v-data-table>
-    </div>
-  </div>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn @click="loadData">
+          {{ $t("refresh-page") }}
+        </v-btn>
+        <v-btn @click="$store.state.store.show = true">
+          {{ $t("access-store") }}
+        </v-btn>
+      </v-card-actions>
+    </v-alert>
+
+    <v-card-title class="minus-height">
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        :label="$t('message.label-hymn-name-or-number')"
+        variant="underlined"
+      />
+    </v-card-title>
+
+    <v-progress-linear
+      :color="$store.state.data.layout.color"
+      indeterminate
+      v-if="loading"
+    />
+    <v-data-table-virtual
+      v-else
+      :headers="fields"
+      :items="musics"
+      :search="search"
+      :no-data-text="$t('message.no-data-text')"
+      class="elevation-1"
+      item-value="name"
+      :height="table_height"
+      fixed-header
+      fixed-footer
+      hover
+    >
+      <template v-slot:[`item.options`]="{ item }">
+        <music-bar v-bind="{ ...item.props.title, album: $t('hymnal') }" />
+      </template>
+    </v-data-table-virtual>
+  </v-card>
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
+
 const Hymnal = require("@/controllers/Hymnal.js");
+const Dialog = require("@/helpers/Dialog.js");
 
 export default {
   name: "hymnal",
   components: {
-    lInput: () => import(`@/components/Input`),
-    MusicBar: () => import("@/components/MusicBar"),
+    MusicBar: defineAsyncComponent(() => import("@/components/MusicBar")),
   },
   data() {
     return {
-      search: null,
+      search: "",
       loading: true,
       musics: [],
       fields: [
         {
-          text: this.$t("number"),
-          value: "track",
+          title: this.$t("number"),
           align: "end",
+          sortable: true,
+          key: "track",
+          width: 100,
         },
-        { text: this.$t("title"), value: "name" },
-        { text: "", value: "options" },
+        {
+          title: this.$t("title"),
+          sortable: true,
+          key: "name",
+        },
+        { title: "", key: "options" },
       ],
-      items_page: 10,
-      pagination: {
-        itemsLength: -1,
-      },
-      error: null,
     };
   },
   computed: {
@@ -97,88 +96,33 @@ export default {
     desktop: function () {
       return this.$store.state.desktop;
     },
+    table_height: function () {
+      let height = this.$store.state.window.router_view.height;
+      document.querySelectorAll(".minus-height").forEach((el) => {
+        height -= el.offsetHeight || 0;
+      });
+      return height;
+    },
   },
   watch: {
-    search() {
-      this.items_page = 5;
-      document
-        .getElementById("content_scroll")
-        .scrollTo({ top: 0, behavior: "smooth" });
-      const self = this;
-      setTimeout(function () {
-        self.calcItemsPage();
-      }, 10);
-    },
     async lang() {
       this.musics = [];
       await this.loadData();
     },
   },
   methods: {
-    scroll: function (evt) {
-      if (
-        evt.srcElement.scrollHeight - evt.srcElement.scrollTop <=
-          evt.srcElement.clientHeight + 100 &&
-        this.pagination.itemsPerPage < this.pagination.itemsLength
-      ) {
-        this.items_page = this.items_page + 5;
-      }
-    },
-    calcItemsPage: function () {
-      if (
-        document.getElementById("content_scroll").scrollHeight <=
-          document.getElementById("content_scroll").clientHeight &&
-        this.pagination.itemsPerPage < this.pagination.itemsLength
-      ) {
-        this.items_page = this.items_page + 10;
-        const self = this;
-        setTimeout(function () {
-          self.calcItemsPage();
-        }, 10);
-      }
-    },
-    filterPerfectMatch: function (value, search) {
-      if (isNaN(search)) {
-        if (value !== undefined && isNaN(value)) {
-          return (
-            value
-              .toLowerCase()
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
-              .indexOf(
-                search
-                  .toLowerCase()
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, "")
-              ) > -1
-          );
-        } else {
-          return false;
-        }
-      } else {
-        return value != null && value == search;
-      }
-    },
     loadData: async function () {
-      this.error = null;
       this.loading = true;
       Hymnal.list({ limit: -1, sort_by: "track" }, (resp, data) => {
         if (resp) {
           this.musics = data;
-          const self = this;
-          setTimeout(function () {
-            self.calcItemsPage();
-          }, 10);
         } else {
-          this.error = data;
+          Dialog.error("Erro ao carregar dados", data);
         }
 
         this.loading = false;
       });
     },
-  },
-  created() {
-    window.addEventListener("scroll", this.handleScroll);
   },
   mounted: async function () {
     await this.loadData();

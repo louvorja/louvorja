@@ -5,6 +5,3 @@ export function list(data, callback = function () { }) {
         callback(resp, ret);
     });
 }
-export function show() {
-    //console.log("bbbb");
-}

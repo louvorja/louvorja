@@ -48,6 +48,25 @@ button.bt-column {
     cursor: pointer;
 }
 
+
+.table {
+    border: 0 !important;
+    border-spacing: 0 !important;
+    border-collapse: collapse !important;
+}
+
+.table .row-0 {
+    height: 0;
+}
+
+.table .row-100 {
+    height: 100%;
+}
+
+.table .col-top {
+    vertical-align: top;
+}
+
 /*:root{
     --primary: #29569b !important;
     --primary-hover: #275291 !important;

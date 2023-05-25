@@ -14,12 +14,12 @@ footer.bg-dark {
 }
 </style>
 <script>
-import { version } from "../../package";
+import packageJson from "../../package.json";
 
 export default {
   computed: {
     version: function () {
-      return version;
+      return packageJson.version;
     },
   },
 };
