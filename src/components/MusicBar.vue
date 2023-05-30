@@ -50,6 +50,7 @@
       </template>
     </v-tooltip>
 
+    <!--
     <v-tooltip :text="$t('listen-to-music')" location="bottom" v-if="visible">
       <template v-slot:activator="{ props }">
         <v-btn
@@ -81,6 +82,7 @@
         />
       </template>
     </v-tooltip>
+    -->
 
     <v-tooltip :text="$t('lyrics')" location="bottom" v-if="visible">
       <template v-slot:activator="{ props }">
@@ -90,7 +92,6 @@
           size="small"
           @click="openLyric($attrs)"
           :color="color"
-          :disabled="!$attrs.url_instrumental_music"
           v-bind="props"
         />
       </template>
@@ -104,35 +105,28 @@
 </template>
 
 <script>
-const Audio = require("@/helpers/Audio.js");
+const Media = require("@/helpers/Media.js");
 
 export default {
   inheritAttrs: false,
+  props: ["color"],
   data() {
     return {
       visible: false,
     };
   },
-  computed: {
-    color: function () {
-      return this.$store.state.data.layout.dark
-        ? "#FFFFFF"
-        : this.$store.state.data.layout.color;
-    },
-    test: function () {},
-  },
   methods: {
     openMusic: function (obj, options = {}) {
-      Audio.open(obj, options);
-      //this.$emit("music", true);
+      Media.open(obj, options);
+      this.$emit("music", true);
     },
     openPlayer: function (obj, options = {}) {
-      Audio.player(obj, options);
-      //this.$emit("player", true);
+      Media.player(obj, options);
+      this.$emit("player", true);
     },
     openLyric: function (obj, options = {}) {
-      Audio.lyric(obj, options);
-      //this.$emit("lyric", true);
+      Media.lyric(obj, options);
+      this.$emit("lyric", true);
     },
   },
   mounted: async function () {

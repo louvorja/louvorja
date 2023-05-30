@@ -63,5 +63,6 @@
     "skin": "Apariencia",
     "streaming": "Transmisión",
     "light-themes": "Temas Claros",
-    "dark-themes": "Temas Oscuros"
+    "dark-themes": "Temas Oscuros",
+    "minimize": "Minimizar"
 }

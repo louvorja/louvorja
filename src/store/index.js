@@ -9,6 +9,7 @@ export default createStore({
       lang: null,
 
       window: {
+        main: { height: 0 },
         router_view: { height: 0 }
       },
 
@@ -106,20 +107,36 @@ export default createStore({
       media: {
         show: false,
         loading: false,
+        id_music: 0,
+        has_music: false,
+        is_paused: true,
+        file: '',
         playlist: [],
         music: [],
-        slide: 0,
+        slides: [],
+        slide: {
+          index: -1,
+          number: 0,
+          count: 0,
+          start_time: 0,
+          end_time: 0,
+          url_image: '',
+          lyric: '',
+        },
         progress: 0,
         audio: 0,
-        file: '',
-        is_paused: true,
-        id_musica: 0,
+        volume: 100,
         current_time: 0,
         duration: 0,
-        album: '',
+        album: {
+          id_album: 0,
+          name: "",
+          url_image: "",
+          color: "#0A1736"
+        },
         track: 0,
       },
-      player: {
+      /*player: {
         show: false,
         loading: false,
         music: [],
@@ -132,7 +149,7 @@ export default createStore({
         duration: 0,
         album: '',
         track: 0,
-      },
+      },*/
       lyric: {
         show: false,
         loading: false,

@@ -1,6 +1,7 @@
 <template>
   <header class="w-100">
     <v-system-bar
+      window
       :theme="$store.state.data.layout.dark ? 'dark' : ''"
       :class="!sidebar ? 'headerbar' : ''"
       :color="$store.state.data.layout.color"

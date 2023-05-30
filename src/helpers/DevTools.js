@@ -6,6 +6,5 @@ export function write() {
     }
 }
 export function debug() {
-    return store.state.debug;
-    //return (window.location.hostname == "localhost");
+    return (window.location.hostname == "localhost" || store.state.debug);
 }

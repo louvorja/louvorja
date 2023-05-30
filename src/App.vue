@@ -13,53 +13,28 @@
     <app-dialog />
     <app-alert />
     <app-store />
-    <!--
     <app-album />
     <app-lyric />
-    -->
+    <app-media />
 
-    <table class="table w-100 h-100" style="max-height: 100vh !important">
-      <tr class="row-0">
-        <td :colspan="2">
-          <app-system-header />
-        </td>
-      </tr>
-      <tr class="row-0">
-        <td style="max-width: 0; width: 100%">
-          <app-header />
-        </td>
-
-        <td rowspan="3" style="background: blue">
-          XXXX
-          <!--<app-music-bar />-->
-        </td>
-      </tr>
-      <tr class="row-0">
-        <td style="max-width: 0; width: 100%">
-          <app-tabs />
-        </td>
-      </tr>
-      <tr class="row-100">
-        <td id="router-view-area">
-          <div style="height: 100%; overflow: auto">
-            <!--<keep-alive :include="tabs">-->
-            <router-view />
-            <!--</keep-alive>-->
-            <!--<app-player />-->
-          </div>
-        </td>
-      </tr>
-      <tr class="row-0">
-        <td :colspan="2">
-          <app-footer />
-        </td>
-      </tr>
-      <tr class="row-0">
-        <td :colspan="2">
-          <app-dev-tools v-if="$store.state.debug" />
-        </td>
-      </tr>
-    </table>
+    <div id="main-area" class="vh-100 vw-100 d-flex flex-column flex-nowrap">
+      <div id="header-area">
+        <app-system-header />
+        <app-header />
+        <app-tabs />
+      </div>
+      <div
+        id="router-view-area"
+        :style="'flex-grow: 1;height:' + router_view_height + 'px'"
+      >
+        <router-view />
+      </div>
+      <div id="footer-area">
+        <app-player />
+        <app-footer />
+        <app-dev-tools v-if="$store.state.debug" />
+      </div>
+    </div>
   </v-app>
 </template>
 
@@ -70,18 +45,18 @@ export default {
   components: {
     AppSideBar: defineAsyncComponent(() => import("@/layout/SideBar")),
     AppDialog: defineAsyncComponent(() => import("@/layout/Dialog")),
-    AppStore: defineAsyncComponent(() => import("@/layout/store/Index")),
     AppAlert: defineAsyncComponent(() => import("@/layout/Alert")),
-    //AppLyric:  defineAsyncComponent(() => import("@/layout/Lyric")),
-    //AppAlbum:  defineAsyncComponent(() => import("@/layout/Album")),
+    AppStore: defineAsyncComponent(() => import("@/layout/store/Index")),
+    AppAlbum: defineAsyncComponent(() => import("@/layout/Album")),
+    AppLyric: defineAsyncComponent(() => import("@/layout/Lyric")),
     AppSystemHeader: defineAsyncComponent(() =>
       import("@/layout/SystemHeader")
     ),
     AppHeader: defineAsyncComponent(() => import("@/layout/Header")),
     AppTabs: defineAsyncComponent(() => import("@/layout/TabsPages")),
-    //AppPlayer:  defineAsyncComponent(() => import("@/layout/Player")),
+    AppMedia: defineAsyncComponent(() => import("@/layout/Media")),
+    AppPlayer: defineAsyncComponent(() => import("@/layout/Player")),
     AppFooter: defineAsyncComponent(() => import("@/layout/Footer")),
-    //AppMusicBar:  defineAsyncComponent(() => import("@/layout/Music")),
     AppDevTools: defineAsyncComponent(() => import("@/layout/DevTools")),
     AppFonts: defineAsyncComponent(() => import("@/layout/Fonts")),
     AppFontsDesktop: defineAsyncComponent(() =>
@@ -99,25 +74,9 @@ export default {
         return item.name;
       });
     },
-  },
-  mounted() {
-    window.addEventListener("load", () => {
-      this.routerViewArea();
-    });
-
-    /* * ROTINA PARA MONITORAR ELEMENTOS * */
-    var ro = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        const cr = entry.contentRect;
-        //console.log("Element:", entry.target);
-        //console.log(`Element size: ${cr.width}px x ${cr.height}px`);
-        //console.log(`Element padding: ${cr.top}px ; ${cr.left}px`);
-        this.routerViewArea();
-      }
-    });
-
-    //Monitora alterações na altura do elemento
-    ro.observe(document.getElementById("router-view-area"));
+    router_view_height: function () {
+      return this.$store.state.window.router_view.height;
+    },
   },
   methods: {
     debugMode() {
@@ -127,10 +86,33 @@ export default {
         Dialog.ok("Modo Desenvolvedor", "Modo de desenvolvedor ativado!");
       }
     },
-    routerViewArea() {
+    mainArea() {
+      this.$store.state.window.main.height =
+        document.getElementById("main-area").offsetHeight;
+
       this.$store.state.window.router_view.height =
-        document.getElementById("router-view-area").offsetHeight;
+        document.getElementById("main-area").offsetHeight -
+        document.getElementById("header-area").offsetHeight -
+        document.getElementById("footer-area").offsetHeight;
     },
+  },
+  mounted() {
+    window.addEventListener("load", () => {
+      this.mainArea();
+    });
+
+    /* * ROTINA PARA MONITORAR ELEMENTOS * */
+    var ro = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const cr = entry.contentRect;
+        this.mainArea();
+      }
+    });
+
+    //Monitora alterações na altura do elemento
+    ro.observe(document.getElementById("main-area"));
+    ro.observe(document.getElementById("header-area"));
+    ro.observe(document.getElementById("footer-area"));
   },
 };
 </script>

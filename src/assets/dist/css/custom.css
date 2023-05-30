@@ -15,18 +15,20 @@ body {
     white-space: pre;
 }
 
-
-button.bt-column .v-btn__content {
-    flex-direction: column !important;
-}
-
-button.bt-column {
-    padding-top: 30px !important;
-    padding-bottom: 30px !important;
-}
-
 .h-100 {
     height: 100% !important;
+}
+
+.vw-100 {
+    width: 100vw !important;
+    min-width: 100vw !important;
+    max-width: 100vw !important;
+}
+
+.vh-100 {
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
 }
 
 .overflow {
@@ -49,6 +51,24 @@ button.bt-column {
 }
 
 
+/* *****************************************
+ * Custiomização dos botões de páginas do header
+ * *****************************************/
+
+button.bt-column .v-btn__content {
+    flex-direction: column !important;
+}
+
+button.bt-column {
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+
+/* *****************************************
+ * Custiomização da tabela estrutural
+ * *****************************************/
+
 .table {
     border: 0 !important;
     border-spacing: 0 !important;
@@ -66,6 +86,37 @@ button.bt-column {
 .table .col-top {
     vertical-align: top;
 }
+
+
+
+/* *****************************************
+ * Custiomização do Scroll
+ * *****************************************/
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: rgb(0 0 0 / 10%);
+    border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(0 0 0 / 20%);
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(0 0 0 / 30%);
+}
+
+
 
 /*:root{
     --primary: #29569b !important;

@@ -1,108 +1,153 @@
 <template>
-  <v-dialog dark v-model="album.show" width="500px">
-    <v-card :color="album.album.color">
-      <v-layout column fill-height style="max-height: 90vh">
-        <div class="d-flex flex-no-wrap justify-space-between align-center">
-          <v-avatar class="ma-3" size="125" tile>
-            <v-img :src="album.album.url_image"></v-img>
-          </v-avatar>
-          <div class="flex-grow-1 d-flex flex-column">
-            <div class="text-h4 font-weight-light" v-text="album.album.name" />
-          </div>
-        </div>
+  <v-dialog theme="dark" v-model="album.show" width="80%">
+    <v-card :color="album.album.color" id="album-card">
+      <div class="d-flex flex-no-wrap align-stretch album-minus-height">
+        <v-avatar class="ma-3" size="125" rounded="0">
+          <v-img :src="album.album.url_image" />
+        </v-avatar>
 
-        <div class="flex-grow-1 px-4 pb-4" style="overflow: auto; flex: auto">
-          <v-skeleton-loader v-if="album.loading" type="text@5" />
-          <div :color="album.album.color" v-else>
-            <div v-for="music in album.musics" :key="music.id_music">
-              <v-list-item-content>
-                <v-list-item-title class="d-flex align-center">
-                  <v-avatar color="primary" size="35" class="me-4">
-                    {{ music.track }}
-                  </v-avatar>
-                  <div style="flex-grow: inherit; white-space: normal;">
-                    {{ music.name }}
-                  </div>
-                  <music-bar
-                    v-bind="{ ...music, album: album.album.name }"
-                    @music="closeAlbum()"
-                    @player="closeAlbum()"
-                  />
-                </v-list-item-title>
-              </v-list-item-content>
-            </div>
-          </div>
-        </div>
-        <div class="flex-grow-0">
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn text color="error" @click="closeAlbum()">
-              {{ $t("close") }}
-            </v-btn>
-          </v-card-actions>
-        </div>
-      </v-layout>
-
-      <!--
-      <v-layout column fill-height style="max-height: 90vh">
-        <div class="flex-grow-0">
-          <v-card-title>
-            <v-skeleton-loader
-              v-if="album.loading"
-              width="100%"
-              type="heading"
-            />
-            <span v-else>{{ album.music.name }}</span>
+        <div class="flex-grow-1 d-flex align-center">
+          <v-card-title class="text-h4 font-weight-light">
+            {{ album.album.name }}
           </v-card-title>
-          <v-card-subtitle v-if="!album.loading && album.album">
-            <span>{{ album.album }}</span>
-            <span v-if="album.track" class="text-lowercase">
-              | {{ $t("track") }} {{ album.track }}
-            </span>
-          </v-card-subtitle>
         </div>
-        <div class="flex-grow-1 px-4 pb-4" style="overflow: auto; flex: auto">
-          <v-skeleton-loader v-if="album.loading" type="text@5" />
-          <div v-else>
-            <div v-for="item in album.music.album" :key="item.id_album">
-              {{ item.album }}&nbsp;
-            </div>
-          </div>
+
+        <div class="d-flex align-start">
+          <v-btn
+            variant="text"
+            icon="mdi-close"
+            size="small"
+            @click.native="closeAlbum()"
+          />
         </div>
-        <div class="flex-grow-0">
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn text color="error" @click="closeLetter()">
-              {{ $t("close") }}
-            </v-btn>
-          </v-card-actions>
-        </div>
-      </v-layout>
-      -->
+      </div>
+
+      <v-skeleton-loader
+        :color="album.album.color"
+        v-if="album.loading"
+        type="text@5"
+      />
+      <div v-else>
+        <v-data-table-virtual
+          :color="album.album.color"
+          :headers="[
+            {
+              title: this.$t('track'),
+              align: 'end',
+              sortable: true,
+              key: 'track',
+              width: 100,
+            },
+            {
+              title: this.$t('title'),
+              sortable: true,
+              key: 'name',
+            },
+            { title: '', key: 'options' },
+          ]"
+          :items="album.musics"
+          :no-data-text="$t('message.no-data-text')"
+          class="elevation-1"
+          item-value="name"
+          :height="table_height"
+          fixed-header
+          fixed-footer
+          hover
+        >
+          <template v-slot:[`item.options`]="{ item }">
+            <music-bar
+              v-bind="{ ...item.props.title, album: album.album }"
+              color="#FFFFFF"
+              @music="closeAlbum()"
+              @player="closeAlbum()"
+            />
+          </template>
+        </v-data-table-virtual>
+      </div>
+
+      <v-card-actions class="album-minus-height">
+        <v-spacer></v-spacer>
+        <v-btn
+          class="ms-2"
+          variant="outlined"
+          size="small"
+          @click="closeAlbum()"
+        >
+          {{ $t("close") }}
+        </v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
-
 <script>
+import { defineAsyncComponent } from "vue";
+
 const Album = require("@/helpers/Album.js");
 
 export default {
   components: {
-    MusicBar: () => import("@/components/MusicBar"),
+    MusicBar: defineAsyncComponent(() => import("@/components/MusicBar")),
   },
   data() {
-    return {};
+    return {
+      refresh: 0,
+    };
   },
   computed: {
     album: function () {
       return this.$store.state.album;
+    },
+    table_height: function () {
+      this.refresh;
+      let height = this.$store.state.window.main.height - 50;
+      document.querySelectorAll(".album-minus-height").forEach((el) => {
+        height -= el.offsetHeight || 0;
+      });
+      return height;
+    },
+  },
+  watch: {
+    album: {
+      handler: function () {
+        this.refresh++;
+
+        /*
+         * Hack para mudar a cor da tabela, pois não está funcionando nativamente
+         * pela propriedade "color"
+         */
+        if (!this.album.loading) {
+          let self = this;
+          setTimeout(function () {
+            document
+              .querySelectorAll(
+                "#album-card table th, #album-card table td,#album-card .v-table__wrapper"
+              )
+              .forEach((element) => {
+                element.style.backgroundColor = self.album.album.color;
+              });
+          }, 10);
+        }
+      },
+      deep: true,
     },
   },
   methods: {
     closeAlbum: function () {
       Album.close();
     },
+  },
+  mounted() {
+    this.refresh++;
+
+    try {
+      let self = this;
+      document
+        .getElementById("album-card")
+        .addEventListener("scroll", function (event) {
+          self.refresh++;
+        });
+    } catch (e) {}
   },
 };
 </script>

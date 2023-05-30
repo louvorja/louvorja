@@ -4,9 +4,10 @@ import router from './router'
 import vuetify from './plugins/vuetify'
 import store from './store/index.js'
 
-import i18n from './i18n'
+import i18n from './i18n';
 import deepAssign from 'simple-deep-assign';
-import shortkey from 'vue3-shortkey'
+import shortkey from 'vue3-shortkey';
+import VueFullscreen  from 'vue-fullscreen';
 
 import { timer, formatSecond, size } from "@/filters";
 
@@ -278,7 +279,8 @@ const app = createApp(
   //.use(watch)
   .use(vuetify)
   .use(i18n)
-  .use(shortkey, { prevent: ["input", "textarea"] });
+  .use(shortkey, { prevent: ["input", "textarea"] })
+  .use(VueFullscreen );
 //.use(computed)
 app.config.productionTip = false
 

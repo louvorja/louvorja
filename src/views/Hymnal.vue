@@ -50,7 +50,14 @@
       hover
     >
       <template v-slot:[`item.options`]="{ item }">
-        <music-bar v-bind="{ ...item.props.title, album: $t('hymnal') }" />
+        <music-bar
+          v-bind="{ ...item.props.title, album: $t('hymnal') }"
+          :color="
+            this.$store.state.data.layout.dark
+              ? '#FFFFFF'
+              : this.$store.state.data.layout.color
+          "
+        />
       </template>
     </v-data-table-virtual>
   </v-card>

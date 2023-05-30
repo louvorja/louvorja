@@ -20,6 +20,6 @@ export function open(obj) {
 }
 export function close() {
     store.state.album.show = false;
-    store.state.album.album = {};
-    store.state.album.musics = {};
+    //store.state.album.album = {};
+    //store.state.album.musics = {};
 }

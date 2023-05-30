@@ -66,7 +66,14 @@
         </v-chip>
       </template>
       <template v-slot:[`item.options`]="{ item }">
-        <music-bar v-bind="item.props.title" />
+        <music-bar
+          v-bind="item.props.title"
+          :color="
+            this.$store.state.data.layout.dark
+              ? '#FFFFFF'
+              : this.$store.state.data.layout.color
+          "
+        />
       </template>
     </v-data-table-virtual>
   </v-card>

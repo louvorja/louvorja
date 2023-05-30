@@ -1,5 +1,6 @@
 <template>
   <div class="d-flex" style="height: 100%; width: 100%">
+    <!--
     <div class="d-flex" :style="styleBg">
       <span :style="styleTxt">
         {{ content.stopwatch | timer(data.stopwatch.mask) }}
@@ -49,10 +50,12 @@
         </div>
       </v-card>
     </v-expand-x-transition>
+    -->
   </div>
 </template>
 
 <script>
+/*
 import filters from "@/filters";
 export default {
   name: "stopwatch",
@@ -107,5 +110,5 @@ export default {
       );
     },
   },
-};
+};*/
 </script>
