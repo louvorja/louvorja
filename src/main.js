@@ -7,9 +7,9 @@ import store from './store/index.js'
 import i18n from './i18n';
 import deepAssign from 'simple-deep-assign';
 import shortkey from 'vue3-shortkey';
-import VueFullscreen  from 'vue-fullscreen';
+import VueFullscreen from 'vue-fullscreen';
 
-import { timer, formatSecond, size } from "@/filters";
+import { timer, formatSecond, size, nl2br } from "@/filters";
 
 //import computed from './computed';
 //import watch from './watch';
@@ -280,14 +280,15 @@ const app = createApp(
   .use(vuetify)
   .use(i18n)
   .use(shortkey, { prevent: ["input", "textarea"] })
-  .use(VueFullscreen );
+  .use(VueFullscreen);
 //.use(computed)
 app.config.productionTip = false
 
 app.config.globalProperties.$filters = {
   timer,
   formatSecond,
-  size
+  size,
+  nl2br
 };
 
 app.mount('#app')

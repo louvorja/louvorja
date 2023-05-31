@@ -250,7 +250,7 @@ const Media = require("@/helpers/Media.js");
 
 export default {
   components: {
-    ListChangeMusicType: defineAsyncComponent(() =>
+    listChangeMusicType: defineAsyncComponent(() =>
       import(`@/components/ListChangeMusicType`)
     ),
   },

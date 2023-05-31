@@ -384,8 +384,10 @@ ipcMain.on('save_json', (event, filename, data, dir) => {
 })
 
 ipcMain.on('save_data', (event, data) => {
-  var str = array2jsonfile(data);
+  //var str = array2jsonfile(data);
+  var str = data;
   fs.writeFileSync(Fs.getAppBasePath() + 'config.json', str);
+  console.log('Dados Salvos', Fs.getAppBasePath() + 'config.json')
   event.reply('save_data');
 })
 

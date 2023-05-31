@@ -122,6 +122,7 @@ export default createStore({
           end_time: 0,
           url_image: '',
           lyric: '',
+          progress: 0,
         },
         progress: 0,
         audio: 0,

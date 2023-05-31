@@ -53,3 +53,7 @@ export function size(value) {
     let i = parseInt(Math.floor(Math.log(value) / Math.log(1024)));
     return Math.round(value / Math.pow(1024, i), 2) + ' ' + sizes[i];
 }
+export function nl2br(value) {
+    if (!value) return '';
+    return value.replace(/\r\n/g, '<br>');
+}

@@ -148,6 +148,7 @@ export default {
           self.refresh++;
         });
     } catch (e) {}
+    
   },
 };
 </script>

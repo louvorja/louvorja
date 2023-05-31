@@ -95,6 +95,7 @@ export function close(options) {
     store.state.media.slide.end_time = 0;
     store.state.media.slide.url_image = "";
     store.state.media.slide.lyric = "";
+    store.state.media.slide.progress = 0;
 
     if (!options || !options.album) {
         //Não é mesmo álbum. Reseta informações
@@ -252,7 +253,10 @@ export function slide() {
         ? store.state.media.duration
         : store.state.media.slides[slide_indx + 1].time;
     store.state.media.slide.url_image = slide.url_image;
-    store.state.media.slide.lyric = slide.lyric;
+    store.state.media.slide.lyric = slide.name || slide.lyric;
+    store.state.media.slide.progress = (store.state.media.current_time - store.state.media.slide.start_time) / (store.state.media.slide.end_time - store.state.media.slide.start_time) * 100;
+    store.state.media.slide.progress = isNaN(store.state.media.slide.progress) ? 0 : store.state.media.slide.progress;
+
     return slide;
 }
 export function adjust() {
