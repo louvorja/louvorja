@@ -122,6 +122,7 @@
         <v-card-actions
           class="align-stretch media-minus-height"
           :class="{ fullscreen }"
+          v-show="!fullscreen || (fullscreen && show_fullscreen_player)"
         >
           <div class="d-flex flex-column flex-grow-1 px-2">
             <div class="d-flex align-center justify-center flex-grow-1">
@@ -340,6 +341,8 @@ export default {
     return {
       refresh: 0,
       fullscreen: false,
+      show_fullscreen_player: false,
+      interval: null,
     };
   },
   computed: {
@@ -477,8 +480,6 @@ export default {
       this.fullscreen = !this.fullscreen;
     },
     moveScreen() {
-      console.log("teste");
-      /*
       if (this.fullscreen) {
         this.show_fullscreen_player = true;
         if (this.interval) {
@@ -488,7 +489,7 @@ export default {
         this.interval = setTimeout(function () {
           self.show_fullscreen_player = false;
         }, 3000);
-      }*/
+      }
     },
   },
   mounted() {
