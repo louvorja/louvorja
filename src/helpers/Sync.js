@@ -18,6 +18,12 @@ export function start() {
     store.state.download.active = true;
     store.state.download.file.qt_remaining = 0;
     store.state.download.file.qt_downloaded = 0;
+
+    if (store.state.data.online) {
+        this.end();
+        return;
+    }
+
     this.check_tables();
 }
 export function end() {
@@ -74,6 +80,11 @@ export function reset_database() {
 
 export function check_tables() {
     DevTools.write('Verificando tabelas');
+
+    if (store.state.data.online) {
+        this.end();
+        return;
+    }
 
     //Obtem a lista de tabelas no banco local
     DB.get("list_tables", null, (resp, ret) => {

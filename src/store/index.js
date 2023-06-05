@@ -15,6 +15,7 @@ export default createStore({
 
       path: { app_path: "", base: "", files: "", files_lang: "" },
       displays: [],
+      active_displays: {},
       development: false,
       portable: false,
       ip: "",
@@ -22,12 +23,13 @@ export default createStore({
       platform: "",
       maximize: true,
       db_port: 0,
-      //monitor: 0,
+      display: -1,
 
       data: {
         sync_version: { pt: null, es: null },
         db: { port: 7770 },
         lang: "pt",
+        online: false,
         last_conn_server: null,
         downloads: {
           albums: { pt: null, es: null },
@@ -68,6 +70,7 @@ export default createStore({
       save_data: false,
       openpages: [],
       page: "",
+      full: false,
       show_arrows: true,
       active_header_tab: null,
       tabs_dot: [],

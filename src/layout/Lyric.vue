@@ -48,7 +48,6 @@ export default {
   },
   computed: {
     lyric: function () {
-      console.log(this.lyric);
       return this.$store.state.lyric;
     },
   },

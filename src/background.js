@@ -67,7 +67,7 @@ console.log("Diretório Local (getAppBasePath):", Fs.getAppBasePath());
 console.log("Diretório Portable (PORTABLE_EXECUTABLE_DIR):", process.env.PORTABLE_EXECUTABLE_DIR);
 console.log("Diretório Fonte:", Fs.getAppPath("fonts/din-condensed-bold.ttf"));
 
-let win = [];
+let win = {};
 async function activeWindow() {
 
   console.log("Inicializando Janela");
@@ -95,16 +95,36 @@ function closeLoadingScreen() {
 }
 
 async function createWindow(i, route) {
-  route = (route == undefined ? "" : route);
+  route = "#/" + (route == undefined ? "" : route);
+
+  let width, height, x, y, alwaysOnTop;
+  if (i > 0) {
+    let displays = screen.getAllDisplays();
+    let display = displays.find(display => display.id === i);
+    width = display.size.width;
+    height = display.size.height;
+    x = display.bounds.x;
+    y = display.bounds.y;
+    alwaysOnTop = false;
+  } else {
+    width = 800;
+    height = 600;
+    x = 0;
+    y = 0;
+    alwaysOnTop = false;
+  }
 
   let create = false;
 
-  console.log('Janela', i, route)
-  if (win[i] == undefined) {
+  console.log('Janela', i, 'Route', route, 'win[i]', win[i])
+  if (typeof win[i] == 'undefined') {
     create = true;
     win[i] = new BrowserWindow({
-      width: 800,
-      height: 600,
+      width,
+      height,
+      x,
+      y,
+      alwaysOnTop,
       resizable: true,
       backgroundColor: '#000000',
       autoHideMenuBar: false,
@@ -124,7 +144,7 @@ async function createWindow(i, route) {
 
     win[i].webContents.on('did-finish-load', () => {
       console.log('Janela', i, 'carregada 100%')
-      win[i].webContents.send('loaded');
+      win[i].webContents.send('loaded', i);
     })
   }
 
@@ -142,6 +162,10 @@ async function createWindow(i, route) {
   }
 
   console.log("Janela Criada?", create)
+  if (i && i > 0) {
+    win[0].webContents.send('screen', true, i, route);
+  }
+
   if (create) {
     win[i].maximize()
     win[i].show()
@@ -154,8 +178,12 @@ async function createWindow(i, route) {
         win[i].webContents.send('maximize', BrowserWindow.getFocusedWindow().isMaximized() || false);
       }
     });
-
   }
+
+  win[i].on('close', () => {
+    win[0].webContents.send('screen', false, i, route);
+    delete win[i];
+  });
 
 }
 
@@ -219,78 +247,6 @@ if (isDevelopment) {
     })
   }
 }
-
-/*
-function ipc(){
-  ipcMain.on('action', function(event,data,params,params2){
-    console.log('Action',data);
-    if (data == 'getDataWeb'){
-      sendDataWeb(params);
-    }else if (data == 'getJSON'){
-      sendJSON(params,params2);
-    }else if(data == 'saveData'){
-      var str = array2jsonfile(params);
-      fs.writeFileSync(Fs.getAppBasePath()+'config.json', str);
-      //console.log('salvando... ',Fs.getAppBasePath()+'config.json',params);
-      win[0].webContents.send('saveData',0);
-
-    }else if(data == 'saveApiData'){
-      var str = array2jsonfile(params);
-      var path = Fs.getAppFilesPath()+params2+'.json';
-      fs.writeFileSync(path, str);
-      console.log('salvando... ',Fs.getAppFilesPath()+'config.json',params,params2);
-      //win[0].webContents.send(params2,getJSONFile(path));
-
-    }else if(data == 'openWindow'){
-      console.log(params.route);
-      createWindow(1,params.route);
-      //win[0].webContents.send('saveData',0);
-    }else if(data == 'data'){
-      win.forEach(function(element, index) {
-        if (index > 0){
-          win[index].webContents.send('popup_data',params,params2);
-        }
-      });
-    }else if(data == 'getDataMain'){
-      win[0].webContents.send('getDataMain',params);
-
-    }else if (data == 'startServer'){
-      var static = require('node-static');
-      var file = new static.Server(`${__dirname}/server`)
-      var _ip = params.ip
-      var _port = params.port
-      
-      server = require('http').createServer(function (request, response) {
-          request.addListener('end', function () {
-              file.serve(request, response)
-          }).resume()
-      }).listen(_port,_ip)
-
-      win[0].webContents.send('server',{status: true, ip: _ip, port: _port});
-      console.log(_ip,_port,params)
-
-      server.on('error', function (e) {
-        win[0].webContents.send('server',{status: false, error: 'Erro ao iniciar servidor'});
-        server.close()
-      });
-    }else if (data == 'stopServer'){
-      server.close()
-      win[0].webContents.send('server',{status: false});
-      
-    }else if(data == 'minimize'){
-      BrowserWindow.getFocusedWindow().minimize()
-    }else if(data == 'maximize'){
-      if (!BrowserWindow.getFocusedWindow().isMaximized()) {
-        BrowserWindow.getFocusedWindow().maximize();
-      } else {
-        BrowserWindow.getFocusedWindow().unmaximize();
-      }
-    }else if(data == 'close'){
-      BrowserWindow.getFocusedWindow().close()
-    }
-  });
-}
-*/
 
 ipcMain.on('minimize', () => {
   BrowserWindow.getFocusedWindow().minimize()
@@ -428,6 +384,7 @@ ipcMain.on('download', (event, file) => {
     event.reply('download', 'complete');
   });
 });
+
 ipcMain.on('devtools', (event, file) => {
   console.log("DevTools")
   if (win[0].webContents.isDevToolsOpened()) {
@@ -439,6 +396,18 @@ ipcMain.on('devtools', (event, file) => {
   }
 });
 
+ipcMain.on('screen', (event, id, route) => {
+  createWindow(id, route);
+  event.reply('displays', screen.getAllDisplays());
+})
+
+ipcMain.on('data_screen', (event, screen, data) => {
+  Object.keys(win).map((id) => {
+    if (id > 0) {
+      win[id].webContents.send(screen, data);
+    }
+  });
+})
 
 
 function lang(app_lang = null) {

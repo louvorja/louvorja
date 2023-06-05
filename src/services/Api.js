@@ -91,8 +91,9 @@ export async function call(method, route, options = null, body = null, local = f
     }
 }
 export function base_url(local = false) {
+    let port = store.state.db_port || store.state.data.db.port;
     if (local) {
-        return `http://localhost:${store.state.db_port}`;
+        return `http://localhost:${port}`;
     } else {
         if (window.location.hostname == "localhost_") {
             return "http://localhost:8000";

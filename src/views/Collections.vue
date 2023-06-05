@@ -111,6 +111,9 @@ export default {
     lang: function () {
       return this.$store.state.data.lang;
     },
+    online: function () {
+      return this.$store.state.data.online;
+    },
     all_categories: function () {
       return this.categories.map((item) => {
         return item.slug;
@@ -128,8 +131,14 @@ export default {
   },
   watch: {
     async lang() {
-      Storage.remove(`${this.page}:categories`);
-      Storage.remove(`${this.page}:id_category`);
+      Storage.removeAll(this.page);
+      this.categories = [];
+      this.albums = [];
+      this.id_category = null;
+      await this.loadCategories();
+    },
+    async online() {
+      Storage.removeAll(this.page);
       this.categories = [];
       this.albums = [];
       this.id_category = null;

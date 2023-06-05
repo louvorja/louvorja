@@ -33,8 +33,10 @@ const app = createApp(
     data() {
       return this.$store.state;
     },
-    methods: {
-
+    computed: {
+      online: function () {
+        return this.$store.state.data.online;
+      },
     },
     watch: {
       data: {
@@ -43,6 +45,9 @@ const app = createApp(
           this.save_data = true;
         },
         deep: true
+      },
+      async online() {
+        Sync.start();
       },
       openpages: {
         handler: function () {
@@ -53,10 +58,11 @@ const app = createApp(
       },
       $route(to) {
         //DevTools.write("Watcher", "route", to);
-        let self = this;
+
         this.page = to.name;
         let route = (this.$router.options.routes.find((element) => element.name === to.name));
         let tab = (route.tab == undefined ? false : route.tab);
+        this.full = (route.full == undefined ? false : route.full);
 
         //Verifica se tem tabs salvas em cache
         if (localStorage.openpages) {
@@ -68,15 +74,6 @@ const app = createApp(
             this.openpages.push(route);
           }
         }
-        /*
-        setTimeout(function () {
-            //console.log('lEN',document.querySelectorAll(".active_header_tab").length )
-            if (document.querySelectorAll(".active_header_tab").length > 0) {
-                var indx = document.querySelector(".active_header_tab").getAttribute("data-id");
-                self.active_header_tab = parseInt(indx);
-                //console.log("SELF",self.active_header_tab)
-            }
-        }, 10)*/
       }
     },
     mounted() {
@@ -91,6 +88,9 @@ const app = createApp(
         // É UMA APLICAÇÃO DESKTOP - INICIA COMUNICAÇÃO COM A MÁQUINA
         DevTools.write("Aplicação DESKTOP")
 
+        ipcRenderer.on('display', function (event, data) {
+          self.display = data;
+        });
         ipcRenderer.on('debug', function (event, data) {
           self.debug = data;
         });
@@ -116,11 +116,26 @@ const app = createApp(
           self.maximize = data;
         });
         ipcRenderer.on('loaded', (event, data) => {
-          document.getElementById("preload").style.display = 'none'
+          setTimeout(function () {
+            document.getElementById("preload").style.display = 'none'
+          }, 1000)
+          self.display = data;
         });
-        //ipcRenderer.on('server', (event, data) => {
-        //  self.server = data;
-        //});
+        ipcRenderer.on('screen', (event, active, id, route) => {
+          DevTools.write("Abriu a tela?", active, id, route)
+          let display = Object.assign({}, self.displays.find(item => {
+            return item.id === id;
+          }));
+
+          if (active) {
+            display['active'] = active;
+            display['route'] = route;
+            self.active_displays[display.id] = display;
+          } else {
+            delete self.active_displays[display.id];
+          }
+
+        });
 
         // OBTEM CONFIGURAÇÕES SALVAS NA MAQUINA
         ipcRenderer.on('data', function (event, data) {
@@ -204,31 +219,6 @@ const app = createApp(
             Sync.start();
           }
 
-          /*
-                  //checa conexão com o banco de dados
-                  let s = await self.getDBData();
-                  if (s) {
-                    //obtem configurações da web
-                    let d = await self.getApiData('config');
-                    if (d) {
-                      self.config_web = d;
-                      ipcRenderer.send('save_json', 'config', d, 'filedir');
-          
-                      //inicia o processo de download e atualização do banco de dados
-                      DevTools.write('%cAtualizando Banco de Dados', 'color:blue')
-                      await self.downloadDB();
-                      DevTools.write('%cBanco de Dados atualizado!', 'color:blue')
-                    }
-                    await self.checkDownloads();
-                  }
-          */
-
-          /*self.getApiData('config', function (d) {
-            self.config_web = d;
-            ipcRenderer.send('save_json', 'config', d, 'filedir');
-            DevTools.write("rotina de downloadddd")
-            self.downloadDB();
-          });*/
         });
 
         if (self.$store.state.lang) {

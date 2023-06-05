@@ -107,6 +107,39 @@
       >
         Loja
       </v-btn>
+
+      <v-btn
+        v-for="display in $store.state.displays"
+        :key="display.id"
+        size="x-small"
+        variant="text"
+        prepend-icon="mdi-briefcase-download"
+        :color="$store.state.active_displays[display.id] ? 'warning' : ''"
+        @click="openMonitor(display, 'screens/media')"
+      >
+        {{ display.id }}|{{ display.label }}
+      </v-btn>
+
+      <v-btn
+        v-for="display in $store.state.displays"
+        :key="display.id"
+        size="x-small"
+        variant="text"
+        prepend-icon="mdi-briefcase-download"
+        :color="$store.state.active_displays[display.id] ? 'warning' : ''"
+        @click="openMonitor(display, 'screens')"
+      >
+        OUTRA ROTA|{{ display.label }}
+      </v-btn>
+
+      <v-btn
+        size="x-small"
+        variant="text"
+        prepend-icon="mdi-briefcase-download"
+        @click="sendMessage()"
+      >
+        sendMessage
+      </v-btn>
       <v-spacer />
     </v-card>
   </div>
@@ -200,6 +233,14 @@ export default {
     },
     showStore: function () {
       this.$store.state.store.show = true;
+    },
+    openMonitor: function (display, route) {
+      const IPC = require("@/helpers/IPC");
+      IPC.send("screen", display.id, route);
+    },
+    sendMessage: function () {
+      const IPC = require("@/helpers/IPC");
+      IPC.send("data_screen", 'media', { teste: "56" });
     },
   },
 };

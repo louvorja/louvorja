@@ -25,11 +25,7 @@ export function change(lang, vuetify, i18n) {
     //para que as configurações sejam recarregadas,
     //e o electron mande novamente as configurações para a aplicação
     if (store.state.desktop) {
-        setTimeout(function () {
-            if (lang) {
-                IPC.send('config', lang);
-            }
-        }, 1000);
+        this.getConfig(lang)
     }
 
 
@@ -46,4 +42,17 @@ export function flag(lang) {
     } else {
         return lang;
     }
+}
+export function getConfig(lang, timer) {
+    if (timer == undefined) {
+        timer = 1000;
+    }
+    let self = this;
+    setTimeout(function () {
+        if (store.state.display < 0) {
+            self.getConfig(lang, 50);
+        } else if (store.state.display == 0 && lang) {
+            IPC.send('config', lang);
+        }
+    }, timer);
 }

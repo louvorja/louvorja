@@ -9,19 +9,19 @@
     />
     <app-fonts v-else />
 
-    <app-side-bar />
-    <app-dialog />
-    <app-alert />
-    <app-store />
-    <app-album />
-    <app-lyric />
-    <app-media />
+    <app-side-bar v-if="!full" />
+    <app-dialog v-if="!full" />
+    <app-alert v-if="!full" />
+    <app-store v-if="!full" />
+    <app-album v-if="!full" />
+    <app-lyric v-if="!full" />
+    <app-media v-if="!full" />
 
     <div id="main-area" class="vh-100 vw-100 d-flex flex-column flex-nowrap">
       <div id="header-area">
-        <app-system-header />
-        <app-header />
-        <app-tabs />
+        <app-system-header v-if="!full" />
+        <app-header v-if="!full" />
+        <app-tabs v-if="!full" />
       </div>
       <div
         id="router-view-area"
@@ -30,9 +30,9 @@
         <router-view />
       </div>
       <div id="footer-area">
-        <app-player />
-        <app-footer />
-        <app-dev-tools v-if="$store.state.debug" />
+        <app-player v-if="!full" />
+        <app-footer v-if="!full" />
+        <app-dev-tools v-if="$store.state.debug && !full" />
       </div>
     </div>
   </v-app>
@@ -69,13 +69,11 @@ export default {
     };
   },
   computed: {
-    tabs: function () {
-      return this.$store.state.openpages.map((item) => {
-        return item.name;
-      });
-    },
     router_view_height: function () {
       return this.$store.state.window.router_view.height;
+    },
+    full: function () {
+      return this.$store.state.full;
     },
   },
   methods: {

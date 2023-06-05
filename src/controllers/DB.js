@@ -3,7 +3,7 @@ import store from '../store'
 const Api = require("../services/Api");
 
 export function get(table, data, callback = function () { }) {
-    if (store.state.desktop) {
+    if (store.state.desktop && !store.state.data.online) {
         // É sistema desktop, usa banco local
         Api.get_local(table, data, (resp, ret) => {
             callback(resp, ret);

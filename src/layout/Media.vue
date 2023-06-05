@@ -335,7 +335,7 @@ export default {
     listChangeMusicType: defineAsyncComponent(() =>
       import(`@/components/ListChangeMusicType`)
     ),
-    screen: defineAsyncComponent(() => import(`@/components/Screen`)),
+    screen: defineAsyncComponent(() => import(`@/components/screens/Media`)),
   },
   data() {
     return {

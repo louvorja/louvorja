@@ -49,9 +49,19 @@
         @click="search()"
         v-shortkey="['ctrl', 'f']"
         @shortkey="search()"
-      >
-        <v-icon :size="15">mdi-magnify</v-icon>
-      </v-btn>
+      />
+
+      <!-- Botão Nuvem -->
+      <v-btn
+        v-if="$store.state.desktop"
+        variant="text"
+        :icon="
+          $store.state.data.online ? 'mdi-cloud' : 'mdi-cloud-cancel-outline'
+        "
+        size="small"
+        class="text-white"
+        @click="chageOnline()"
+      />
 
       <!-- Divisor -->
       <v-divider vertical />
@@ -188,7 +198,7 @@
       />
       <v-btn
         variant="text"
-        icon="mdi-maximize"
+        icon="mdi-window-maximize"
         size="small"
         class="text-white"
         @click="maximize()"
@@ -274,6 +284,9 @@ export default {
     },
     img: function (dir) {
       return Files.img(dir);
+    },
+    chageOnline: function (dir) {
+      return (this.$store.state.data.online = !this.$store.state.data.online);
     },
   },
 };

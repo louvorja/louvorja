@@ -117,6 +117,9 @@ export default {
     lang: function () {
       return this.$store.state.data.lang;
     },
+    online: function () {
+      return this.$store.state.data.online;
+    },
     desktop: function () {
       return this.$store.state.desktop;
     },
@@ -129,6 +132,16 @@ export default {
     },
   },
   watch: {
+    async lang() {
+      Storage.remove(`${this.page}:musics`);
+      this.musics = [];
+      await this.loadData();
+    },
+    async online() {
+      Storage.remove(`${this.page}:musics`);
+      this.musics = [];
+      await this.loadData();
+    },
     async lang() {
       Storage.remove(`${this.page}:musics`);
       this.musics = [];
