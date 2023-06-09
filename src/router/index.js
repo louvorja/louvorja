@@ -93,15 +93,15 @@ const routes = [
     component: () => import('@/views/SlideEditor.vue')
   },
   {
-    path: '/screens',
-    name: 'screens',
+    path: '/screen',
+    name: 'screen',
     tab: false,
     full: true,
     component: () => import('@/views/screens/Home.vue')
   },
   {
-    path: '/screens/media',
-    name: 'screens-media',
+    path: '/screen/media',
+    name: 'screen-media',
     tab: false,
     full: true,
     component: () => import('@/views/screens/Media.vue')

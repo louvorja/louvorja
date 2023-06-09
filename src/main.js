@@ -27,6 +27,7 @@ const Locale = require("./helpers/Locale");
 const Data = require("./helpers/Data");
 const Sync = require("./helpers/Sync");
 const System = require("./helpers/System");
+const Screen = require("./helpers/Screen");
 
 const app = createApp(
   {
@@ -91,6 +92,9 @@ const app = createApp(
         ipcRenderer.on('display', function (event, data) {
           self.display = data;
         });
+        ipcRenderer.on('current_screen', function (event, data) {
+          self.current_screen = data;
+        });
         ipcRenderer.on('debug', function (event, data) {
           self.debug = data;
         });
@@ -99,6 +103,8 @@ const app = createApp(
         });
         ipcRenderer.on('displays', function (event, data) {
           self.displays = data;
+          Screen.register(data);
+          ipcRenderer.send("print");
         });
         ipcRenderer.on('ip', (event, data) => {
           self.ip = data;
@@ -134,7 +140,10 @@ const app = createApp(
           } else {
             delete self.active_displays[display.id];
           }
-
+        });
+        ipcRenderer.on('print_screen', (event, id, print) => {
+          DevTools.write("Print", id)
+          self.print_displays[id] = print;
         });
 
         // OBTEM CONFIGURAÇÕES SALVAS NA MAQUINA

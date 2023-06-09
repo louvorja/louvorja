@@ -4,7 +4,7 @@ const Musics = require("../controllers/Musics.js");
 const Alert = require("./Alert");
 const Time = require("./Time");
 const Media = require("./Media");
-const IPC = require("./IPC");
+const Screen = require("./Screen");
 const Dialog = require("@/helpers/Dialog");
 
 export function open(obj, options = {}) {
@@ -164,8 +164,7 @@ export function timeUpdate() {
     store.state.media.progress = store.state.media.current_time / store.state.media.duration * 100;
     store.state.media.progress = isNaN(store.state.media.progress) ? 0 : store.state.media.progress;
 
-    let data = JSON.parse(JSON.stringify(store.state.media));
-    IPC.send("data_screen", 'media', data);
+    Screen.send("media", store.state.media);
 
     Media.adjust();
 }

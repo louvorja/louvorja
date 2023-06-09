@@ -115,5 +115,5 @@ module.exports = {
         })
 
         return data;
-    }
+    },
 }

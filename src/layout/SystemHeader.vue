@@ -51,6 +51,16 @@
         @shortkey="search()"
       />
 
+      <!-- Botão Monitores -->
+      <v-btn
+        v-if="$store.state.desktop"
+        variant="text"
+        icon="mdi-monitor-multiple"
+        size="small"
+        class="text-white"
+        @click="showScreen()"
+      />
+
       <!-- Botão Nuvem -->
       <v-btn
         v-if="$store.state.desktop"
@@ -240,6 +250,7 @@ import { defineAsyncComponent } from "vue";
 const System = require("../helpers/System.js");
 const Locale = require("../helpers/Locale.js");
 const Files = require("../helpers/Files.js");
+const Screen = require("../helpers/Screen.js");
 
 export default {
   components: {
@@ -285,8 +296,11 @@ export default {
     img: function (dir) {
       return Files.img(dir);
     },
-    chageOnline: function (dir) {
-      return (this.$store.state.data.online = !this.$store.state.data.online);
+    chageOnline: function () {
+      System.changeOnline();
+    },
+    showScreen: function () {
+      Screen.show();
     },
   },
 };

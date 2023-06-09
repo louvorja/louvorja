@@ -64,5 +64,8 @@
     "streaming": "Transmissão",
     "light-themes": "Temas Claros",
     "dark-themes": "Temas Escuros",
-    "minimize": "Minimizar"
+    "minimize": "Minimizar",
+    "refresh-screens": "Atualizar Telas",
+    "screens": "Telas",
+    "no-signal": "Sem sinal"
 }

@@ -115,7 +115,7 @@
         variant="text"
         prepend-icon="mdi-briefcase-download"
         :color="$store.state.active_displays[display.id] ? 'warning' : ''"
-        @click="openMonitor(display, 'screens/media')"
+        @click="openMonitor(display, 'screen/media')"
       >
         {{ display.id }}|{{ display.label }}
       </v-btn>
@@ -127,9 +127,21 @@
         variant="text"
         prepend-icon="mdi-briefcase-download"
         :color="$store.state.active_displays[display.id] ? 'warning' : ''"
-        @click="openMonitor(display, 'screens')"
+        @click="openMonitor(display, 'screen')"
       >
         OUTRA ROTA|{{ display.label }}
+      </v-btn>
+
+      <v-btn
+        v-for="display in $store.state.displays"
+        :key="display.id"
+        size="x-small"
+        variant="text"
+        prepend-icon="mdi-briefcase-download"
+        :color="$store.state.active_displays[display.id] ? 'warning' : ''"
+        @click="closeMonitor(display)"
+      >
+        FECHAR|{{ display.label }}
       </v-btn>
 
       <v-btn
@@ -140,6 +152,7 @@
       >
         sendMessage
       </v-btn>
+
       <v-spacer />
     </v-card>
   </div>
@@ -235,12 +248,16 @@ export default {
       this.$store.state.store.show = true;
     },
     openMonitor: function (display, route) {
-      const IPC = require("@/helpers/IPC");
-      IPC.send("screen", display.id, route);
+      const Screen = require("@/helpers/Screen");
+      Screen.create(display.id, route);
+    },
+    closeMonitor: function (display, route) {
+      const Screen = require("@/helpers/Screen");
+      Screen.close(display.id);
     },
     sendMessage: function () {
-      const IPC = require("@/helpers/IPC");
-      IPC.send("data_screen", 'media', { teste: "56" });
+      const Screen = require("@/helpers/Screen");
+      Screen.send("media", this.$store.state.media);
     },
   },
 };

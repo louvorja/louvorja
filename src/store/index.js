@@ -16,6 +16,7 @@ export default createStore({
       path: { app_path: "", base: "", files: "", files_lang: "" },
       displays: [],
       active_displays: {},
+      print_displays: {},
       development: false,
       portable: false,
       ip: "",
@@ -24,6 +25,7 @@ export default createStore({
       maximize: true,
       db_port: 0,
       display: -1,
+      current_screen: {},
 
       data: {
         sync_version: { pt: null, es: null },
@@ -31,6 +33,7 @@ export default createStore({
         lang: "pt",
         online: false,
         last_conn_server: null,
+        screen: {},
         downloads: {
           albums: { pt: null, es: null },
           downloaded: {
@@ -140,20 +143,6 @@ export default createStore({
         },
         track: 0,
       },
-      /*player: {
-        show: false,
-        loading: false,
-        music: [],
-        progress: 0,
-        audio: 0,
-        file: '',
-        is_paused: true,
-        id_music: 0,
-        current_time: 0,
-        duration: 0,
-        album: '',
-        track: 0,
-      },*/
       lyric: {
         show: false,
         loading: false,
@@ -166,6 +155,9 @@ export default createStore({
         loading: false,
         album: {},
         musics: {},
+      },
+      screen: {
+        show: false,
       },
     }
   },

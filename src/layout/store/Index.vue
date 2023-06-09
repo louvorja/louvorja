@@ -17,7 +17,23 @@
         </template>
       </v-toolbar>
 
-      <v-layout>
+      <div v-if="$store.state.data.online">
+        <v-alert
+          class="ma-5"
+          type="warning"
+          text="Você está usando o banco de dados on-line. Altere para o banco de dados local para visualizar este conteúdo!"
+        />
+        <v-btn
+          class="ma-5"
+          variant="flat"
+          prepend-icon="mdi-cloud-cancel-outline"
+          color="grey-lighten-3"
+          @click="chageOnline()"
+        >
+          Usar banco de dados local
+        </v-btn>
+      </div>
+      <v-layout v-else>
         <v-navigation-drawer
           theme="dark"
           :color="$store.state.data.layout.color"
@@ -82,6 +98,7 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
+const System = require("@/helpers/System");
 
 export default {
   components: {
@@ -107,6 +124,9 @@ export default {
     },
     page: function (page) {
       this.component = page;
+    },
+    chageOnline: function () {
+      System.changeOnline();
     },
   },
 };

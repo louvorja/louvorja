@@ -4,6 +4,11 @@
     style="background: rgba(11, 61, 98, 1)"
   >
     <ico src="louvorja" size="100" />
+    <!--
+    <div v-for="display in $store.state.displays" :key="display.id">
+      <img :src="print_displays[display.id] ?? ''" />
+    </div>
+    -->
     <div v-if="debug" style="width: 100%; height: 100%; overflow: auto">
       <json-viewer :value="$data" />
     </div>

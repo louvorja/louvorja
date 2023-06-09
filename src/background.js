@@ -1,9 +1,10 @@
-import { app, protocol, BrowserWindow, screen, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, screen, ipcMain, desktopCapturer } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 //import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 
 const Config = require("./backend/Config");
 const Fs = require("./backend/Fs");
+const JSONData = require("./backend/JSONData");
 
 const http = require('http')
 const fs = require('fs');
@@ -33,7 +34,7 @@ let log_stdout = process.stdout;
 
 function saveConsole(args) {
   const date = new Date();
-  const datetime = `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  const datetime = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
 
   let output = datetime + ' | ' + args.join(' ');
   log_file.write(util.format(output) + '\r\n');
@@ -94,13 +95,14 @@ function closeLoadingScreen() {
   loadingScreen.close();
 }
 
-async function createWindow(i, route) {
+async function createWindow(i, route, current_screen) {
+  i = +i;
   route = "#/" + (route == undefined ? "" : route);
 
   let width, height, x, y, alwaysOnTop;
   if (i > 0) {
     let displays = screen.getAllDisplays();
-    let display = displays.find(display => display.id === i);
+    let display = displays.find(display => display.id == i);
     width = display.size.width;
     height = display.size.height;
     x = display.bounds.x;
@@ -116,7 +118,7 @@ async function createWindow(i, route) {
 
   let create = false;
 
-  console.log('Janela', i, 'Route', route, 'win[i]', win[i])
+  console.log('Janela', i, 'Route', route, 'win[i]', win[i], 'current_screen', current_screen)
   if (typeof win[i] == 'undefined') {
     create = true;
     win[i] = new BrowserWindow({
@@ -145,6 +147,8 @@ async function createWindow(i, route) {
     win[i].webContents.on('did-finish-load', () => {
       console.log('Janela', i, 'carregada 100%')
       win[i].webContents.send('loaded', i);
+      win[i].webContents.send('development', isDevelopment);
+      win[i].webContents.send('current_screen', current_screen);
     })
   }
 
@@ -165,6 +169,7 @@ async function createWindow(i, route) {
   if (i && i > 0) {
     win[0].webContents.send('screen', true, i, route);
   }
+  printScreen();
 
   if (create) {
     win[i].maximize()
@@ -181,8 +186,23 @@ async function createWindow(i, route) {
   }
 
   win[i].on('close', () => {
+    if (i == 0) {
+      Object.keys(win).map((id) => {
+        if (id > 0) {
+          win[id].close();
+        }
+      });
+    }
     win[0].webContents.send('screen', false, i, route);
     delete win[i];
+  });
+
+  win[i].on('focus', () => {
+    printScreen();
+  });
+
+  win[i].on('blur', () => {
+    printScreen();
   });
 
 }
@@ -210,6 +230,8 @@ app.on('activate', () => {
 app.on('ready', async () => {
   console.log('app ==> ready')
 
+  screen.on('display-added', refreshDisplays);
+  screen.on('display-removed', refreshDisplays);
   /*
   if (isDevelopment && !process.env.IS_TEST) {
     console.log('Ambiente de DEV. Instalando VUEJS_DEVTOOLS.')
@@ -267,14 +289,16 @@ ipcMain.on('close', () => {
 ipcMain.on('config', (event, app_lang) => {
   const ip = require("ip")
 
-  lang(app_lang);
+  if (app_lang) {
+    lang(app_lang);
+  }
 
   event.reply('portable', isPortable);
   event.reply('development', isDevelopment);
-  event.reply('displays', screen.getAllDisplays());
+  //event.reply('displays', screen.getAllDisplays());
   event.reply('ip', ip.address());
   event.reply('platform', process.platform);
-  event.reply('data', getJSONFile(Fs.getAppBasePath('config.json')));
+  event.reply('data', JSONData.getFile(Fs.getAppBasePath('config.json')));
   event.reply('path', {
     app_path: Fs.getAppPath(),
     base: Fs.getAppBasePath(),
@@ -282,7 +306,12 @@ ipcMain.on('config', (event, app_lang) => {
     files_lang: Fs.getAppFilesLangPath(lang())
   });
   event.reply('debug', isDevelopment);
+  refreshDisplays();
 })
+
+ipcMain.on('displays', (event) => {
+  refreshDisplays();
+});
 
 ipcMain.on('start_db', async (event, port) => {
   await localStorage.setItem("db-port", port);
@@ -314,7 +343,7 @@ ipcMain.on('start_db', async (event, port) => {
 ipcMain.on('config_web', (event) => {
   var data = null;
   if (fs.existsSync(Fs.getAppFilesPath('config.json'))) {
-    data = getJSONFile(Fs.getAppFilesPath('config.json'));
+    data = JSONData.getFile(Fs.getAppFilesPath('config.json'));
   }
 
   event.reply('config_web', data);
@@ -323,14 +352,14 @@ ipcMain.on('config_web', (event) => {
 ipcMain.on('get_json', (event, filename) => {
   var data = null;
   if (fs.existsSync(Fs.getAppFilesPath(filename + '.json'))) {
-    data = getJSONFile(Fs.getAppFilesPath(filename + '.json'));
+    data = JSONData.getFile(Fs.getAppFilesPath(filename + '.json'));
   }
 
   event.reply('get_json', data);
 })
 
 ipcMain.on('save_json', (event, filename, data, dir) => {
-  var str = array2jsonfile(data);
+  var str = JSONData.toJSONFile(data);
   if (dir == 'filedir') {
     dir = Fs.getAppFilesPath()
   } else {
@@ -340,7 +369,7 @@ ipcMain.on('save_json', (event, filename, data, dir) => {
 })
 
 ipcMain.on('save_data', (event, data) => {
-  //var str = array2jsonfile(data);
+  //var str = JSONData.toJSONFile(data);
   var str = data;
   fs.writeFileSync(Fs.getAppBasePath() + 'config.json', str);
   console.log('Dados Salvos', Fs.getAppBasePath() + 'config.json')
@@ -396,9 +425,21 @@ ipcMain.on('devtools', (event, file) => {
   }
 });
 
-ipcMain.on('screen', (event, id, route) => {
-  createWindow(id, route);
+ipcMain.on('screen', (event, id, route, data) => {
+  createWindow(id, route, data);
   event.reply('displays', screen.getAllDisplays());
+})
+
+ipcMain.on('current_screen', (event, id, data) => {
+  if (win[id]) {
+    win[id].webContents.send('current_screen', data);
+  }
+})
+
+ipcMain.on('close_screen', (event, id) => {
+  if (win[id]) {
+    win[id].close();
+  }
 })
 
 ipcMain.on('data_screen', (event, screen, data) => {
@@ -407,6 +448,10 @@ ipcMain.on('data_screen', (event, screen, data) => {
       win[id].webContents.send(screen, data);
     }
   });
+})
+
+ipcMain.on('print', (event) => {
+  printScreen();
 })
 
 
@@ -419,37 +464,34 @@ function lang(app_lang = null) {
   return __lang;
 }
 
+function refreshDisplays() {
+  let displays = screen.getAllDisplays();
+  win[0].webContents.send('displays', displays);
 
+  //Checa as janelas
+  let data = JSONData.getFile(Fs.getAppBasePath('config.json'));
+  Object.keys(data.screen).map(item => {
+    let screen = data.screen[item];
+    let display = displays.filter(d => d.id == item)[0];
 
-function getJSONFile(file) {
-  try {
-    var data = fs.readFileSync(file, 'utf8');
-    return JSON.parse(data);
-  }
-  catch (e) {
-    return {}
-  }
-}
+    //É janela bloqueada, porém não existe! Cria janela.
+    if (screen.lock && !win[item] && display) {
 
-function array2jsonfile(params) {
-  var str1 = JSON.stringify(params);
-  var str2 = "";
-  var chr = "";
-  for (var i = 0; i < str1.length; i++) {
-    if (str1[i].match(/[^\x00-\x7F]/)) {
-      chr = "/u" + ("000" + str1[i].charCodeAt(0).toString(16)).substr(-4);
-    } else {
-      chr = str1[i];
+      console.log(item, 'screen', JSON.stringify(data.screen[item]))
+      createWindow(item, 'screen', data.screen[item]);
+
     }
-    str2 = str2 + chr;
-  }
-  return str2;
+  });
 }
 
-
-function pad(number) {
-  if (number < 10) {
-    return `0${number}`;
-  }
-  return number;
+function printScreen() {
+  desktopCapturer.getSources({ types: ['screen'], thumbnailSize: { width: 400, height: 200 } })
+    .then(sources => {
+      sources.map(source => {
+        win[0].webContents.send('print_screen', source.display_id, source.thumbnail.toDataURL());
+      });
+    })
+    .catch(error => {
+      console.error('Erro ao obter as fontes de tela:', error);
+    });
 }

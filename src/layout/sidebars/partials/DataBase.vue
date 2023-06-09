@@ -1,6 +1,25 @@
 <template>
   <div>
-    <div class="px-2">
+    <v-alert
+      v-if="$store.state.data.online"
+      class="mx-2"
+      type="warning"
+      text="Você está usando o banco de dados on-line. Altere para o modo off-line para mais opções!"
+    />
+    <v-btn
+      class="ma-2"
+      variant="flat"
+      :prepend-icon="
+        !$store.state.data.online ? 'mdi-cloud' : 'mdi-cloud-cancel-outline'
+      "
+      :color="!$store.state.data.online ? 'info' : 'grey-lighten-3'"
+      @click="chageOnline()"
+    >
+      <span v-if="$store.state.data.online">Usar banco de dados local</span>
+      <span v-else>Usar banco de dados on-line</span>
+    </v-btn>
+
+    <div class="pa-2" v-if="!$store.state.data.online">
       <h4>Resetar Banco de Dados</h4>
       <small>
         Esta opção ajuda a corrigir falhas ou dados corrompidos em seu banco de
@@ -17,9 +36,13 @@
 <script>
 const Dialog = require("@/helpers/Dialog");
 const Sync = require("@/helpers/Sync");
+const System = require("@/helpers/System");
 
 export default {
   methods: {
+    chageOnline: function () {
+      System.changeOnline();
+    },
     resetDB: function () {
       Dialog.yesno(
         "Atenção",

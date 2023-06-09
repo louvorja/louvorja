@@ -16,6 +16,7 @@
     <app-album v-if="!full" />
     <app-lyric v-if="!full" />
     <app-media v-if="!full" />
+    <app-screen v-if="!full" />
 
     <div id="main-area" class="vh-100 vw-100 d-flex flex-column flex-nowrap">
       <div id="header-area">
@@ -49,6 +50,7 @@ export default {
     AppStore: defineAsyncComponent(() => import("@/layout/store/Index")),
     AppAlbum: defineAsyncComponent(() => import("@/layout/Album")),
     AppLyric: defineAsyncComponent(() => import("@/layout/Lyric")),
+    AppScreen: defineAsyncComponent(() => import("@/layout/Screen")),
     AppSystemHeader: defineAsyncComponent(() =>
       import("@/layout/SystemHeader")
     ),
