@@ -6,8 +6,9 @@ const Config = require("./backend/Config");
 const Fs = require("./backend/Fs");
 const JSONData = require("./backend/JSONData");
 
-const http = require('http')
+const http = require('http');
 const fs = require('fs');
+
 const { localStorage } = require('electron-browser-storage');
 
 var request = require('request');
@@ -107,7 +108,7 @@ async function createWindow(i, route, current_screen) {
     height = display.size.height;
     x = display.bounds.x;
     y = display.bounds.y;
-    alwaysOnTop = false;
+    alwaysOnTop = current_screen.always_on_top || false;
   } else {
     width = 800;
     height = 600;
@@ -454,6 +455,57 @@ ipcMain.on('print', (event) => {
   printScreen();
 })
 
+ipcMain.on('identify_monitors', (event, screens) => {
+  let displays = screen.getAllDisplays();
+  displays.map(display => {
+    let label = display.label;
+    let name = (screens[display.id] && screens[display.id].label) || display.label;
+    let size = display.size.width + ' x ' + display.size.height;
+    if (label == name) {
+      label = "";
+    }
+
+    let width = display.size.width / 3;
+    let height = display.size.height / 4;
+    let x = display.bounds.x;
+    let y = Math.floor(display.bounds.y + (display.size.height * .1));
+
+    if (width < 450) {
+      width = Math.min(450, display.size.width);
+    }
+    if (height < 200) {
+      height = Math.min(200, display.size.height);
+    }
+    if (display.size.height < 400) {
+      y = display.bounds.y;
+    }
+
+    let window = new BrowserWindow({
+      width,
+      height,
+      x,
+      y,
+      alwaysOnTop: true,
+      transparent: true,
+      frame: false,
+      icon: Fs.getAppPath('public/favicon.png'),
+    });
+
+    window.loadFile(Fs.getAppPath('public/identify-monitors.html'), { query: { label, name, size } });
+
+    window.once('ready-to-show', () => {
+      window.setOpacity(.9);
+      printScreen(100);
+
+      setTimeout(function () {
+        window.close();
+        printScreen(100);
+      }, 5000);
+    });
+
+  });
+})
+
 
 function lang(app_lang = null) {
   if (app_lang) {
@@ -476,22 +528,38 @@ function refreshDisplays() {
 
     //É janela bloqueada, porém não existe! Cria janela.
     if (screen.lock && !win[item] && display) {
+      console.log("NÃO EXISTE")
+      createWindow(item, 'screen', screen);
+    }
 
-      console.log(item, 'screen', JSON.stringify(data.screen[item]))
-      createWindow(item, 'screen', data.screen[item]);
+    //Tela está aberta, porém monitor está desconectado! Oculta a janela.
+    if (win[item] && !display) {
+      console.log("EXISTE, MAS DESCONECTADO")
+      win[item].setOpacity(0);
+    }
 
+    //Tela está aberta, e monitor existe! Reposiciona a janela.
+    if (win[item] && display) {
+      console.log("EXISTE, E CONECTADO")
+      win[item].setOpacity(1);
+      win[item].setPosition(display.bounds.x, display.bounds.y);
+      win[item].setSize(display.size.width, display.size.height);
+      win[item].setAlwaysOnTop(screen.always_on_top || false);
     }
   });
 }
 
-function printScreen() {
-  desktopCapturer.getSources({ types: ['screen'], thumbnailSize: { width: 400, height: 200 } })
-    .then(sources => {
-      sources.map(source => {
-        win[0].webContents.send('print_screen', source.display_id, source.thumbnail.toDataURL());
+function printScreen(delay) {
+  delay = delay || 0;
+  setTimeout(function () {
+    desktopCapturer.getSources({ types: ['screen'], thumbnailSize: { width: 400, height: 200 } })
+      .then(sources => {
+        sources.map(source => {
+          win[0].webContents.send('print_screen', source.display_id, source.thumbnail.toDataURL());
+        });
+      })
+      .catch(error => {
+        console.error('Erro ao obter as fontes de tela:', error);
       });
-    })
-    .catch(error => {
-      console.error('Erro ao obter as fontes de tela:', error);
-    });
+  }, delay)
 }

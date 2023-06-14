@@ -10,7 +10,11 @@
         "hymnal-not-downloaded": "El himnario no se descargó en su programa. ¡Ve a la tienda y descarga el himnario!",
         "musics-not-downloaded": "No se han descargado canciones en su programa. ¡Ve a la tienda y descarga las canciones!",
         "label-hymn-name-or-number": "Ingrese el nombre o número del himno",
-        "label-song-name": "Introduce el nombre de la canción"
+        "label-song-name": "Introduce el nombre de la canción",
+        "screen-always-on-top": "Ventana siempre arriba",
+        "screen-lock": "Ventana siempre abierta",
+        "put-name-screen": "Pon un nombre para identificar esta pantalla",
+        "screen-delete": "Quitar pantalla inactiva"
     },
     "initials": {
         "sung": "CA",
@@ -52,6 +56,7 @@
     "lyrics": "Letra de musica",
     "version": "Versión",
     "track": "Rango",
+    "save": "Ahorrar",
     "close": "Cerca",
     "annual-collections": "Varias Colecciones",
     "various-collections": "Colecciones Anuales",
@@ -67,5 +72,7 @@
     "minimize": "Minimizar",
     "refresh-screens": "Actualizar Pantallas",
     "screens": "Pantallas",
-    "no-signal": "sin señal"
+    "no-signal": "sin señal",
+    "identify-monitors": "Identificar monitores",
+    "rename-screen": "Renombrar pantalla"
 }

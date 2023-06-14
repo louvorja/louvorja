@@ -10,7 +10,11 @@
         "hymnal-not-downloaded": "O hinário não foi baixado em seu programa. Acesse a loja e faça o download do hinário!",
         "musics-not-downloaded": "Nenhuma música foi baixada em seu programa. Acesse a loja e faça o download das músicas!",
         "label-hymn-name-or-number": "Digite o nome ou número do hino",
-        "label-song-name": "Digite o nome da música"
+        "label-song-name": "Digite o nome da música",
+        "screen-always-on-top": "Janela sempre no topo",
+        "screen-lock": "Janela sempre aberta",
+        "put-name-screen": "Coloque um nome para identificar esta tela",
+        "screen-delete": "Remover tela inativa"
     },
     "initials": {
         "sung": "CA",
@@ -52,6 +56,7 @@
     "lyrics": "Letra da Música",
     "version": "Versão",
     "track": "Faixa",
+    "save": "Salvar",
     "close": "Fechar",
     "annual-collections": "Coletâneas Anuais",
     "various-collections": "Coletâneas Diversas",
@@ -67,5 +72,7 @@
     "minimize": "Minimizar",
     "refresh-screens": "Atualizar Telas",
     "screens": "Telas",
-    "no-signal": "Sem sinal"
+    "no-signal": "Sem sinal",
+    "identify-monitors": "Identificar monitores",
+    "rename-screen": "Renomear tela"
 }

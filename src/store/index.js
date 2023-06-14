@@ -78,6 +78,9 @@ export default createStore({
       active_header_tab: null,
       tabs_dot: [],
 
+      internet: {
+        status: 'offline'
+      },
       download: {
         show: false,
         active: false,

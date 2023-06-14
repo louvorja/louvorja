@@ -73,7 +73,6 @@ export function lock(id) {
     Dialog.yesno(title, msg, function (resp) {
         if (resp == "yes") {
             store.state.data.screen[id].lock = !store.state.data.screen[id].lock;
-            console.log("DATATA", store.state.data.screen[id])
             IPC.send("current_screen", id, self.data(store.state.data.screen[id]));
             IPC.send("displays");
 
@@ -87,11 +86,46 @@ export function lock(id) {
         }
     });
 }
+
+export function always_on_top(id) {
+    let title = store.state.data.screen[id].always_on_top
+        ? "Desafixar do topo"
+        : "Fixar no topo";
+    let msg = store.state.data.screen[id].always_on_top
+        ? "Esta tela ficará fixada em primeiro plano. Nenhuma outra janela irá sobrepor esta tela.<br><br>Deseja continuar?"
+        : "Esta tela será desafixada do primeiro plano. Ela poderá ser sobreposta por outra janela.<br><br>Deseja continuar?";
+
+    let self = this;
+    Dialog.yesno(title, msg, function (resp) {
+        if (resp == "yes") {
+            store.state.data.screen[id].always_on_top = !store.state.data.screen[id].always_on_top;
+            IPC.send("current_screen", id, self.data(store.state.data.screen[id]));
+            IPC.send("displays");
+            setTimeout(function () { IPC.send("displays"); }, 2000);
+        }
+    });
+}
+
+export function identify() {
+    IPC.send("identify_monitors", JSON.parse(JSON.stringify(store.state.data.screen)));
+}
+
+export function remove(id) {
+    Dialog.yesno("Remover tela?", "Esta tela está desconectada, e após removida, será adicionada aqui caso seja conectada novamente.<br><br>Deseja removê-la?", function (resp) {
+        if (resp == "yes") {
+            delete store.state.data.screen[id];
+            IPC.send("displays");
+            setTimeout(function () { IPC.send("displays"); }, 2000);
+        }
+    });
+}
+
 export function register(data) {
     data.map(item => {
         if (!store.state.data.screen[item.id]) {
             store.state.data.screen[item.id] = {};
             store.state.data.screen[item.id].lock = false;
+            store.state.data.screen[item.id].always_on_top = false;
             store.state.data.screen[item.id].label = item.label;
         }
     });

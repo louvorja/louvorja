@@ -69,7 +69,7 @@
         <v-spacer></v-spacer>
         <v-btn
           class="ms-2"
-          variant="outlined"
+          variant="text"
           size="small"
           @click="closeAlbum()"
         >
