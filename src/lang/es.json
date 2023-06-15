@@ -14,7 +14,8 @@
         "screen-always-on-top": "Ventana siempre arriba",
         "screen-lock": "Ventana siempre abierta",
         "put-name-screen": "Pon un nombre para identificar esta pantalla",
-        "screen-delete": "Quitar pantalla inactiva"
+        "screen-delete": "Quitar pantalla inactiva",
+        "screen-background": "Dar formato al fondo de la pantalla"
     },
     "initials": {
         "sung": "CA",
@@ -74,5 +75,6 @@
     "screens": "Pantallas",
     "no-signal": "sin señal",
     "identify-monitors": "Identificar monitores",
-    "rename-screen": "Renombrar pantalla"
+    "rename-screen": "Renombrar pantalla",
+    "format-screen-background": "Dar formato al fondo de la pantalla"
 }

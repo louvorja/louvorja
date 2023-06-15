@@ -75,7 +75,11 @@ export default {
       return this.$store.state.window.router_view.height;
     },
     full: function () {
-      return this.$store.state.full;
+      return (
+        this.$store.state.full || this.$store.state.full,
+        window.location.href.includes("/screens") == true ||
+          window.location.href.includes("/screen") == true
+      );
     },
   },
   methods: {

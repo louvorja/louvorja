@@ -162,6 +162,16 @@ export default createStore({
       screen: {
         show: false,
       },
+
+      defauls: {
+        color_palette: [
+          ['#000000', '#9E9E9E', '#FFFFFF'],
+          ['#FF6D00', '#FFAB00', '#FFD600'],
+          ['#1B5E20', '#827717', '#64DD17'],
+          ['#01579B', '#006064', '#00B8D4'],
+          ['#B71C1C', '#880E4F', '#FF80AB'],
+        ]
+      }
     }
   },
   mutations: {

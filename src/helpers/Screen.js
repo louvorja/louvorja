@@ -59,6 +59,9 @@ export function soft_close(id) {
 
 export function refresh() {
     IPC.send("displays");
+    Object.keys(store.state.data.screen).map(id => {
+        IPC.send('current_screen', id, JSON.parse(JSON.stringify(store.state.data.screen[id])))
+    });
 }
 
 export function lock(id) {
@@ -127,6 +130,8 @@ export function register(data) {
             store.state.data.screen[item.id].lock = false;
             store.state.data.screen[item.id].always_on_top = false;
             store.state.data.screen[item.id].label = item.label;
+            store.state.data.screen[item.id].background = {};
+            store.state.data.screen[item.id].background.color = "#000000";
         }
     });
 }

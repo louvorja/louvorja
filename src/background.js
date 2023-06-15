@@ -296,7 +296,6 @@ ipcMain.on('config', (event, app_lang) => {
 
   event.reply('portable', isPortable);
   event.reply('development', isDevelopment);
-  //event.reply('displays', screen.getAllDisplays());
   event.reply('ip', ip.address());
   event.reply('platform', process.platform);
   event.reply('data', JSONData.getFile(Fs.getAppBasePath('config.json')));
@@ -468,7 +467,7 @@ ipcMain.on('identify_monitors', (event, screens) => {
     let width = display.size.width / 3;
     let height = display.size.height / 4;
     let x = display.bounds.x;
-    let y = Math.floor(display.bounds.y + (display.size.height * .1));
+    let y = Math.round(display.bounds.y + (display.size.height * .1));
 
     if (width < 450) {
       width = Math.min(450, display.size.width);
@@ -552,7 +551,7 @@ function refreshDisplays() {
 function printScreen(delay) {
   delay = delay || 0;
   setTimeout(function () {
-    desktopCapturer.getSources({ types: ['screen'], thumbnailSize: { width: 400, height: 200 } })
+    desktopCapturer.getSources({ types: ['screen'], thumbnailSize: { width: 300, height: 200 } })
       .then(sources => {
         sources.map(source => {
           win[0].webContents.send('print_screen', source.display_id, source.thumbnail.toDataURL());

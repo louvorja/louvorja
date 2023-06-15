@@ -23,6 +23,7 @@
           <v-slide-group-item v-for="display in displays" :key="display.id">
             <v-card
               class="mx-1 d-flex flex-column"
+              :min-width="200"
               :color="
                 display.active
                   ? $store.state.active_displays[display.id]
@@ -31,14 +32,12 @@
                   : 'grey-lighten-5'
               "
             >
-              <img
-                v-if="$store.state.print_displays[display.id]"
+              <v-img
+                cover
                 :src="$store.state.print_displays[display.id] ?? ''"
-                :style="'height: 100px;' + (!display.active && 'opacity:.5;')"
-              />
-              <div
-                v-else
-                style="width: 180px; height: 100px; background: #c7c2c2"
+                :height="100"
+                :max-height="100"
+                :style="!display.active && 'opacity:.5;'"
               />
               <v-card-text class="pa-1 ma-0 flex-grow-1">
                 <div
@@ -68,8 +67,27 @@
                 <div v-else class="text-red text-center">
                   <v-icon icon="mdi-monitor-off" /> {{ $t("no-signal") }}
                 </div>
+                {{ display.background }}
               </v-card-text>
               <v-card-actions class="ma-0 pa-1">
+                <v-tooltip :text="$t('message.screen-background')">
+                  <template v-slot:activator="{ props }">
+                    <v-btn
+                      icon
+                      variant="text"
+                      @click="
+                        formatScreenDialog(display.id, display.background)
+                      "
+                    >
+                      <v-avatar
+                        v-bind="props"
+                        :color="display.background.color"
+                        :style="'border: 3px solid ' + display.background.color"
+                        image="https://cdn.vuetifyjs.com/images/john.jpg"
+                      />
+                    </v-btn>
+                  </template>
+                </v-tooltip>
                 <v-spacer></v-spacer>
                 <v-tooltip :text="$t('message.screen-always-on-top')">
                   <template v-slot:activator="{ props }">
@@ -155,7 +173,8 @@
         </v-btn>
       </v-card-actions>
 
-      <v-dialog v-model="rename_dialog" persistent width="1024">
+      <!-- RENAME DIALOG ----------------------------------- -->
+      <v-dialog v-model="rename_dialog" persistent>
         <v-card>
           <v-card-title>
             <v-card-title class="text-h4 font-weight-light">
@@ -164,10 +183,12 @@
           </v-card-title>
           <v-card-text>
             <div class="d-flex flex-row flex-nowrap align-center">
-              <img
+              <v-img
                 v-if="$store.state.print_displays[id]"
                 :src="$store.state.print_displays[id] ?? ''"
-                style="height: 100px"
+                :max-width="200"
+                :height="100"
+                cover
                 class="mx-3"
               />
               <v-text-field
@@ -188,6 +209,40 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <!-- ------------------------------------------------- -->
+
+      <!-- BACKGROUND DIALOG ------------------------------- -->
+      <v-dialog v-model="bg_dialog" persistent>
+        <v-card>
+          <v-card-title>
+            <v-card-title class="text-h4 font-weight-light">
+              {{ $t("format-screen-background") }}
+            </v-card-title>
+          </v-card-title>
+          <v-card-text>
+            <div class="d-flex flex-row flex-nowrap align-center">
+              <v-color-picker
+                v-model="color"
+                mode="hexa"
+                :swatches="$store.state.defauls.color_palette"
+                show-swatches
+                :swatches-max-height="100"
+                :canvas-height="100"
+              />
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="info" variant="text" @click="formatScreen()">
+              {{ $t("save") }}
+            </v-btn>
+            <v-btn color="red" variant="text" @click="bg_dialog = false">
+              {{ $t("close") }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- ------------------------------------------------- -->
     </v-card>
   </v-dialog>
 </template>
@@ -200,8 +255,10 @@ export default {
     return {
       model: null,
       rename_dialog: false,
+      bg_dialog: false,
       id: null,
       name: "",
+      color: "",
     };
   },
   computed: {
@@ -221,7 +278,9 @@ export default {
         if (display.label && display.label != "") {
           d[item.id].label = display.label;
         }
-
+        if (display.background) {
+          d[item.id].background = display.background;
+        }
         d[item.id].active = true;
       });
       Object.keys(this.$store.state.data.screen).filter((id) => {
@@ -235,6 +294,12 @@ export default {
           d[id].active = false;
         }
       });
+
+      Object.keys(d).map((id) => {
+        d[id].background = d[id].background ?? {};
+        d[id].background.color = d[id].background.color ?? "#000000";
+      });
+
       return d;
     },
   },
@@ -263,7 +328,6 @@ export default {
       this.id = id;
       this.name = name;
       this.rename_dialog = !this.rename_dialog;
-      console.log(id, name);
     },
     renameScreen() {
       if (this.$store.state.data.screen[this.id]) {
@@ -274,6 +338,21 @@ export default {
     },
     deleteScreen(id) {
       Screen.remove(id);
+    },
+    formatScreenDialog(id, background) {
+      this.id = id;
+      this.color = background.color || "#000000";
+      this.bg_dialog = !this.bg_dialog;
+    },
+    formatScreen() {
+      if (this.$store.state.data.screen[this.id]) {
+        this.$store.state.data.screen[this.id].background =
+          this.$store.state.data.screen[this.id].background || {};
+
+        this.$store.state.data.screen[this.id].background.color = this.color;
+      }
+      this.bg_dialog = false;
+      Screen.refresh();
     },
   },
   mounted() {},

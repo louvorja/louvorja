@@ -14,7 +14,8 @@
         "screen-always-on-top": "Janela sempre no topo",
         "screen-lock": "Janela sempre aberta",
         "put-name-screen": "Coloque um nome para identificar esta tela",
-        "screen-delete": "Remover tela inativa"
+        "screen-delete": "Remover tela inativa",
+        "screen-background": "Formatar fundo de tela"
     },
     "initials": {
         "sung": "CA",
@@ -74,5 +75,6 @@
     "screens": "Telas",
     "no-signal": "Sem sinal",
     "identify-monitors": "Identificar monitores",
-    "rename-screen": "Renomear tela"
+    "rename-screen": "Renomear tela",
+    "format-screen-background": "Formatar fundo de tela"
 }
