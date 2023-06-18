@@ -345,6 +345,9 @@
             <v-btn color="info" variant="text" @click="formatScreen()">
               {{ $t("save") }}
             </v-btn>
+            <v-btn color="info" variant="text" @click="formatScreen(true)">
+              {{ $t("save-and-close") }}
+            </v-btn>
             <v-btn color="red" variant="text" @click="bg_dialog = false">
               {{ $t("close") }}
             </v-btn>
@@ -459,7 +462,7 @@ export default {
       this.position = background.position || "center center";
       this.bg_dialog = !this.bg_dialog;
     },
-    formatScreen() {
+    formatScreen(close) {
       if (this.$store.state.data.screen[this.id]) {
         this.$store.state.data.screen[this.id].background =
           this.$store.state.data.screen[this.id].background || {};
@@ -470,7 +473,9 @@ export default {
         this.$store.state.data.screen[this.id].background.position =
           this.position;
       }
-      this.bg_dialog = false;
+      if (close) {
+        this.bg_dialog = false;
+      }
       Screen.refresh();
     },
 

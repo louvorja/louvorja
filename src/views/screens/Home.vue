@@ -6,22 +6,13 @@
     class="h-100 w-100"
     :color="color"
     :style="bg_style"
-  >
-    HOME SCREEN {{ color }}
-    <json-viewer :value="$store.state.current_screen" />
-    <json-viewer :value="bg_style" />
-  </v-card>
+  />
 </template>
 
 <script>
-import JsonViewer from "vue-json-viewer";
-
 const Styles = require("@/helpers/Styles.js");
 
 export default {
-  components: {
-    JsonViewer,
-  },
   computed: {
     color: function () {
       return this.$store.state.current_screen.background
