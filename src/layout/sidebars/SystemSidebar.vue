@@ -80,6 +80,12 @@ export default {
           desktop: true,
         },
         {
+          name: "screens",
+          icon: "mdi-monitor-multiple",
+          click: "this.screens()",
+          desktop: true,
+        },
+        {
           name: "download-center",
           icon: "mdi-briefcase-download",
           click: "this.store()",
@@ -123,6 +129,9 @@ export default {
     },
     store: function () {
       this.$store.state.store.show = true;
+    },
+    screens: function () {
+      this.$store.state.screen.show = true;
     },
   },
 };

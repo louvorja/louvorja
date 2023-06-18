@@ -67,7 +67,6 @@
                 <div v-else class="text-red text-center">
                   <v-icon icon="mdi-monitor-off" /> {{ $t("no-signal") }}
                 </div>
-                {{ display.background }}
               </v-card-text>
               <v-card-actions class="ma-0 pa-1">
                 <v-tooltip :text="$t('message.screen-background')">
@@ -83,7 +82,11 @@
                         v-bind="props"
                         :color="display.background.color"
                         :style="'border: 3px solid ' + display.background.color"
-                        image="https://cdn.vuetifyjs.com/images/john.jpg"
+                        :image="
+                          display.background && display.background.image
+                            ? display.background.image
+                            : ''
+                        "
                       />
                     </v-btn>
                   </template>
@@ -229,6 +232,112 @@
                 :swatches-max-height="100"
                 :canvas-height="100"
               />
+
+              <div class="pa-3 flex-grow-1">
+                <span class="text-caption">{{ $t("background-image") }}</span>
+                <v-img
+                  width="100%"
+                  cover
+                  :height="200"
+                  :src="file"
+                  style="background: #e9e9e9"
+                >
+                  <template v-slot:default>
+                    <div
+                      class="w-100 h-100 d-flex align-center justify-center"
+                      v-if="!file"
+                    >
+                      <v-btn
+                        icon="mdi-image-plus-outline"
+                        size="x-large"
+                        variant="plain"
+                        @click="selectImage"
+                      />
+                    </div>
+                    <div
+                      class="w-100 h-100 d-flex align-end justify-end"
+                      v-else
+                    >
+                      <v-btn
+                        icon="mdi-image-sync-outline"
+                        color="info"
+                        size="x-large"
+                        variant="text"
+                        @click="selectImage"
+                      />
+                      <v-btn
+                        icon="mdi-image-remove-outline"
+                        color="red"
+                        size="x-large"
+                        variant="text"
+                        @click="removeImage"
+                      />
+                    </div>
+                  </template>
+                </v-img>
+
+                <v-file-input
+                  ref="fileInput"
+                  class="d-none"
+                  @change="getFile"
+                  accept="image/*"
+                  label="File input"
+                  multiple
+                  prepend-icon="mdi-image-area"
+                  variant="underlined"
+                />
+
+                <v-autocomplete
+                  variant="underlined"
+                  :label="$t('size')"
+                  :items="[
+                    { value: 'auto', title: $t('lists.size.auto') },
+                    { value: 'contain', title: $t('lists.size.contain') },
+                    { value: 'cover', title: $t('lists.size.cover') },
+                  ]"
+                  v-model="size"
+                />
+                <v-autocomplete
+                  variant="underlined"
+                  :label="$t('position')"
+                  :items="[
+                    { value: 'top left', title: $t('lists.position.top-left') },
+                    {
+                      value: 'top center',
+                      title: $t('lists.position.top-center'),
+                    },
+                    {
+                      value: 'top right',
+                      title: $t('lists.position.top-right'),
+                    },
+                    {
+                      value: 'center left',
+                      title: $t('lists.position.center-left'),
+                    },
+                    {
+                      value: 'center center',
+                      title: $t('lists.position.center-center'),
+                    },
+                    {
+                      value: 'center right',
+                      title: $t('lists.position.center-right'),
+                    },
+                    {
+                      value: 'bottom left',
+                      title: $t('lists.position.bottom-left'),
+                    },
+                    {
+                      value: 'bottom center',
+                      title: $t('lists.position.bottom-center'),
+                    },
+                    {
+                      value: 'bottom right',
+                      title: $t('lists.position.bottom-right'),
+                    },
+                  ]"
+                  v-model="position"
+                />
+              </div>
             </div>
           </v-card-text>
           <v-card-actions>
@@ -259,6 +368,9 @@ export default {
       id: null,
       name: "",
       color: "",
+      file: null,
+      size: null,
+      position: null,
     };
   },
   computed: {
@@ -342,6 +454,9 @@ export default {
     formatScreenDialog(id, background) {
       this.id = id;
       this.color = background.color || "#000000";
+      this.file = background.image || "";
+      this.size = background.size || "cover";
+      this.position = background.position || "center center";
       this.bg_dialog = !this.bg_dialog;
     },
     formatScreen() {
@@ -350,11 +465,28 @@ export default {
           this.$store.state.data.screen[this.id].background || {};
 
         this.$store.state.data.screen[this.id].background.color = this.color;
+        this.$store.state.data.screen[this.id].background.image = this.file;
+        this.$store.state.data.screen[this.id].background.size = this.size;
+        this.$store.state.data.screen[this.id].background.position =
+          this.position;
       }
       this.bg_dialog = false;
       Screen.refresh();
     },
+
+    getFile(e) {
+      e.preventDefault();
+      const file = e.target.files[0];
+      if (file) {
+        this.file = file.path;
+      }
+    },
+    selectImage() {
+      this.$refs.fileInput.click();
+    },
+    removeImage() {
+      this.file = "";
+    },
   },
-  mounted() {},
 };
 </script>

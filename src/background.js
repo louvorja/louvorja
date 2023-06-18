@@ -468,6 +468,7 @@ ipcMain.on('identify_monitors', (event, screens) => {
     let height = display.size.height / 4;
     let x = display.bounds.x;
     let y = Math.round(display.bounds.y + (display.size.height * .1));
+    let opacity = .9;
 
     if (width < 450) {
       width = Math.min(450, display.size.width);
@@ -488,12 +489,12 @@ ipcMain.on('identify_monitors', (event, screens) => {
       transparent: true,
       frame: false,
       icon: Fs.getAppPath('public/favicon.png'),
+      opacity
     });
 
     window.loadFile(Fs.getAppPath('public/identify-monitors.html'), { query: { label, name, size } });
 
     window.once('ready-to-show', () => {
-      window.setOpacity(.9);
       printScreen(100);
 
       setTimeout(function () {

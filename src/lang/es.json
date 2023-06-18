@@ -22,6 +22,24 @@
         "instrumental": "PB",
         "without-audio": "SA"
     },
+    "lists": {
+        "size": {
+            "auto": "Original",
+            "contain": "Ajustado",
+            "cover": "Pantalla Completa"
+        },
+        "position": {
+            "top-left": "Superior Izquierda",
+            "top-center": "Superior",
+            "top-right": "Superior Derecha",
+            "center-left": "Centro Izquierda",
+            "center-center": "Centro",
+            "center-right": "Centro Derecha",
+            "bottom-left": "Abajo Izquierda",
+            "bottom-center": "Abajo",
+            "bottom-right": "Abajo Derecha"
+        }
+    },
     "home": "Comienzo",
     "hymnal": "Himnario Adventista",
     "hymnals": "Himnarios",
@@ -76,5 +94,8 @@
     "no-signal": "sin señal",
     "identify-monitors": "Identificar monitores",
     "rename-screen": "Renombrar pantalla",
-    "format-screen-background": "Dar formato al fondo de la pantalla"
+    "format-screen-background": "Dar formato al fondo de la pantalla",
+    "background-image": "Imagen de fondo",
+    "size": "Tamano",
+    "position": "Posición"
 }
