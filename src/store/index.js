@@ -42,11 +42,13 @@ export default createStore({
             files: {},
           },
         },
-        media: {
-          mini: false,
-        },
         fav: [],
         layout: { id: 1, color: "#29569b", dark: false },
+        options: {
+          screen: {
+            fade: true,
+          }
+        },
         stopwatch: {
           text: {
             fontSize: 14,

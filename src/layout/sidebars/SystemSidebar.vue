@@ -37,9 +37,17 @@
           :value="tab.name"
         >
           <v-card flat>
-            <v-card-title>{{ $t(tab.name) }}</v-card-title>
-            <v-divider class="my-2"></v-divider>
-            <component v-if="tab.component" :is="tab.component" />
+            <v-card-title class="minus-height">{{ $t(tab.name) }}</v-card-title>
+            <v-divider class="my-2 minus-height"></v-divider>
+            <v-card-text
+              :style="
+                'height:' +
+                content_height +
+                'px;overflow: hidden;overflow-y: auto;'
+              "
+            >
+              <component v-if="tab.component" :is="tab.component" />
+            </v-card-text>
           </v-card>
         </v-window-item>
       </v-window>
@@ -60,7 +68,7 @@ export default {
     return {
       active_menu: 0,
       width_menu_min: 220,
-      width_menu_open: 550,
+      width_menu_open: 580,
       menu: [
         {
           name: "configs",
@@ -114,6 +122,14 @@ export default {
       return this.desktop
         ? this.menu
         : this.menu.filter((menu) => !menu.desktop);
+    },
+    content_height: function () {
+      //this.refresh;
+      let height = this.$store.state.window.main.height - 65;
+      document.querySelectorAll(".minus-height").forEach((el) => {
+        height -= el.offsetHeight || 0;
+      });
+      return height;
     },
   },
   methods: {

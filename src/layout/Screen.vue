@@ -1,5 +1,9 @@
 <template>
-  <v-dialog v-model="screen.show" width="80%">
+  <v-dialog
+    v-model="screen.show"
+    width="80%"
+    :theme="$store.state.data.layout.dark ? 'dark' : ''"
+  >
     <v-card id="screen-card">
       <div class="d-flex flex-no-wrap align-stretch">
         <div class="flex-grow-1 d-flex align-center">
@@ -27,8 +31,14 @@
               :color="
                 display.active
                   ? $store.state.active_displays[display.id]
-                    ? 'amber-lighten-3'
+                    ? $store.state.data.layout.dark
+                      ? 'amber-accent-4'
+                      : 'amber-lighten-3'
+                    : $store.state.data.layout.dark
+                    ? 'grey-darken-3'
                     : 'grey-lighten-3'
+                  : $store.state.data.layout.dark
+                  ? 'grey-darken-2'
                   : 'grey-lighten-5'
               "
             >

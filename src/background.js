@@ -123,10 +123,10 @@ async function createWindow(i, route, current_screen) {
   if (typeof win[i] == 'undefined') {
     create = true;
     win[i] = new BrowserWindow({
-      width,
-      height,
-      x,
-      y,
+      width: 0,
+      height: 0,
+      x: 0,
+      y: 0,
       alwaysOnTop,
       resizable: true,
       backgroundColor: '#000000',
@@ -136,6 +136,7 @@ async function createWindow(i, route, current_screen) {
       show: false,
       icon: Fs.getAppPath('public/favicon.png'),
       title: "Louvor JA",
+      opacity: 0,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
@@ -172,19 +173,39 @@ async function createWindow(i, route, current_screen) {
   }
   printScreen();
 
-  if (create) {
-    win[i].maximize()
-    win[i].show()
-    if (loadingScreen) {
-      closeLoadingScreen();
-    }
-
+  win[i].once('ready-to-show', () => {
     win[i].on('resize', function () {
       if (BrowserWindow.getFocusedWindow()) {
         win[i].webContents.send('maximize', BrowserWindow.getFocusedWindow().isMaximized() || false);
       }
     });
-  }
+
+    win[i].setPosition(x, y);
+    win[i].setSize(width, height);
+    win[i].maximize();
+
+    if (i && i > 0 && current_screen && current_screen.fade) {
+      setTimeout(function () {
+        let fade = setInterval(function () {
+          let op = win[i].getOpacity() + .1;
+          win[i].setOpacity(op);
+          if (op >= 1) {
+            clearInterval(fade)
+          }
+
+        }, 100);
+      }, 10)
+    } else {
+      win[i].setOpacity(1);
+    }
+
+
+    //win[i].show()
+    if (loadingScreen) {
+      closeLoadingScreen();
+    }
+
+  });
 
   win[i].on('close', () => {
     if (i == 0) {
@@ -436,9 +457,20 @@ ipcMain.on('current_screen', (event, id, data) => {
   }
 })
 
-ipcMain.on('close_screen', (event, id) => {
+ipcMain.on('close_screen', (event, id, data) => {
   if (win[id]) {
-    win[id].close();
+    if (data && data.fade) {
+      let fade = setInterval(function () {
+        let op = win[id].getOpacity() - .1;
+        win[id].setOpacity(op);
+        if (op <= 0) {
+          clearInterval(fade);
+          win[id].close();
+        }
+      }, 100);
+    } else {
+      win[id].close();
+    }
   }
 })
 
@@ -530,6 +562,13 @@ function refreshDisplays() {
     if (screen.lock && !win[item] && display) {
       console.log("NÃO EXISTE")
       createWindow(item, 'screen', screen);
+    } else if (win[item] && display) {
+      //Tela está aberta, e monitor existe! Reposiciona a janela.
+      console.log("EXISTE, E CONECTADO")
+      win[item].setOpacity(1);
+      win[item].setPosition(display.bounds.x, display.bounds.y);
+      win[item].setSize(display.size.width, display.size.height);
+      win[item].setAlwaysOnTop(screen.always_on_top || false);
     }
 
     //Tela está aberta, porém monitor está desconectado! Oculta a janela.
@@ -538,14 +577,6 @@ function refreshDisplays() {
       win[item].setOpacity(0);
     }
 
-    //Tela está aberta, e monitor existe! Reposiciona a janela.
-    if (win[item] && display) {
-      console.log("EXISTE, E CONECTADO")
-      win[item].setOpacity(1);
-      win[item].setPosition(display.bounds.x, display.bounds.y);
-      win[item].setSize(display.size.width, display.size.height);
-      win[item].setAlwaysOnTop(screen.always_on_top || false);
-    }
   });
 }
 

@@ -98,5 +98,6 @@
     "format-screen-background": "Formatar fundo de tela",
     "background-image": "Imagem de Fundo",
     "size": "Tamanho",
-    "position": "Posição"
+    "position": "Posição",
+    "fading-effect-on-screens": "Efeito de esmaecimento nas telas"
 }

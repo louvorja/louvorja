@@ -43,7 +43,7 @@ export function close(id) {
     if (id == undefined) {
         id = store.state.display;
     }
-    IPC.send("close_screen", id);
+    IPC.send("close_screen", id, this.data(store.state.data.screen[id]));
 }
 
 export function soft_close(id) {
@@ -81,7 +81,7 @@ export function lock(id) {
 
             if (!store.state.data.screen[id].lock) {
                 if (store.state.active_displays[id] && store.state.active_displays[id].route == '#/screen') {
-                    IPC.send("close_screen", id);
+                    self.close(id);
                 }
             } else {
                 setTimeout(function () { IPC.send("displays"); }, 2000);
@@ -126,7 +126,9 @@ export function remove(id) {
 export function register(data) {
     data.map(item => {
         if (!store.state.data.screen[item.id]) {
-            store.state.data.screen[item.id] = {};
+            store.state.data.screen[item.id] = {
+                ...store.state.data.options.screen
+            };
             store.state.data.screen[item.id].lock = false;
             store.state.data.screen[item.id].always_on_top = false;
             store.state.data.screen[item.id].label = item.label;

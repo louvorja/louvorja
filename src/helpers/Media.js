@@ -317,6 +317,7 @@ export function getElement() {
         el.setAttribute("id", id);
         document.body.appendChild(el);
         el.addEventListener("timeupdate", this.timeUpdate);
+        el.addEventListener("progress", this.timeUpdate);
     } else {
         el = document.getElementById(id);
     }

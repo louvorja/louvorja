@@ -98,5 +98,6 @@
     "format-screen-background": "Dar formato al fondo de la pantalla",
     "background-image": "Imagen de fondo",
     "size": "Tamano",
-    "position": "Posición"
+    "position": "Posición",
+    "fading-effect-on-screens": "Efecto de desvanecimiento en las pantallas"
 }
