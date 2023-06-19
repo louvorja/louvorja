@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="px-3">
+    <div class="px-3" v-if="$store.state.desktop">
       <div class="subtitle-1 font-weight-medium">{{ $t("screens") }}</div>
 
       <v-switch
