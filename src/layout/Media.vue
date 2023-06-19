@@ -251,6 +251,8 @@
                   clickable
                   :indeterminate="media.loading"
                   :height="10"
+                  :stream="!media.loading"
+                  :buffer-value="media.buffered"
                   :color="
                     media.is_paused
                       ? 'warning'

@@ -161,6 +161,8 @@
               clickable
               :indeterminate="$store.state.media.loading"
               :height="10"
+              :stream="!$store.state.media.loading"
+              :buffer-value="$store.state.media.buffered"
               :color="
                 $store.state.media.is_paused
                   ? 'warning'

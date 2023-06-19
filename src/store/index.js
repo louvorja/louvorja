@@ -134,6 +134,7 @@ export default createStore({
           progress: 0,
         },
         progress: 0,
+        buffered: 0,
         audio: 0,
         volume: 100,
         current_time: 0,

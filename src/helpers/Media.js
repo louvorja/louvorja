@@ -86,6 +86,7 @@ export function close(options) {
     store.state.media.current_time = 0;
     store.state.media.duration = 0;
     store.state.media.progress = 0;
+    store.state.media.buffered = 0;
     store.state.media.file = "";
 
     store.state.media.slides = [];
@@ -163,8 +164,14 @@ export function timeUpdate() {
     store.state.media.duration = isNaN(audio.duration) ? 0 : audio.duration;
     store.state.media.progress = store.state.media.current_time / store.state.media.duration * 100;
     store.state.media.progress = isNaN(store.state.media.progress) ? 0 : store.state.media.progress;
+    store.state.media.buffered = 0;
 
     Screen.send("media", store.state.media);
+
+    let buffered = audio.buffered; // Obter intervalos de buffer carregados
+    if (buffered.length > 0) {
+        store.state.media.buffered = (buffered.end(0) / audio.duration) * 100;
+    }
 
     Media.adjust();
 }
