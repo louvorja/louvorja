@@ -15,7 +15,8 @@
         "screen-lock": "Janela sempre aberta",
         "put-name-screen": "Coloque um nome para identificar esta tela",
         "screen-delete": "Remover tela inativa",
-        "screen-background": "Formatar fundo de tela"
+        "screen-background": "Formatar fundo de tela",
+        "lazy-load-details": "Desmarcar essa opção faz com que o áudio só seja executado após 100% carregado. Ideal para internet lenta."
     },
     "initials": {
         "sung": "CA",
@@ -70,6 +71,7 @@
     "sung": "Cantado",
     "slide-without-audio": "Slide sem Áudio",
     "without-audio": "Sem Áudio",
+    "audio": "Áudio",
     "listen-to-music": "Ouvir Música",
     "listen-to-instrumental-music": "Ouvir Música Playback",
     "lyrics": "Letra da Música",
@@ -99,5 +101,6 @@
     "background-image": "Imagem de Fundo",
     "size": "Tamanho",
     "position": "Posição",
-    "fading-effect-on-screens": "Efeito de esmaecimento nas telas"
+    "fading-effect-on-screens": "Efeito de esmaecimento nas telas",
+    "load-while-running": "Carregar durante a execução"
 }

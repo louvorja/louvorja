@@ -62,8 +62,25 @@ export function open(obj, options = {}) {
             this.slides();
 
             if (store.state.media.file !== "") {
-                audio.setAttribute("src", store.state.media.file);
-                this.play();
+                if (store.state.data.options.audio.lazy_load) {
+                    audio.src = store.state.media.file;
+                    audio.load();
+                    this.play();
+                } else {
+                    let self = this;
+                    var request = new XMLHttpRequest();
+                    request.open("GET", store.state.media.file, true);
+                    request.responseType = "blob";
+                    request.onload = function () {
+                        if (this.status == 200) {
+                            audio.src = URL.createObjectURL(this.response);
+                            audio.load();
+                            self.play();
+                        }
+                    }
+                    request.send();
+                }
+
             } else {
                 store.state.media.audio = 0;
                 this.slide();
@@ -315,6 +332,7 @@ export function getElement() {
     if (!document.getElementById(id)) {
         el = document.createElement("audio");
         el.setAttribute("id", id);
+        el.setAttribute("preload", "auto");
         document.body.appendChild(el);
         el.addEventListener("timeupdate", this.timeUpdate);
         el.addEventListener("progress", this.timeUpdate);

@@ -47,6 +47,9 @@ export default createStore({
         options: {
           screen: {
             fade: true,
+          },
+          audio: {
+            lazy_load: true,
           }
         },
         stopwatch: {

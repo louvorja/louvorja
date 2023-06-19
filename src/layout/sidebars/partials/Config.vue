@@ -9,6 +9,19 @@
         color="info"
       />
     </div>
+    <div class="px-3">
+      <div class="subtitle-1 font-weight-medium">{{ $t("audio") }}</div>
+
+      <v-switch
+        v-model="$store.state.data.options.audio.lazy_load"
+        :label="$t('load-while-running')"
+        color="info"
+      >
+        <template v-slot:details>
+          {{ $t("message.lazy-load-details") }}
+        </template>
+      </v-switch>
+    </div>
   </div>
 </template>
 
