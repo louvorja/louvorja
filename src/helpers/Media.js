@@ -61,15 +61,24 @@ export function open(obj, options = {}) {
 
             this.slides();
 
-            if (store.state.media.file !== "") {
-                if (store.state.data.options.audio.lazy_load) {
+            if (store.state.media.file !== "" && store.state.media.audio > 0) {
+                if ((store.state.desktop && !store.state.data.online) || store.state.data.options.audio.lazy_load) {
+
                     audio.src = store.state.media.file;
                     audio.load();
                     this.play();
+
                 } else {
                     let self = this;
-                    var request = new XMLHttpRequest();
-                    request.open("GET", store.state.media.file, true);
+                    let request = new XMLHttpRequest();
+                    try {
+                        request.open("GET", store.state.media.file, true);
+                    } catch (error) {
+                        Dialog.error("Erro ao carregar áudio!", error + "<br><br>A música será carregada sem áudio.", function (resp) {
+                            Media.open(store.state.media, { audio: 0 });
+                        });
+                    }
+
                     request.responseType = "blob";
                     request.onload = function () {
                         if (this.status == 200) {
@@ -78,7 +87,14 @@ export function open(obj, options = {}) {
                             self.play();
                         }
                     }
+                    request.onerror = function () {
+                        Dialog.error("Erro ao carregar áudio!", "Ocorreu um erro ao tentar carregar este áudio. A música será carregada sem áudio.", function (resp) {
+                            Media.open(store.state.media, { audio: 0 });
+                        });
+                    };
+
                     request.send();
+
                 }
 
             } else {
@@ -103,7 +119,7 @@ export function close(options) {
     store.state.media.current_time = 0;
     store.state.media.duration = 0;
     store.state.media.progress = 0;
-    store.state.media.buffered = 0;
+    store.state.media.buffered = 100;
     store.state.media.file = "";
 
     store.state.media.slides = [];
@@ -149,7 +165,13 @@ export function pause(bool) {
     if (store.state.media.is_paused) {
         audio.pause();
     } else {
-        audio.play();
+        window.playResult = audio.play();
+        playResult.catch(e => {
+            window.playResultError = e;
+            Dialog.error("Erro ao carregar áudio!", e + "<br><br>A música será carregada sem áudio.", function (resp) {
+                Media.open(store.state.media, { audio: 0 });
+            });
+        })
     }
 }
 export function restart() {
@@ -181,15 +203,18 @@ export function timeUpdate() {
     store.state.media.duration = isNaN(audio.duration) ? 0 : audio.duration;
     store.state.media.progress = store.state.media.current_time / store.state.media.duration * 100;
     store.state.media.progress = isNaN(store.state.media.progress) ? 0 : store.state.media.progress;
-    store.state.media.buffered = 0;
 
-    Screen.send("media", store.state.media);
-
-    let buffered = audio.buffered; // Obter intervalos de buffer carregados
-    if (buffered.length > 0) {
-        store.state.media.buffered = (buffered.end(0) / audio.duration) * 100;
+    if (store.state.desktop && !store.state.data.online) {
+        audio.buffered = 100
+    } else {
+        store.state.media.buffered = 0;
+        let buffered = audio.buffered; // Obter intervalos de buffer carregados
+        if (buffered.length > 0) {
+            store.state.media.buffered = (buffered.end(0) / audio.duration) * 100;
+        }
     }
 
+    Screen.send("media", store.state.media);
     Media.adjust();
 }
 export function goToPercent(val) {

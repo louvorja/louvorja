@@ -12,7 +12,7 @@
     <div class="px-3">
       <div class="subtitle-1 font-weight-medium">{{ $t("audio") }}</div>
 
-      <v-switch
+      <v-switch v-if="!($store.state.desktop && !$store.state.data.online)"
         v-model="$store.state.data.options.audio.lazy_load"
         :label="$t('load-while-running')"
         color="info"
