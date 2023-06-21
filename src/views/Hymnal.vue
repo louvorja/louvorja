@@ -50,7 +50,7 @@
     >
       <template v-slot:[`item.options`]="{ item }">
         <music-bar
-          v-bind="{ ...item.props.title, album: $t('hymnal') }"
+          v-bind="{ ...item.raw, album: $t('hymnal') }"
           :color="
             this.$store.state.data.layout.dark
               ? '#FFFFFF'

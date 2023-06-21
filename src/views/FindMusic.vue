@@ -50,7 +50,7 @@
     >
       <template v-slot:[`item.albums`]="{ item }">
         <v-chip
-          v-for="album in item.props.title.albums"
+          v-for="album in item.raw.albums"
           :key="album.id_album"
           size="small"
           class="ma-1"
@@ -66,7 +66,7 @@
       </template>
       <template v-slot:[`item.options`]="{ item }">
         <music-bar
-          v-bind="item.props.title"
+          v-bind="item.raw"
           :color="
             this.$store.state.data.layout.dark
               ? '#FFFFFF'

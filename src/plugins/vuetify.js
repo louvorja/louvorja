@@ -27,6 +27,9 @@ const vuetify = createVuetify({
         VAutocomplete: {
             variant: "underlined",
         },
+        VBtn: {
+            variant: "text",
+        },
     },
 })
 

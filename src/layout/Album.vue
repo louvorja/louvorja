@@ -56,7 +56,7 @@
         >
           <template v-slot:[`item.options`]="{ item }">
             <music-bar
-              v-bind="{ ...item.props.title, album: album.album }"
+              v-bind="{ ...item.raw, album: album.album }"
               color="#FFFFFF"
               @music="closeAlbum()"
               @player="closeAlbum()"

@@ -31,18 +31,8 @@
             </v-card-subtitle>
           </div>
           <div class="d-flex align-start">
-            <v-btn
-              variant="text"
-              icon="mdi-minus"
-              size="small"
-              @click.native="show()"
-            />
-            <v-btn
-              variant="text"
-              icon="mdi-close"
-              size="small"
-              @click.native="close()"
-            />
+            <v-btn icon="mdi-minus" size="small" @click.native="show()" />
+            <v-btn icon="mdi-close" size="small" @click.native="close()" />
           </div>
         </div>
 
@@ -133,7 +123,6 @@
               <v-btn
                 v-if="media.audio > 0"
                 :disabled="media.loading"
-                variant="text"
                 icon="mdi-restart"
                 size="small"
                 @click.native="restart()"
@@ -141,7 +130,6 @@
               <v-btn
                 v-if="media.audio > 0"
                 :disabled="media.loading"
-                variant="text"
                 icon="mdi-rewind-10"
                 size="small"
                 @click="rewind()"
@@ -154,7 +142,6 @@
               />
               <v-btn
                 :disabled="media.loading"
-                variant="text"
                 icon="mdi-page-first"
                 size="small"
                 @click="first()"
@@ -163,7 +150,6 @@
               />
               <v-btn
                 :disabled="media.loading"
-                variant="text"
                 icon="mdi-chevron-left"
                 size="small"
                 @click="prev()"
@@ -187,7 +173,6 @@
               />
               <v-btn
                 :disabled="media.loading"
-                variant="text"
                 icon="mdi-chevron-right"
                 size="small"
                 @click="next()"
@@ -200,7 +185,6 @@
               />
               <v-btn
                 :disabled="media.loading"
-                variant="text"
                 icon="mdi-page-last"
                 size="small"
                 @click="last()"
@@ -210,7 +194,6 @@
               <v-btn
                 v-if="media.audio > 0"
                 :disabled="media.loading"
-                variant="text"
                 icon="mdi-fast-forward-10"
                 size="small"
                 @click="forward()"
@@ -222,7 +205,6 @@
                 @shortkey="forward()"
               />
               <v-btn
-                variant="text"
                 :icon="!fullscreen ? 'mdi-fullscreen' : 'mdi-fullscreen-exit'"
                 size="small"
                 @click="toggleFullscreen()"
@@ -295,7 +277,6 @@
               <div class="text-right text-caption">
                 <v-btn
                   :disabled="media.loading"
-                  variant="text"
                   :icon="volume_icon"
                   size="x-small"
                   @click.native="volume()"
