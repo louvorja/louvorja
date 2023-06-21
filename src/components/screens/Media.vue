@@ -119,12 +119,6 @@ export default {
         this.current_image = +!this.current_image;
 
         this.images[this.current_image] = this.image;
-
-        console.log(
-          "....IMAGEM MUDOU....",
-          this.image,
-          this.images[this.current_image]
-        );
       }
     },
   },

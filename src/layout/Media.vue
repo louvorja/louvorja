@@ -77,7 +77,7 @@
                   :active="media.slide.index == index"
                   variant="tonal"
                   :height="58"
-                  active-color="white"
+                  color="white"
                   border
                 >
                   <template v-slot:prepend>
