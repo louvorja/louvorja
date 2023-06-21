@@ -16,7 +16,18 @@ const vuetify = createVuetify({
         locale: 'pt',
         fallback: 'pt',
         messages: { pt, es }
-    }
+    },
+    defaults: {
+        VTextField: {
+            variant: "underlined",
+        },
+        VFileInput: {
+            variant: "underlined",
+        },
+        VAutocomplete: {
+            variant: "underlined",
+        },
+    },
 })
 
 export default vuetify;

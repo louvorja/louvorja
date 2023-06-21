@@ -27,7 +27,6 @@
         v-model="search"
         append-icon="mdi-magnify"
         :label="$t('message.label-song-name')"
-        variant="underlined"
       />
     </v-card-title>
 

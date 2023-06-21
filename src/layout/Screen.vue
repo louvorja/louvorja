@@ -205,7 +205,6 @@
                 class="mx-3"
               />
               <v-text-field
-                variant="underlined"
                 :label="$t('message.put-name-screen')"
                 v-model="name"
               />
@@ -294,11 +293,9 @@
                   label="File input"
                   multiple
                   prepend-icon="mdi-image-area"
-                  variant="underlined"
                 />
 
                 <v-autocomplete
-                  variant="underlined"
                   :label="$t('size')"
                   :items="[
                     { value: 'auto', title: $t('lists.size.auto') },
@@ -308,7 +305,6 @@
                   v-model="size"
                 />
                 <v-autocomplete
-                  variant="underlined"
                   :label="$t('position')"
                   :items="[
                     { value: 'top left', title: $t('lists.position.top-left') },
