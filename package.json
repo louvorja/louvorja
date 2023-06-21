@@ -2,6 +2,7 @@
   "name": "louvorja",
   "version": "23.6.1",
   "author": "Mayco Rolbuche",
+  "authorEmail": "mayco_rolbuche@hotmail.com",
   "description": "LouvorJA",
   "homepage": "https://louvorja.com.br/",
   "projectUrl": "https://github.com/louvorja/louvorja",
@@ -43,7 +44,7 @@
     "vue-sessionstorage": "^1.0.0",
     "vue3-draggable": "^2.0.9",
     "vue3-shortkey": "^4.0.0",
-    "vuetify": "^3.2.2",
+    "vuetify": "^3.3.5",
     "webpack-plugin-vuetify": "^2.0.1"
   },
   "devDependencies": {

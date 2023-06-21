@@ -60,13 +60,14 @@ import { defineAsyncComponent } from "vue";
 
 export default {
   components: {
+    about: defineAsyncComponent(() => import(`./partials/About`)),
     config: defineAsyncComponent(() => import(`./partials/Config`)),
     themes: defineAsyncComponent(() => import(`./partials/Themes`)),
     database: defineAsyncComponent(() => import(`./partials/DataBase`)),
   },
   data() {
     return {
-      active_menu: 0,
+      active_menu: "configs",
       width_menu_min: 220,
       width_menu_open: 580,
       menu: [
@@ -104,6 +105,11 @@ export default {
           icon: "mdi-database",
           component: "database",
           desktop: true,
+        },
+        {
+          name: "about",
+          icon: "mdi-information",
+          component: "about",
         },
       ],
     };

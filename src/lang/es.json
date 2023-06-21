@@ -102,5 +102,8 @@
     "size": "Tamano",
     "position": "Posición",
     "fading-effect-on-screens": "Efecto de desvanecimiento en las pantallas",
-    "load-while-running": "Cargar mientras se ejecuta"
+    "load-while-running": "Cargar mientras se ejecuta",
+    "about": "Acerca de",
+    "about-the-program": "Sobre el programa",
+    "developer": "Desarrollador"
 }

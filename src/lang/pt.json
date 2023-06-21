@@ -102,5 +102,8 @@
     "size": "Tamanho",
     "position": "Posição",
     "fading-effect-on-screens": "Efeito de esmaecimento nas telas",
-    "load-while-running": "Carregar durante a execução"
+    "load-while-running": "Carregar durante a execução",
+    "about": "Sobre",
+    "about-the-program": "Sobre o programa",
+    "developer": "Desenvolvedor"
 }

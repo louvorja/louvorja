@@ -50,6 +50,18 @@ body {
     cursor: pointer;
 }
 
+.text-bold {
+    font-weight: bold;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 
 /* *****************************************
  * Custiomização dos botões de páginas do header
