@@ -5,6 +5,9 @@ export function background(data) {
         backgroundRepeat: (data && data.repeat) ?? 'no-repeat',
         backgroundPosition: (data && data.position) ?? 'center center',
         backgroundSize: (data && data.size) ?? 'cover',
+        position: (data && data.position) ?? 'initial',
+        width: (data && data.width) ?? 'initial',
+        height: (data && data.height) ?? 'initial',
     };
 }
 

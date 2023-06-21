@@ -1,22 +1,18 @@
 <template>
   <div id="__screen__" @mousemove="$emit('move')" :style="style_container">
-    <div
-      class="
-        slide-show
-        flex
-        fill-height
-        flex-grow-1
-        black
-        d-flex
-        align-center
-        justify-center
-      "
-      :style="style_bg"
-    >
-      <div v-if="text" class="slide-text text-center" :style="style_txt">
-        {{ text }}
+    <Transition v-for="(img, index) in images" :key="index">
+      <div
+        v-if="index == current_image"
+        class="slide-show flex fill-height flex-grow-1 black d-flex align-center justify-center"
+        :style="style_bg[index]"
+      >
+        <Transition>
+          <div v-if="text" class="slide-text text-center" :style="style_txt">
+            {{ text }}
+          </div>
+        </Transition>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -33,11 +29,15 @@
 </style>
 
 <script>
+const Styles = require("@/helpers/Styles.js");
+
 export default {
   inheritAttrs: false,
   props: ["text", "fullscreen", "index", "image", "height", "width"],
   data() {
     return {
+      current_image: 0,
+      images: ["", ""],
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
     };
@@ -47,6 +47,7 @@ export default {
       return {
         height: this.height_screen,
         width: this.width_screen,
+        position: "relative",
       };
     },
     height_screen: function () {
@@ -60,14 +61,14 @@ export default {
         : "100vw";
     },
     style_bg: function () {
-      if (this.image) {
-        return Object.assign({
-          backgroundSize: "cover",
-          backgroundImage: `url('${this.image}')`,
+      return this.images.map((img) => {
+        return Styles.background({
+          image: img,
+          position: "absolute",
+          width: "100%",
+          height: "100%",
         });
-      } else {
-        return {};
-      }
+      });
     },
     style_txt: function () {
       if (this.text) {
@@ -92,15 +93,10 @@ export default {
       }
     },
   },
-
-  mounted() {
-    this.$nextTick(() => {
-      window.addEventListener("resize", this.onResize);
-    });
-  },
-
-  beforeDestroy() {
-    window.removeEventListener("resize", this.onResize);
+  watch: {
+    image() {
+      this.changeImage();
+    },
   },
 
   methods: {
@@ -118,6 +114,30 @@ export default {
       let p = (pc * v) / 100 / 2;
       return p + "px";
     },
+    changeImage() {
+      if (this.images[this.current_image] != this.image) {
+        this.current_image = +!this.current_image;
+
+        this.images[this.current_image] = this.image;
+
+        console.log(
+          "....IMAGEM MUDOU....",
+          this.image,
+          this.images[this.current_image]
+        );
+      }
+    },
+  },
+
+  mounted() {
+    this.changeImage();
+    this.$nextTick(() => {
+      window.addEventListener("resize", this.onResize);
+    });
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("resize", this.onResize);
   },
 };
 </script>

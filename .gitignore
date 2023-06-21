@@ -2,6 +2,7 @@
 node_modules
 /dist
 /public/buildcode.txt
+notes.txt
 
 # db files
 *.db

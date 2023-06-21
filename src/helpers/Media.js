@@ -2,7 +2,7 @@ import store from '../store'
 const DevTools = require("./DevTools");
 const Musics = require("../controllers/Musics.js");
 const Alert = require("./Alert");
-const Time = require("./Time");
+const DateTime = require("./DateTime");
 const Media = require("./Media");
 const Screen = require("./Screen");
 const Dialog = require("@/helpers/Dialog");
@@ -49,10 +49,10 @@ export function open(obj, options = {}) {
         if (resp) {
             if (store.state.media.audio == 1) {
                 store.state.media.file = data.url_music;
-                data.lyric.map(item => { item.time = Time.hms_to_seconds(item.time) || 0; });
+                data.lyric.map(item => { item.time = DateTime.toSeconds(item.time) || 0; });
             } else if (store.state.media.audio == 2) {
                 store.state.media.file = data.url_instrumental_music;
-                data.lyric.map(item => { item.time = Time.hms_to_seconds(item.instrumental_time) || Time.hms_to_seconds(item.time) || 0; });
+                data.lyric.map(item => { item.time = DateTime.toSeconds(item.instrumental_time) || DateTime.toSeconds(item.time) || 0; });
             } else {
                 store.state.media.file = "";
                 data.lyric.map(item => { item.time = 0; });

@@ -15,9 +15,10 @@
             <v-img :src="media.album.url_image" />
           </v-avatar>
           <div class="flex-grow-1 d-flex flex-column">
+            <v-skeleton-loader type="subtitle" v-if="media.loading" />
             <v-card-title
               class="text-h4 font-weight-light"
-              v-if="media.music.name"
+              v-else-if="media.music.name"
             >
               {{ media.music.name }}
             </v-card-title>
@@ -113,6 +114,9 @@
                     :height="5"
                     :color="media.is_paused ? 'orange' : 'white'"
                   />
+
+                  <!-- Pré carregar imagem -->
+                  <img :src="item.url_image" style="display: none" />
                 </v-list-item>
               </v-list>
             </div>
