@@ -7,7 +7,7 @@
       :color="$store.state.data.layout.color"
       flat
     >
-      <v-btn icon variant="text" size="x-small">
+      <v-btn icon size="x-small">
         <ico
           @click.native="
             $store.state.sidebar.geral = !$store.state.sidebar.geral
@@ -17,7 +17,6 @@
         />
       </v-btn>
       <v-btn
-        variant="text"
         icon="mdi-menu"
         class="text-white"
         @click.native="$store.state.sidebar.geral = !$store.state.sidebar.geral"
@@ -33,7 +32,6 @@
 
       <!-- Botão Home -->
       <v-btn
-        variant="text"
         icon="mdi-home-circle-outline"
         size="small"
         to="/"
@@ -42,7 +40,6 @@
 
       <!-- Botão de Busca -->
       <v-btn
-        variant="text"
         icon="mdi-magnify"
         size="small"
         class="text-white"
@@ -54,7 +51,6 @@
       <!-- Botão Monitores -->
       <v-btn
         v-if="$store.state.desktop"
-        variant="text"
         icon="mdi-monitor-multiple"
         size="small"
         class="text-white"
@@ -64,7 +60,6 @@
       <!-- Botão Nuvem -->
       <v-btn
         v-if="$store.state.desktop"
-        variant="text"
         :icon="
           $store.state.data.online ? 'mdi-cloud' : 'mdi-cloud-cancel-outline'
         "
@@ -80,12 +75,7 @@
       <div class="text-center mx-2">
         <v-menu>
           <template v-slot:activator="{ props }">
-            <v-btn
-              variant="text"
-              class="text-white"
-              size="small"
-              v-bind="props"
-            >
+            <v-btn class="text-white" size="small" v-bind="props">
               <img
                 :height="15"
                 :src="img(`flags/${flag(lang)}.svg`)"
@@ -133,7 +123,6 @@
               color="white"
             >
               <v-btn
-                variant="text"
                 icon="mdi-download"
                 size="small"
                 class="text-white"
@@ -191,7 +180,6 @@
 
       <!-- Botões de Minimizar, Maximizar, Restaurar e Fechar -->
       <v-btn
-        variant="text"
         icon="mdi-window-minimize"
         size="small"
         class="text-white"
@@ -199,7 +187,6 @@
         v-if="$store.state.desktop"
       />
       <v-btn
-        variant="text"
         icon="mdi-window-restore"
         size="small"
         class="text-white"
@@ -207,7 +194,6 @@
         v-if="$store.state.desktop && $store.state.maximize"
       />
       <v-btn
-        variant="text"
         icon="mdi-window-maximize"
         size="small"
         class="text-white"
@@ -215,7 +201,6 @@
         v-if="$store.state.desktop && !$store.state.maximize"
       />
       <v-btn
-        variant="text"
         icon="mdi-close"
         size="small"
         class="text-white btn-close"

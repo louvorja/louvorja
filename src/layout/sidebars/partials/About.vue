@@ -6,7 +6,9 @@
     </div>
     <div class="text-caption">
       <v-icon icon="mdi mdi-email-outline" class="me-2" />
-      <a :href="`mailto:${data.authorEmail}`">{{ data.authorEmail }}</a>
+      <a class="link" :href="`mailto:${data.authorEmail}`">{{
+        data.authorEmail
+      }}</a>
     </div>
 
     <div class="py-2" />
@@ -16,7 +18,7 @@
     </div>
     <div class="text-caption">
       <v-icon icon="mdi mdi-web" class="me-2" />
-      <a :href="data.homepage">{{ data.homepage }}</a>
+      <a class="link" :href="data.homepage">{{ data.homepage }}</a>
     </div>
     <div class="text-caption">
       <span class="text-bold">{{ $t("version") }}:</span> {{ data.version }}

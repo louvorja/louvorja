@@ -7,13 +7,14 @@
       active: this.$route.path === cto,
       dark: $store.state.data.layout.dark,
     }"
-    style="
-      display: flex;
-      align-items: center;
-      flex-wrap: nowrap;
-      flex-direction: column;
-      justify-content: center;
-    "
+    :style="{
+      display: 'flex',
+      alignItems: 'center',
+      flexWrap: 'nowrap',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      textDecoration: 'none',
+    }"
   >
     <ico :src="cico" :class="iconClass" size="40" />
     <div class="text-button">

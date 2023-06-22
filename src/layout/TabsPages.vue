@@ -17,7 +17,7 @@
           :to="item.name"
           class="tab pointer"
           :class="item.name == $store.state.page ? 'active' : 'inactive'"
-          style="margin-left: 2px"
+          :style="{ marginLeft: '2px', textDecoration: 'none' }"
           :variant="item.name == $store.state.page ? 'outlined' : 'plain'"
         >
           <template v-slot:prepend>

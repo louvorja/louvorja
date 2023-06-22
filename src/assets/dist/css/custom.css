@@ -54,11 +54,11 @@ body {
     font-weight: bold;
 }
 
-a {
+a.link {
     text-decoration: none;
 }
 
-a:hover {
+a.link:hover {
     text-decoration: underline;
 }
 
