@@ -1,5 +1,6 @@
 import store from '../store'
 
+const Storage = require("../helpers/Storage");
 const DevTools = require("../helpers/DevTools");
 
 export function get(route, options = null, callback = function () { }) {
@@ -50,6 +51,7 @@ export async function call(method, route, options = null, body = null, local = f
         url = `${this.url()}/${route}${params}`;
         info_local = 'servidor';
     }
+    let key_storage = 'api:' + (this.url().split("/").pop() + '.' + route + params).replace(/\/|\.|\?|=|\&/g, ".");
 
     DevTools.write('%curl', 'color:orange', url, options);
 
@@ -62,6 +64,21 @@ export async function call(method, route, options = null, body = null, local = f
 
     if (body) {
         body = JSON.stringify(body || {});
+    }
+
+    if (!local) {
+        let data = Storage.get(key_storage); // Pega do Session
+        if (data) {
+            //Existe no Storage
+            //Verifica se ainda está na validade
+            let valid = Date.now() <= data.expires;
+            if (valid) {
+                //Retorna os dados do session
+                DevTools.write('%cObteve da session ' + key_storage, 'color:orange');
+                callback(true, data.data);
+                return true;
+            }
+        }
     }
 
     let response = await fetch(url,
@@ -82,6 +99,18 @@ export async function call(method, route, options = null, body = null, local = f
             callback(false, `Erro ao obter dados do  ${info_local}:  ${data.error}`);
             return false;
         }
+
+        if (!local) {
+            const expirationMinutes = 60 * 24; // 24 horas
+            const expirationDate = new Date();
+            expirationDate.setTime(expirationDate.getTime() + (expirationMinutes * 60 * 1000)); // Calcula a data de expiração
+
+            Storage.set(key_storage, {
+                expires: expirationDate.getTime(), // Salva o timestamp da data de expiração
+                data: data.data,
+            })
+        }
+
         callback(true, data.data);
         return true;
     } else {

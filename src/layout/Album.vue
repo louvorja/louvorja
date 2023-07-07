@@ -67,12 +67,7 @@
 
       <v-card-actions class="album-minus-height">
         <v-spacer></v-spacer>
-        <v-btn
-          class="ms-2"
-          variant="text"
-          size="small"
-          @click="closeAlbum()"
-        >
+        <v-btn class="ms-2" variant="text" size="small" @click="closeAlbum()">
           {{ $t("close") }}
         </v-btn>
       </v-card-actions>
@@ -111,6 +106,10 @@ export default {
     album: {
       handler: function () {
         this.refresh++;
+        let self = this;
+        setTimeout(function () {
+          self.refresh++;
+        }, 10);
 
         /*
          * Hack para mudar a cor da tabela, pois não está funcionando nativamente
@@ -148,7 +147,6 @@ export default {
           self.refresh++;
         });
     } catch (e) {}
-    
   },
 };
 </script>
