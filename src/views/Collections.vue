@@ -152,7 +152,7 @@ export default {
   },
   methods: {
     loadCategories: async function () {
-      this.categories = Storage.get(`${this.page}:categories`, []);
+      this.categories = [];
       this.loading_categories = this.loading_categories.length <= 0;
       this.id_category = Storage.get(`${this.page}:id_category`);
       Categories.list(
@@ -167,7 +167,6 @@ export default {
             if (this.categories.length > 0 && !this.id_category) {
               this.id_category = this.categories[0].slug;
             }
-            Storage.set(`${this.page}:categories`, data);
           } else {
             Dialog.error("Erro ao carregar dados", data);
           }
@@ -180,7 +179,7 @@ export default {
         return;
       }
 
-      this.albums = Storage.get(`${this.page}:${this.id_category}:albums`, []);
+      this.albums = [];
       this.loading = this.albums.length <= 0;
       Albums.list(
         {
@@ -192,7 +191,6 @@ export default {
         (resp, data) => {
           if (resp) {
             this.albums = data;
-            Storage.set(`${this.page}:${this.id_category}:albums`, data);
           } else {
             Dialog.error("Erro ao carregar dados", data);
           }

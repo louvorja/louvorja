@@ -118,12 +118,10 @@ export default {
   },
   watch: {
     async lang() {
-      Storage.remove(`${this.page}:musics`);
       this.musics = [];
       await this.loadData();
     },
     async online() {
-      Storage.remove(`${this.page}:musics`);
       this.musics = [];
       await this.loadData();
     },
@@ -133,12 +131,11 @@ export default {
   },
   methods: {
     loadData: async function () {
-      this.musics = Storage.get(`${this.page}:musics`, []);
+      this.musics = [];
       this.loading = this.musics.length <= 0;
       Hymnal.list({ limit: -1, sort_by: "track" }, (resp, data) => {
         if (resp) {
           this.musics = data;
-          Storage.set(`${this.page}:musics`, data);
         } else {
           Dialog.error("Erro ao carregar dados", data);
         }
