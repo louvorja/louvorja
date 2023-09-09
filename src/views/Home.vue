@@ -1,7 +1,7 @@
 <template>
   <div
     class="d-flex align-center justify-center fill-height"
-    style="background: rgba(11, 61, 98, 1)"
+    :style="{ background: $store.state.data.layout.color }"
   >
     <ico src="louvorja" size="100" />
     <!--

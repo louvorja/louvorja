@@ -35,7 +35,9 @@ export default {
   data() {
     return {
       layout: [
+        { id: 8, color: "#1b2a41", dark: false },
         { id: 1, color: "#29569b", dark: false },
+        { id: 9, color: "#0B3D62", dark: false },
         { id: 2, color: "#077568", dark: false },
         { id: 3, color: "#d24726", dark: false },
         { id: 4, color: "#80397b", dark: false },

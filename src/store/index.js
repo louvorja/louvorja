@@ -43,7 +43,7 @@ export default createStore({
           },
         },
         fav: [],
-        layout: { id: 1, color: "#29569b", dark: false },
+        layout: { id: 8, color: "#1b2a41", dark: false },
         options: {
           screen: {
             fade: true,
