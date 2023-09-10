@@ -23,7 +23,7 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
     "update-build-code": "node update-build-code.js",
-    "build:web": "version.bat && git push && npm run build && npm run deploy"
+    "build:web": "version.bat && npm run build && git push && git pull origin main && git checkout main && git merge develop && git push -u origin main && git checkout develop && npm run deploy"
   },
   "main": "background.js",
   "dependencies": {
