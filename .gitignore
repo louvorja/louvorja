@@ -11,6 +11,9 @@ notes.txt
 .env.local
 .env.*.local
 
+# ftp file
+.ftp
+
 # Log files
 npm-debug.log*
 yarn-debug.log*
