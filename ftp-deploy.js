@@ -68,6 +68,19 @@ console.log("Iniciando transferência de arquivos...");
 
 const ftpDeploy = new FtpDeploy();
 
+let totalFiles = 0;
+let completedFiles = 0;
+
+ftpDeploy.on("uploading", function (data) {
+    totalFiles = data.totalFilesCount;
+    completedFiles += 1;
+
+    const percentComplete = ((completedFiles / totalFiles) * 100).toFixed(2);
+
+    console.log(`Enviando arquivo ${completedFiles} de ${totalFiles} [${percentComplete}%]: ${data.filename}`);
+});
+
+
 ftpDeploy.deploy(config)
     .then(() => {
         console.log("Transferência de arquivos FTP concluída com sucesso!");
