@@ -10,7 +10,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "start": "vue-cli-service serve",
-    "build": "version.bat && vue-cli-service build",
+    "build": "vue-cli-service build",
     "deploy": "node ftp-deploy.js",
     "db": "npx nodemon ./src/database/server.js",
     "electron:start": "vue-cli-service electron:serve",
@@ -22,7 +22,8 @@
     "build:mac": "node update-build-code.js && vue-cli-service electron:build --mac",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "update-build-code": "node update-build-code.js"
+    "update-build-code": "node update-build-code.js",
+    "build:web": "version.bat && git push && npm run build && npm run deploy"
   },
   "main": "background.js",
   "dependencies": {
