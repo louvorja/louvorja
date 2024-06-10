@@ -135,6 +135,7 @@ export default createStore({
           start_time: 0,
           end_time: 0,
           url_image: '',
+          image_position: 5,
           lyric: '',
           progress: 0,
         },

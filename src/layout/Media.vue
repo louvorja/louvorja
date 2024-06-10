@@ -52,6 +52,7 @@
               :index="slide_index"
               :text="media.slide.lyric"
               :image="media.slide.url_image"
+              :image_position="media.slide.image_position"
               :height="media_height"
               @move="moveScreen"
             >

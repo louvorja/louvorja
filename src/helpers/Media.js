@@ -19,6 +19,7 @@ export function open(obj, options = {}) {
             store.state.media.album.id_album = obj.album.id_album;
             store.state.media.album.name = obj.album.name;
             store.state.media.album.url_image = obj.album.url_image;
+            store.state.media.album.image_position = obj.album.image_position;
             store.state.media.album.color = obj.album.color;
         } else {
             store.state.media.album.name = obj.album;
@@ -129,6 +130,7 @@ export function close(options) {
     store.state.media.slide.start_time = 0;
     store.state.media.slide.end_time = 0;
     store.state.media.slide.url_image = "";
+    store.state.media.slide.image_position = 5;
     store.state.media.slide.lyric = "";
     store.state.media.slide.progress = 0;
 
@@ -139,6 +141,7 @@ export function close(options) {
         store.state.media.album.id_album = 0;
         store.state.media.album.name = "";
         store.state.media.album.url_image = "";
+        store.state.media.album.image_position = 5;
         store.state.media.album.color = "";
     }
 
@@ -266,10 +269,13 @@ export function slides() {
     slides = [slides];
     slides.push(...store.state.media.music.lyric);
     let img = "";
+    let img_pos = 5;
     slides.map((item) => {
         item.url_image = item.url_image || img;
+        item.image_position = item.image_position || img_pos;
         if (item.url_image) {
             img = item.url_image;
+            img_pos = item.image_position;
         }
         return item;
     });
@@ -305,6 +311,7 @@ export function slide() {
         ? store.state.media.duration
         : store.state.media.slides[slide_indx + 1].time;
     store.state.media.slide.url_image = slide.url_image;
+    store.state.media.slide.image_position = slide.image_position;
     store.state.media.slide.lyric = slide.name || slide.lyric;
     store.state.media.slide.progress = (store.state.media.current_time - store.state.media.slide.start_time) / (store.state.media.slide.end_time - store.state.media.slide.start_time) * 100;
     store.state.media.slide.progress = isNaN(store.state.media.slide.progress) ? 0 : store.state.media.slide.progress;

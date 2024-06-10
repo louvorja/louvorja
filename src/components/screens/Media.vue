@@ -33,10 +33,20 @@ const Styles = require("@/helpers/Styles.js");
 
 export default {
   inheritAttrs: false,
-  props: ["text", "fullscreen", "index", "image", "height", "width"],
+  props: [
+    "text",
+    "fullscreen",
+    "index",
+    "image",
+    "image_position",
+    "height",
+    "width",
+  ],
   data() {
     return {
       current_image: 0,
+      current_text: "",
+      text_repeat: false,
       images: ["", ""],
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
@@ -64,6 +74,7 @@ export default {
       return this.images.map((img) => {
         return Styles.background({
           image: img,
+          image_position: this.image_position ?? 5,
           position: "absolute",
           width: "100%",
           height: "100%",
@@ -84,7 +95,7 @@ export default {
           return Object.assign({
             backgroundColor: "rgba(0, 0, 0, 0.75)",
             fontSize: this.fontSizePc(20),
-            color: "#FFF",
+            color: this.text_repeat ? "#efb400" : "#FFF",
             padding,
           });
         }
@@ -96,6 +107,22 @@ export default {
   watch: {
     image() {
       this.changeImage();
+    },
+    index() {
+      if (this.index > 0) {
+        if (
+          this.current_text == this.text &&
+          this.images[this.current_image] == this.image
+        ) {
+          this.text_repeat = !this.text_repeat;
+        } else {
+          this.text_repeat = false;
+        }
+        this.current_text = this.text;
+      } else {
+        this.current_text = "";
+        this.text_repeat = false;
+      }
     },
   },
 
