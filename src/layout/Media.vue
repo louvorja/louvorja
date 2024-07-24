@@ -2,24 +2,14 @@
   <v-dialog theme="dark" v-model="media.show" width="90%">
     <v-card id="media-view">
       <fullscreen v-model="fullscreen">
-        <div
-          v-if="!fullscreen"
-          class="d-flex flex-no-wrap align-stretch flex-row justify-space-between media-minus-height"
-        >
-          <v-avatar
-            class="ma-1"
-            size="65"
-            rounded="0"
-            v-if="media.album.url_image"
-          >
+        <div v-if="!fullscreen"
+          class="d-flex flex-no-wrap align-stretch flex-row justify-space-between media-minus-height">
+          <v-avatar class="ma-1" size="65" rounded="0" v-if="media.album.url_image">
             <v-img :src="media.album.url_image" />
           </v-avatar>
           <div class="flex-grow-1 d-flex flex-column">
             <v-skeleton-loader type="subtitle" v-if="media.loading" />
-            <v-card-title
-              class="text-h4 font-weight-light"
-              v-else-if="media.music.name"
-            >
+            <v-card-title class="text-h4 font-weight-light" v-else-if="media.music.name">
               {{ media.music.name }}
             </v-card-title>
             <v-card-subtitle v-if="media.track || media.album.name">
@@ -30,57 +20,29 @@
               <span v-if="media.track"> Faixa {{ media.track }} </span>
             </v-card-subtitle>
           </div>
-          <div class="d-flex align-start">
+          <div class="d-flex flex-row flex-wrap align-start">
             <v-btn icon="mdi-minus" size="small" @click.native="show()" />
             <v-btn icon="mdi-close" size="small" @click.native="close()" />
           </div>
         </div>
 
-        <v-card-text
-          class="d-flex align-stretch pa-0 ma-0"
-          :style="'height:' + media_height + 'px'"
-        >
+
+        <v-card-text class="d-flex align-stretch pa-0 ma-0" :style="'height:' + media_height + 'px'">
           <div class="h-100 flex-grow-1">
-            <v-skeleton-loader
-              class="skeleton-view"
-              height="100%"
-              v-if="media.loading"
-            />
-            <screen
-              v-else
-              :fullscreen="fullscreen"
-              :index="slide_index"
-              :text="media.slide.lyric"
-              :image="media.slide.url_image"
-              :image_position="media.slide.image_position"
-              :height="media_height"
-              @move="moveScreen"
-            >
+            <v-skeleton-loader class="skeleton-view" height="100%" v-if="media.loading" />
+            <screen v-else :fullscreen="fullscreen" :index="slide_index" :text="media.slide.lyric"
+              :image="media.slide.url_image" :image_position="media.slide.image_position" :height="media_height"
+              @move="moveScreen">
             </screen>
           </div>
-          <div class="h-100" style="width: 250px">
-            <v-skeleton-loader
-              v-if="media.loading"
-              type="list-item-two-line@5"
-              class="px-3"
-            >
+          <!-- kramer: lado direito que mostra a letra dos hinos  -->
+          <div class="h-100" style="width: 250px" v-show="!isMobileView">
+            <v-skeleton-loader v-if="media.loading" type="list-item-two-line@5" class="px-3">
             </v-skeleton-loader>
             <div v-else class="h-100">
-              <v-list
-                class="overflow h-100 ma-0 pa-0 slides-list"
-                bg-color="black"
-              >
-                <v-list-item
-                  @click="goToSlide(index)"
-                  v-for="(item, index) in media.slides"
-                  :key="index"
-                  link
-                  :active="media.slide.index == index"
-                  variant="tonal"
-                  :height="58"
-                  color="white"
-                  border
-                >
+              <v-list class="overflow h-100 ma-0 pa-0 slides-list" bg-color="black">
+                <v-list-item @click="goToSlide(index)" v-for="(item, index) in media.slides" :key="index" link
+                  :active="media.slide.index == index" variant="tonal" :height="58" color="white" border>
                   <template v-slot:prepend>
                     <v-chip class="mr-2">{{ index + 1 }}</v-chip>
                   </template>
@@ -88,23 +50,13 @@
                   <v-list-item-title v-if="item.name">
                     {{ item.name }}
                   </v-list-item-title>
-                  <div
-                    class="text-caption"
-                    v-else
-                    v-html="$filters.nl2br(item.lyric)"
-                    style="
-                      white-space: nowrap;
-                      overflow: hidden;
-                      text-overflow: ellipsis;
-                    "
-                  />
-                  <v-progress-linear
-                    v-if="media.file && media.slide.index == index"
-                    v-model="media.slide.progress"
-                    :indeterminate="media.loading"
-                    :height="5"
-                    :color="media.is_paused ? 'orange' : 'white'"
-                  />
+                  <div class="text-caption" v-else v-html="$filters.nl2br(item.lyric)" style="
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            " />
+                  <v-progress-linear v-if="media.file && media.slide.index == index" v-model="media.slide.progress"
+                    :indeterminate="media.loading" :height="5" :color="media.is_paused ? 'orange' : 'white'" />
 
                   <!-- Pré carregar imagem -->
                   <img :src="item.url_image" style="display: none" />
@@ -114,184 +66,84 @@
           </div>
         </v-card-text>
 
-        <v-card-actions
-          class="align-stretch media-minus-height"
-          :class="{ fullscreen }"
-          v-show="!fullscreen || (fullscreen && show_fullscreen_player)"
-        >
+        <!-- kramer: funções do video  -->
+        <v-card-actions :class="['align-stretch media-minus-height', { fullscreen }]"
+          v-show="!fullscreen || (fullscreen && show_fullscreen_player)">
           <div class="d-flex flex-column flex-grow-1 px-2">
-            <div class="d-flex align-center justify-center flex-grow-1">
-              <v-btn
-                v-if="media.audio > 0"
-                :disabled="media.loading"
-                icon="mdi-restart"
-                size="small"
-                @click.native="restart()"
-              />
-              <v-btn
-                v-if="media.audio > 0"
-                :disabled="media.loading"
-                icon="mdi-rewind-10"
-                size="small"
-                @click="rewind()"
-                v-shortkey="{
-                  left: ['ctrl', 'arrowleft'],
-                  up: ['ctrl', 'arrowup'],
-                  pgup: ['ctrl', 'pageup'],
-                }"
-                @shortkey="rewind()"
-              />
-              <v-btn
-                :disabled="media.loading"
-                icon="mdi-page-first"
-                size="small"
-                @click="first()"
-                v-shortkey="['home']"
-                @shortkey="first()"
-              />
-              <v-btn
-                :disabled="media.loading"
-                icon="mdi-chevron-left"
-                size="small"
-                @click="prev()"
-                v-shortkey="{
+            <div class="d-flex align-center justify-between flex-grow-1 flex-wrap">
+              <!-- Hamburger menu button -->
+              <v-btn v-show="isMobileView" icon="mdi-menu" size="small" @click="toggleMenu" />
+              <!-- Buttons for large screens -->
+              <template v-if="!isMobileView || isMenuOpen">
+                <v-btn v-if="media.audio > 0" :disabled="media.loading" icon="mdi-restart" size="small"
+                  @click.native="restart" />
+                <v-btn v-if="media.audio > 0" :disabled="media.loading" icon="mdi-rewind-10" size="small"
+                  @click="rewind" v-shortkey="{
+                    left: ['ctrl', 'arrowleft'],
+                    up: ['ctrl', 'arrowup'],
+                    pgup: ['ctrl', 'pageup'],
+                  }" @shortkey="rewind" />
+                <v-btn :disabled="media.loading" icon="mdi-page-first" size="small" @click="first" v-shortkey="['home']"
+                  @shortkey="first" />
+                <v-btn :disabled="media.loading" icon="mdi-chevron-left" size="small" @click="prev" v-shortkey="{
                   left: ['arrowleft'],
                   up: ['arrowup'],
                   pgup: ['pageup'],
-                }"
-                @shortkey="prev()"
-              />
-              <v-btn
-                v-if="media.audio > 0"
-                :disabled="media.loading"
-                variant="flat"
-                color="white"
-                :icon="media.is_paused ? 'mdi-play' : 'mdi-pause'"
-                size="small"
-                @click="pause()"
-                v-shortkey="['space']"
-                @shortkey="pause()"
-              />
-              <v-btn
-                :disabled="media.loading"
-                icon="mdi-chevron-right"
-                size="small"
-                @click="next()"
-                v-shortkey="{
+                }" @shortkey="prev" />
+                <v-btn v-if="media.audio > 0" :disabled="media.loading" variant="flat" color="white"
+                  :icon="media.is_paused ? 'mdi-play' : 'mdi-pause'" size="small" @click="pause" v-shortkey="['space']"
+                  @shortkey="pause" />
+                <v-btn :disabled="media.loading" icon="mdi-chevron-right" size="small" @click="next" v-shortkey="{
                   right: ['arrowright'],
                   down: ['arrowdown'],
                   pgdn: ['pagedown'],
-                }"
-                @shortkey="next()"
-              />
-              <v-btn
-                :disabled="media.loading"
-                icon="mdi-page-last"
-                size="small"
-                @click="last()"
-                v-shortkey="['end']"
-                @shortkey="last()"
-              />
-              <v-btn
-                v-if="media.audio > 0"
-                :disabled="media.loading"
-                icon="mdi-fast-forward-10"
-                size="small"
-                @click="forward()"
-                v-shortkey="{
-                  right: ['ctrl', 'arrowright'],
-                  down: ['ctrl', 'arrowdown'],
-                  pgdn: ['ctrl', 'pagedown'],
-                }"
-                @shortkey="forward()"
-              />
-              <v-btn
-                :icon="!fullscreen ? 'mdi-fullscreen' : 'mdi-fullscreen-exit'"
-                size="small"
-                @click="toggleFullscreen()"
-                v-shortkey="{ f11: ['f11'], altenter: ['alt', 'enter'] }"
-                @shortkey="toggleFullscreen()"
-              />
-              <list-change-music-type
-                v-if="!media.loading && media.audio <= 0 && !fullscreen"
-                :key="media.music.id_music"
-                :audio="media.audio"
-                v-bind="media.music"
-                @sung="open(1)"
-                @instrumental="open(2)"
-                @without-audio="open(0)"
-                @lyrics="lyric()"
-              />
+                }" @shortkey="next" />
+                <v-btn :disabled="media.loading" icon="mdi-page-last" size="small" @click="last" v-shortkey="['end']"
+                  @shortkey="last" />
+                <v-btn v-if="media.audio > 0" :disabled="media.loading" icon="mdi-fast-forward-10" size="small"
+                  @click="forward" v-shortkey="{
+                    right: ['ctrl', 'arrowright'],
+                    down: ['ctrl', 'arrowdown'],
+                    pgdn: ['ctrl', 'pagedown'],
+                  }" @shortkey="forward" />
+                <v-btn :icon="!fullscreen ? 'mdi-fullscreen' : 'mdi-fullscreen-exit'" size="small"
+                  @click="toggleFullscreen" v-shortkey="{ f11: ['f11'], altenter: ['alt', 'enter'] }"
+                  @shortkey="toggleFullscreen" />
+                <list-change-music-type v-if="!media.loading && media.audio <= 0 && !fullscreen"
+                  :key="media.music.id_music" :audio="media.audio" v-bind="media.music" @sung="open(1)"
+                  @instrumental="open(2)" @without-audio="open(0)" @lyrics="lyric" />
+              </template>
             </div>
-            <div
-              v-if="media.audio > 0"
-              style="height: 30px"
-              class="d-flex flex-nowrap flex-row align-center justify-space-between"
-            >
+            <div v-if="media.audio > 0" class="d-flex flex-nowrap flex-row align-center justify-space-between"
+              style="height: 30px">
               <div class="text-right text-caption">
                 {{ $filters.formatSecond(media.current_time) }}
               </div>
               <div class="flex-grow-1 px-2">
-                <v-progress-linear
-                  v-model="media.progress"
-                  rounded
-                  clickable
-                  :indeterminate="media.loading"
-                  :height="10"
-                  :stream="!media.loading"
-                  :buffer-value="media.buffered"
-                  :color="
-                    media.is_paused
-                      ? 'warning'
-                      : media.volume <= 0
+                <v-progress-linear v-model="media.progress" rounded clickable :indeterminate="media.loading"
+                  :height="10" :stream="!media.loading" :buffer-value="media.buffered" :color="media.is_paused
+                    ? 'warning'
+                    : media.volume <= 0
                       ? 'red'
                       : 'info'
-                  "
-                  @click="changeProgress"
-                />
+                    " @click="changeProgress" />
               </div>
               <div class="text-left text-caption">
                 {{ $filters.formatSecond(media.duration) }}
-              </div>
-              <div class="text-left text-caption">
-                <list-change-music-type
-                  v-if="!media.loading && !fullscreen"
-                  :key="media.music.id_music"
-                  :audio="media.audio"
-                  v-bind="media.music"
-                  @sung="open(1)"
-                  @instrumental="open(2)"
-                  @without-audio="open(0)"
-                  @lyrics="lyric()"
-                />
               </div>
             </div>
           </div>
 
           <div class="d-flex flex-column px-2">
             <div class="d-flex align-center justify-end flex-grow-1" />
-            <div
-              v-if="media.audio > 0"
-              class="d-flex flex-nowrap flex-row align-center justify-space-between"
-              style="height: 30px"
-            >
+            <div v-if="media.audio > 0" class="d-flex flex-nowrap flex-row align-center justify-space-between"
+              style="height: 30px">
               <div class="text-right text-caption">
-                <v-btn
-                  :disabled="media.loading"
-                  :icon="volume_icon"
-                  size="x-small"
-                  @click.native="volume()"
-                />
+                <v-btn :disabled="media.loading" :icon="volume_icon" size="x-small" @click.native="volume" />
               </div>
               <div class="flex-grow-1 px-2" style="min-width: 100px">
-                <v-progress-linear
-                  v-model="media.volume"
-                  rounded
-                  clickable
-                  :height="10"
-                  color="white"
-                  @click="changeVolume"
-                />
+                <v-progress-linear v-model="media.volume" rounded clickable :height="10" color="white"
+                  @click="changeVolume" />
               </div>
             </div>
           </div>
@@ -305,13 +157,47 @@
 #media-view .skeleton-view .v-skeleton-loader__bone {
   height: 100%;
 }
+
 .v-card-actions.fullscreen {
   bottom: 0;
   position: absolute;
   width: 100%;
   background-color: #0000006b;
 }
+
+.d-flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-space-between {
+  justify-content: space-between;
+}
 </style>
+
 
 <script>
 import { defineAsyncComponent } from "vue";
@@ -327,6 +213,8 @@ export default {
   },
   data() {
     return {
+      isMenuOpen: false,
+      isMobileView: false,
       refresh: 0,
       fullscreen: false,
       show_fullscreen_player: false,
@@ -383,6 +271,12 @@ export default {
     },
   },
   methods: {
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+    },
+    handleResize() {
+      this.isMobileView = window.innerWidth <= 600;
+    },
     show: function () {
       Media.show(false);
     },
@@ -462,7 +356,7 @@ export default {
             childPos.height,
           behavior: "smooth",
         });
-      } catch (error) {}
+      } catch (error) { }
     },
     toggleFullscreen: function () {
       this.fullscreen = !this.fullscreen;
@@ -490,7 +384,14 @@ export default {
         .addEventListener("scroll", function (event) {
           self.refresh++;
         });
-    } catch (e) {}
+    } catch (e) { }
+
+    window.addEventListener("resize", this.handleResize);
+    this.handleResize();
+  },
+  beforeDestroy() {
+    // Removendo o listener de resize
+    window.removeEventListener("resize", this.handleResize);
   },
 };
 </script>
