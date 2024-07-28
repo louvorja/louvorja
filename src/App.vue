@@ -126,9 +126,6 @@ export default {
 </script>
 
 <style>
-#app {
-}
-
 /* Necessário para o componente <Transition> funcionar */
 .v-enter-active,
 .v-leave-active {

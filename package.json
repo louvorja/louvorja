@@ -28,6 +28,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@vue/cli-plugin-pwa": "^5.0.8",
     "axios": "^1.4.0",
     "core-js": "^3.30.1",
     "cors": "^2.8.5",

@@ -9,9 +9,7 @@
     >
       <v-btn icon size="x-small">
         <ico
-          @click.native="
-            $store.state.sidebar.geral = !$store.state.sidebar.geral
-          "
+          @click="$store.state.sidebar.geral = !$store.state.sidebar.geral"
           src="louvorja"
           size="20"
         />
@@ -19,7 +17,7 @@
       <v-btn
         icon="mdi-menu"
         class="text-white"
-        @click.native="$store.state.sidebar.geral = !$store.state.sidebar.geral"
+        @click="$store.state.sidebar.geral = !$store.state.sidebar.geral"
       />
 
       <!-- Título -->

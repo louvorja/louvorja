@@ -47,5 +47,24 @@ module.exports = defineConfig({
       //This line: add knex and sqlite3
       externals: ['knex', 'sqlite3'],
     }
+  },
+  pwa: {
+    name: 'LouvorJA',
+    short_name: 'LouvorJA',
+    themeColor: '#000000',
+    msTileColor: '#000000',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'black',
+    manifestOptions: {
+      start_url: '.',
+      display: 'fullscreen',
+      icons: [
+        {
+          src: './logo.svg',
+          sizes: 'any',
+          type: 'image/svg+xml'
+        }
+      ]
+    }
   }
 })
