@@ -44,6 +44,7 @@ export default {
   ],
   data() {
     return {
+      refresh: 0,
       current_image: 0,
       current_text: "",
       text_repeat: false,
@@ -124,6 +125,13 @@ export default {
         this.text_repeat = false;
       }
     },
+    fullscreen() {
+      this.refresh++;
+      let self = this;
+      setTimeout(function () {
+        self.refresh++;
+      }, 100);
+    },
   },
 
   methods: {
@@ -132,13 +140,21 @@ export default {
       this.windowWidth = window.innerWidth;
     },
     fontSizePc(pc) {
+      this.refresh;
+
       let v = 0;
       if (this.fullscreen) {
         v = Math.min(this.windowWidth, this.windowHeight);
       } else {
-        v = this.height;
+        v = document.getElementById("__screen__")
+          ? Math.min(
+              document.getElementById("__screen__").offsetWidth || this.height,
+              document.getElementById("__screen__").offsetHeight || this.height
+            )
+          : this.height;
       }
       let p = (pc * v) / 100 / 2;
+
       return p + "px";
     },
     changeImage() {
@@ -155,6 +171,13 @@ export default {
     this.$nextTick(() => {
       window.addEventListener("resize", this.onResize);
     });
+    this.onResize;
+
+    this.refresh++;
+    let self = this;
+    setTimeout(function () {
+      self.refresh++;
+    }, 100);
   },
 
   beforeDestroy() {

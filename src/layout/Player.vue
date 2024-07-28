@@ -214,12 +214,7 @@
             </v-list>
           </v-menu>
 
-          <v-btn
-            variant="flat"
-            color="white"
-            size="x-small"
-            @click="show()"
-          >
+          <v-btn variant="flat" color="white" size="x-small" @click="show()">
             {{ media.slide.number }}
           </v-btn>
 
@@ -288,9 +283,6 @@ export default {
     },
   },
   methods: {
-    resize() {
-      this.player_mobile_mode = window.innerWidth <= 615;
-    },
     show: function () {
       Media.show(true);
     },
@@ -340,13 +332,16 @@ export default {
         album: true,
       });
     },
+    onResize() {
+      this.player_mobile_mode = window.innerWidth <= 615;
+    },
   },
   mounted() {
-    window.addEventListener("resize", this.resize);
-    this.resize();
+    window.addEventListener("resize", this.onResize);
+    this.onResize();
   },
   beforeDestroy() {
-    window.removeEventListener("resize", this.resize);
+    window.removeEventListener("resize", this.onResize);
   },
 };
 </script>

@@ -58,16 +58,16 @@ export default {
     closeLetter: function () {
       this.lyric.show = false;
     },
-    resize() {
+    onResize() {
       this.screen_mobile_mode = window.innerWidth <= 400;
     },
   },
   mounted() {
-    window.addEventListener("resize", this.resize);
-    this.resize();
+    window.addEventListener("resize", this.onResize);
+    this.onResize();
   },
   beforeDestroy() {
-    window.removeEventListener("resize", this.resize);
+    window.removeEventListener("resize", this.onResize);
   },
 };
 </script>

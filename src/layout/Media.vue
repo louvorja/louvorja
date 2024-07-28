@@ -430,10 +430,6 @@ export default {
     },
   },
   methods: {
-    resize() {
-      this.screen_mobile_mode = window.innerWidth <= 700;
-      this.player_mobile_mode = window.innerWidth <= 615;
-    },
     show: function () {
       Media.show(false);
     },
@@ -530,6 +526,10 @@ export default {
         }, 3000);
       }
     },
+    onResize() {
+      this.screen_mobile_mode = window.innerWidth <= 700;
+      this.player_mobile_mode = window.innerWidth <= 615;
+    },
   },
   mounted() {
     this.refresh++;
@@ -543,11 +543,11 @@ export default {
         });
     } catch (e) {}
 
-    window.addEventListener("resize", this.resize);
-    this.resize();
+    window.addEventListener("resize", this.onResize);
+    this.onResize();
   },
   beforeDestroy() {
-    window.removeEventListener("resize", this.resize);
+    window.removeEventListener("resize", this.onResize);
   },
 };
 </script>
