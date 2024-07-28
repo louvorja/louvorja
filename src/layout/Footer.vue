@@ -1,5 +1,6 @@
 <template>
   <v-card
+    v-if="!(media.has_music && !media.show)"
     theme="dark"
     :color="$store.state.data.layout.color"
     :rounded="0"
@@ -16,6 +17,9 @@ export default {
   computed: {
     version: function () {
       return packageJson.version;
+    },
+    media: function () {
+      return this.$store.state.media;
     },
   },
 };

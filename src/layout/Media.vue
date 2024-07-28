@@ -9,7 +9,7 @@
       <fullscreen v-model="fullscreen">
         <div
           v-if="!fullscreen"
-          class="d-flex flex-no-wrap align-stretch flex-row justify-space-between media-minus-height"
+          class="d-flex flex-no-wrap align-stretch flex-row justify-space-between minus-media-height"
         >
           <v-avatar
             class="ma-1"
@@ -19,7 +19,7 @@
           >
             <v-img :src="media.album.url_image" />
           </v-avatar>
-          <div class="flex-grow-1 d-flex flex-column">
+          <div class="flex-grow-1 d-flex flex-column text-truncate">
             <v-skeleton-loader type="subtitle" v-if="media.loading" />
             <v-card-title
               class="text-h4 font-weight-light"
@@ -35,7 +35,7 @@
               <span v-if="media.track"> Faixa {{ media.track }} </span>
             </v-card-subtitle>
           </div>
-          <div class="d-flex flex-row flex-wrap align-start">
+          <div class="d-flex flex-row flex-nowrap align-start">
             <v-btn icon="mdi-minus" size="small" @click.native="show()" />
             <v-btn icon="mdi-close" size="small" @click.native="close()" />
           </div>
@@ -95,14 +95,9 @@
                     {{ item.name }}
                   </v-list-item-title>
                   <div
-                    class="text-caption"
+                    class="text-caption text-truncate"
                     v-else
                     v-html="$filters.nl2br(item.lyric)"
-                    style="
-                      white-space: nowrap;
-                      overflow: hidden;
-                      text-overflow: ellipsis;
-                    "
                   />
                   <v-progress-linear
                     v-if="media.file && media.slide.index == index"
@@ -122,7 +117,7 @@
 
         <!-- kramer: funções do video  -->
         <v-card-actions
-          :class="['align-stretch media-minus-height', { fullscreen }]"
+          :class="['align-stretch minus-media-height', { fullscreen }]"
           v-show="!fullscreen || (fullscreen && show_fullscreen_player)"
         >
           <div class="d-flex flex-column flex-grow-1 px-2">
@@ -404,7 +399,7 @@ export default {
     media_height: function () {
       this.refresh;
       let height = this.$store.state.window.main.height - 50;
-      document.querySelectorAll(".media-minus-height").forEach((el) => {
+      document.querySelectorAll(".minus-media-height").forEach((el) => {
         height -= el.offsetHeight || 0;
       });
       if (this.screen_mobile_mode) {

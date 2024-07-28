@@ -37,8 +37,10 @@
           :value="tab.name"
         >
           <v-card flat>
-            <v-card-title class="minus-height">{{ $t(tab.name) }}</v-card-title>
-            <v-divider class="my-2 minus-height"></v-divider>
+            <v-card-title class="minus-systemsidebar-height">{{
+              $t(tab.name)
+            }}</v-card-title>
+            <v-divider class="my-2 minus-systemsidebar-height"></v-divider>
             <v-card-text
               :style="
                 'height:' +
@@ -132,7 +134,7 @@ export default {
     content_height: function () {
       //this.refresh;
       let height = this.$store.state.window.main.height - 65;
-      document.querySelectorAll(".minus-height").forEach((el) => {
+      document.querySelectorAll(".minus-systemsidebar-height").forEach((el) => {
         height -= el.offsetHeight || 0;
       });
       return height;

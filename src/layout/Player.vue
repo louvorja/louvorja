@@ -1,6 +1,6 @@
 <template>
   <v-card
-    v-if="$store.state.media.has_music && !$store.state.media.show"
+    v-if="media.has_music && !media.show"
     theme="dark"
     :rounded="0"
     class="w-100"
@@ -9,35 +9,28 @@
       class="w-100 d-flex flex-nowrap align-stretch flex-row justify-space-between"
     >
       <div
-        class="d-flex flex-no-wrap align-center flex-row justify-space-between"
+        v-if="!player_mobile_mode"
+        class="d-flex flex-no-wrap align-center flex-row justify-space-between text-truncate"
       >
         <v-avatar
           class="ma-1"
           size="65"
           rounded="0"
-          v-if="$store.state.media.album.url_image"
+          v-if="media.album.url_image"
         >
-          <v-img :src="$store.state.media.album.url_image"></v-img>
+          <v-img :src="media.album.url_image"></v-img>
         </v-avatar>
-        <div class="flex-grow-1">
-          <v-card-title v-if="$store.state.media.music.name">
-            {{ $store.state.media.music.name }}
+        <div class="flex-grow-1 text-truncate">
+          <v-card-title v-if="media.music.name">
+            {{ media.music.name }}
           </v-card-title>
 
-          <v-card-subtitle
-            v-if="$store.state.media.track || $store.state.media.album.name"
-          >
-            <span v-if="$store.state.media.album.name">
-              {{ $store.state.media.album.name }}
+          <v-card-subtitle v-if="media.track || media.album.name">
+            <span v-if="media.album.name">
+              {{ media.album.name }}
             </span>
-            <span
-              v-if="$store.state.media.album.name && $store.state.media.track"
-            >
-              |
-            </span>
-            <span v-if="$store.state.media.track">
-              Faixa {{ $store.state.media.track }}
-            </span>
+            <span v-if="media.album.name && media.track"> | </span>
+            <span v-if="media.track"> Faixa {{ media.track }} </span>
           </v-card-subtitle>
         </div>
       </div>
@@ -45,15 +38,15 @@
       <div class="d-flex flex-column flex-grow-1 px-2">
         <div class="d-flex align-center justify-center flex-grow-1">
           <v-btn
-            v-if="$store.state.media.audio > 0"
-            :disabled="$store.state.media.loading"
+            v-if="media.audio > 0 && !player_mobile_mode"
+            :disabled="media.loading"
             icon="mdi-restart"
             size="small"
             @click.native="restart()"
           />
           <v-btn
-            v-if="$store.state.media.audio > 0"
-            :disabled="$store.state.media.loading"
+            v-if="media.audio > 0 && !player_mobile_mode"
+            :disabled="media.loading"
             icon="mdi-rewind-10"
             size="small"
             @click="rewind()"
@@ -65,7 +58,8 @@
             @shortkey="rewind()"
           />
           <v-btn
-            :disabled="$store.state.media.loading"
+            v-show="!player_mobile_mode"
+            :disabled="media.loading"
             icon="mdi-page-first"
             size="small"
             @click="first()"
@@ -73,7 +67,7 @@
             @shortkey="first()"
           />
           <v-btn
-            :disabled="$store.state.media.loading"
+            :disabled="media.loading"
             icon="mdi-chevron-left"
             size="small"
             @click="prev()"
@@ -85,18 +79,18 @@
             @shortkey="prev()"
           />
           <v-btn
-            v-if="$store.state.media.audio > 0"
-            :disabled="$store.state.media.loading"
+            v-if="media.audio > 0"
+            :disabled="media.loading"
             variant="flat"
             color="white"
-            :icon="$store.state.media.is_paused ? 'mdi-play' : 'mdi-pause'"
+            :icon="media.is_paused ? 'mdi-play' : 'mdi-pause'"
             size="small"
             @click="pause()"
             v-shortkey="['space']"
             @shortkey="pause()"
           />
           <v-btn
-            :disabled="$store.state.media.loading"
+            :disabled="media.loading"
             icon="mdi-chevron-right"
             size="small"
             @click="next()"
@@ -108,7 +102,8 @@
             @shortkey="next()"
           />
           <v-btn
-            :disabled="$store.state.media.loading"
+            v-show="!player_mobile_mode"
+            :disabled="media.loading"
             icon="mdi-page-last"
             size="small"
             @click="last()"
@@ -116,8 +111,8 @@
             @shortkey="last()"
           />
           <v-btn
-            v-if="$store.state.media.audio > 0"
-            :disabled="$store.state.media.loading"
+            v-if="media.audio > 0 && !player_mobile_mode"
+            :disabled="media.loading"
             icon="mdi-fast-forward-10"
             size="small"
             @click="forward()"
@@ -129,10 +124,10 @@
             @shortkey="forward()"
           />
           <list-change-music-type
-            v-if="!$store.state.media.loading && $store.state.media.audio <= 0"
-            :key="$store.state.media.music.id_music"
-            :audio="$store.state.media.audio"
-            v-bind="$store.state.media.music"
+            v-if="!media.loading && media.audio <= 0"
+            :key="media.music.id_music"
+            :audio="media.audio"
+            v-bind="media.music"
             @sung="open(1)"
             @instrumental="open(2)"
             @without-audio="open(0)"
@@ -140,41 +135,37 @@
           />
         </div>
         <div
-          v-if="$store.state.media.audio > 0"
+          v-if="media.audio > 0"
           style="height: 30px"
           class="d-flex flex-nowrap flex-row align-center justify-space-between"
         >
           <div class="text-right text-caption">
-            {{ $filters.formatSecond($store.state.media.current_time) }}
+            {{ $filters.formatSecond(media.current_time) }}
           </div>
           <div class="flex-grow-1 px-2">
             <v-progress-linear
-              v-model="$store.state.media.progress"
+              v-model="media.progress"
               rounded
               clickable
-              :indeterminate="$store.state.media.loading"
+              :indeterminate="media.loading"
               :height="10"
-              :stream="!$store.state.media.loading"
-              :buffer-value="$store.state.media.buffered"
+              :stream="!media.loading"
+              :buffer-value="media.buffered"
               :color="
-                $store.state.media.is_paused
-                  ? 'warning'
-                  : $store.state.media.volume <= 0
-                  ? 'red'
-                  : 'info'
+                media.is_paused ? 'warning' : media.volume <= 0 ? 'red' : 'info'
               "
               @click="changeProgress"
             />
           </div>
           <div class="text-left text-caption">
-            {{ $filters.formatSecond($store.state.media.duration) }}
+            {{ $filters.formatSecond(media.duration) }}
           </div>
           <div class="text-left text-caption">
             <list-change-music-type
-              v-if="!$store.state.media.loading"
-              :key="$store.state.media.music.id_music"
-              :audio="$store.state.media.audio"
-              v-bind="$store.state.media.music"
+              v-if="!media.loading"
+              :key="media.music.id_music"
+              :audio="media.audio"
+              v-bind="media.music"
               @sung="open(1)"
               @instrumental="open(2)"
               @without-audio="open(0)"
@@ -186,26 +177,62 @@
 
       <div class="d-flex flex-column px-2">
         <div class="d-flex align-center justify-end flex-grow-1">
-          <v-btn icon="mdi-open-in-new" size="small" @click.native="show()" />
+          <v-btn
+            v-show="!player_mobile_mode"
+            icon="mdi-open-in-new"
+            size="small"
+            @click.native="show()"
+          />
+
+          <v-menu v-if="player_mobile_mode && !media.loading && !fullscreen">
+            <template v-slot:activator="{ props }">
+              <v-btn icon="mdi-menu" v-bind="props"></v-btn>
+            </template>
+
+            <v-list>
+              <v-list-item v-show="media.audio > 0" @click.native="restart">
+                <v-icon icon="mdi-restart" />
+              </v-list-item>
+              <v-divider />
+              <v-list-item v-show="media.audio > 0" @click.native="rewind">
+                <v-icon icon="mdi-rewind-10" />
+              </v-list-item>
+              <v-list-item @click.native="first">
+                <v-icon icon="mdi-page-first" />
+              </v-list-item>
+              <v-divider />
+              <v-list-item @click.native="last">
+                <v-icon icon="mdi-page-last" />
+              </v-list-item>
+              <v-list-item v-show="media.audio > 0" @click.native="forward">
+                <v-icon icon="mdi-fast-forward-10" />
+              </v-list-item>
+              <v-divider />
+              <v-list-item @click.native="show()">
+                <v-icon icon="mdi-open-in-new" />
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
           <v-btn
             variant="flat"
             color="white"
             size="x-small"
             @click.native="show()"
           >
-            {{ $store.state.media.slide.number }}
+            {{ media.slide.number }}
           </v-btn>
 
           <v-btn icon="mdi-close" size="small" @click.native="close()" />
         </div>
         <div
-          v-if="$store.state.media.audio > 0"
+          v-if="media.audio > 0"
           class="d-flex flex-nowrap flex-row align-center justify-space-between"
           style="height: 30px"
         >
           <div class="text-right text-caption">
             <v-btn
-              :disabled="$store.state.media.loading"
+              :disabled="media.loading"
               :icon="volume_icon"
               size="x-small"
               @click.native="volume()"
@@ -213,7 +240,7 @@
           </div>
           <div class="flex-grow-1 px-2" style="min-width: 100px">
             <v-progress-linear
-              v-model="$store.state.media.volume"
+              v-model="media.volume"
               rounded
               clickable
               :height="10"
@@ -238,7 +265,15 @@ export default {
       import(`@/components/ListChangeMusicType`)
     ),
   },
+  data() {
+    return {
+      player_mobile_mode: false,
+    };
+  },
   computed: {
+    media: function () {
+      return this.$store.state.media;
+    },
     volume_icon: function () {
       switch (true) {
         case this.$store.state.media.volume <= 0:
@@ -253,6 +288,9 @@ export default {
     },
   },
   methods: {
+    resize() {
+      this.player_mobile_mode = window.innerWidth <= 615;
+    },
     show: function () {
       Media.show(true);
     },
@@ -302,6 +340,13 @@ export default {
         album: true,
       });
     },
+  },
+  mounted() {
+    window.addEventListener("resize", this.resize);
+    this.resize();
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.resize);
   },
 };
 </script>

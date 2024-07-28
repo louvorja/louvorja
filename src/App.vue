@@ -18,7 +18,7 @@
     <app-media v-if="!full" />
     <app-screen v-if="!full" />
 
-    <div id="main-area" class="vh-100 vw-100 d-flex flex-column flex-nowrap">
+    <div id="main-area" class="vw-100 d-flex flex-column flex-nowrap">
       <div id="header-area">
         <app-system-header v-if="!full" />
         <app-header v-if="!full" />
@@ -91,6 +91,10 @@ export default {
       }
     },
     mainArea() {
+      document.getElementById("app").style.height = window.innerHeight + "px";
+      document.getElementById("main-area").style.height =
+        +window.innerHeight + "px";
+
       this.$store.state.window.main.height =
         document.getElementById("main-area").offsetHeight;
 
@@ -122,6 +126,9 @@ export default {
 </script>
 
 <style>
+#app {
+}
+
 /* Necessário para o componente <Transition> funcionar */
 .v-enter-active,
 .v-leave-active {

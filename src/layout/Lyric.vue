@@ -3,6 +3,7 @@
     v-model="lyric.show"
     :width="500"
     :theme="$store.state.data.layout.dark ? 'dark' : ''"
+    :fullscreen="screen_mobile_mode"
   >
     <v-card>
       <div class="flex-grow-0">
@@ -44,7 +45,9 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      screen_mobile_mode: false,
+    };
   },
   computed: {
     lyric: function () {
@@ -55,6 +58,16 @@ export default {
     closeLetter: function () {
       this.lyric.show = false;
     },
+    resize() {
+      this.screen_mobile_mode = window.innerWidth <= 400;
+    },
+  },
+  mounted() {
+    window.addEventListener("resize", this.resize);
+    this.resize();
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.resize);
   },
 };
 </script>
