@@ -55,16 +55,30 @@ module.exports = defineConfig({
     msTileColor: '#000000',
     appleMobileWebAppCapable: 'yes',
     appleMobileWebAppStatusBarStyle: 'black',
+    iconPaths: {
+      faviconSVG: 'img/icons/favicon.png',
+      favicon32: 'img/icons/favicon-32x32.png',
+      favicon16: 'img/icons/favicon-16x16.png',
+      appleTouchIcon: 'img/icons/favicon-152x152.png',
+      maskIcon: 'img/icons/favicon.svg',
+      msTileImage: 'img/icons/favicon-144x144.png'
+    },
     manifestOptions: {
       start_url: '.',
       display: 'fullscreen',
       icons: [
         {
-          src: './logo.svg',
+          src: './img/icons/favicon.svg',
           sizes: 'any',
           type: 'image/svg+xml'
         }
       ]
     }
+  },
+  chainWebpack: config => {
+    config.plugin('html').tap(args => {
+      args[0].favicon = 'public/img/icons/favicon.png';
+      return args;
+    });
   }
 })
