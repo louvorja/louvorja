@@ -8,7 +8,7 @@
       v-if="desktop && !loading && musics.length <= 0"
       border="bottom"
       type="warning"
-      class="ma-4 minus-height"
+      class="ma-4 minus-findmusic-height"
       :text="$t('message.hymnal-not-downloaded')"
     >
       <v-card-actions>
@@ -22,7 +22,7 @@
       </v-card-actions>
     </v-alert>
 
-    <v-card-title class="minus-height">
+    <v-card-title class="minus-findmusic-height">
       <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
@@ -124,7 +124,7 @@ export default {
     },
     table_height: function () {
       let height = this.$store.state.window.router_view.height;
-      document.querySelectorAll(".minus-height").forEach((el) => {
+      document.querySelectorAll(".minus-findmusic-height").forEach((el) => {
         height -= el.offsetHeight || 0;
       });
       return height;

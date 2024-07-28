@@ -36,8 +36,8 @@
             </v-card-subtitle>
           </div>
           <div class="d-flex flex-row flex-nowrap align-start">
-            <v-btn icon="mdi-minus" size="small" @click.native="show()" />
-            <v-btn icon="mdi-close" size="small" @click.native="close()" />
+            <v-btn icon="mdi-minus" size="small" @click="show()" />
+            <v-btn icon="mdi-close" size="small" @click="close()" />
           </div>
         </div>
 
@@ -127,7 +127,7 @@
                 :disabled="media.loading"
                 icon="mdi-restart"
                 size="small"
-                @click.native="restart"
+                @click="restart"
               />
               <v-btn
                 v-show="media.audio > 0 && !player_mobile_mode"
@@ -289,21 +289,21 @@
                 </template>
 
                 <v-list>
-                  <v-list-item v-show="media.audio > 0" @click.native="restart">
+                  <v-list-item v-show="media.audio > 0" @click="restart">
                     <v-icon icon="mdi-restart" />
                   </v-list-item>
                   <v-divider />
-                  <v-list-item v-show="media.audio > 0" @click.native="rewind">
+                  <v-list-item v-show="media.audio > 0" @click="rewind">
                     <v-icon icon="mdi-rewind-10" />
                   </v-list-item>
-                  <v-list-item @click.native="first">
+                  <v-list-item @click="first">
                     <v-icon icon="mdi-page-first" />
                   </v-list-item>
                   <v-divider />
-                  <v-list-item @click.native="last">
+                  <v-list-item @click="last">
                     <v-icon icon="mdi-page-last" />
                   </v-list-item>
-                  <v-list-item v-show="media.audio > 0" @click.native="forward">
+                  <v-list-item v-show="media.audio > 0" @click="forward">
                     <v-icon icon="mdi-fast-forward-10" />
                   </v-list-item>
                 </v-list>
@@ -320,7 +320,7 @@
                   :disabled="media.loading"
                   :icon="volume_icon"
                   size="x-small"
-                  @click.native="volume"
+                  @click="volume"
                 />
               </div>
               <div class="flex-grow-1 px-2" style="min-width: 100px">

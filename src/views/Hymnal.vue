@@ -110,12 +110,9 @@ export default {
     },
     table_height: function () {
       let height = this.$store.state.window.router_view.height;
-      console.log("..." + height);
       document.querySelectorAll(".minus-hymnal-height").forEach((el) => {
-        console.log(el.offsetHeight || 0, el ? el : "NOT");
         height -= el.offsetHeight || 0;
       });
-      console.log("===" + height);
       return height;
     },
   },

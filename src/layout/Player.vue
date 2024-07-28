@@ -42,7 +42,7 @@
             :disabled="media.loading"
             icon="mdi-restart"
             size="small"
-            @click.native="restart()"
+            @click="restart()"
           />
           <v-btn
             v-if="media.audio > 0 && !player_mobile_mode"
@@ -181,7 +181,7 @@
             v-show="!player_mobile_mode"
             icon="mdi-open-in-new"
             size="small"
-            @click.native="show()"
+            @click="show()"
           />
 
           <v-menu v-if="player_mobile_mode && !media.loading && !fullscreen">
@@ -190,25 +190,25 @@
             </template>
 
             <v-list>
-              <v-list-item v-show="media.audio > 0" @click.native="restart">
+              <v-list-item v-show="media.audio > 0" @click="restart">
                 <v-icon icon="mdi-restart" />
               </v-list-item>
               <v-divider />
-              <v-list-item v-show="media.audio > 0" @click.native="rewind">
+              <v-list-item v-show="media.audio > 0" @click="rewind">
                 <v-icon icon="mdi-rewind-10" />
               </v-list-item>
-              <v-list-item @click.native="first">
+              <v-list-item @click="first">
                 <v-icon icon="mdi-page-first" />
               </v-list-item>
               <v-divider />
-              <v-list-item @click.native="last">
+              <v-list-item @click="last">
                 <v-icon icon="mdi-page-last" />
               </v-list-item>
-              <v-list-item v-show="media.audio > 0" @click.native="forward">
+              <v-list-item v-show="media.audio > 0" @click="forward">
                 <v-icon icon="mdi-fast-forward-10" />
               </v-list-item>
               <v-divider />
-              <v-list-item @click.native="show()">
+              <v-list-item @click="show()">
                 <v-icon icon="mdi-open-in-new" />
               </v-list-item>
             </v-list>
@@ -218,12 +218,12 @@
             variant="flat"
             color="white"
             size="x-small"
-            @click.native="show()"
+            @click="show()"
           >
             {{ media.slide.number }}
           </v-btn>
 
-          <v-btn icon="mdi-close" size="small" @click.native="close()" />
+          <v-btn icon="mdi-close" size="small" @click="close()" />
         </div>
         <div
           v-if="media.audio > 0"
@@ -235,7 +235,7 @@
               :disabled="media.loading"
               :icon="volume_icon"
               size="x-small"
-              @click.native="volume()"
+              @click="volume()"
             />
           </div>
           <div class="flex-grow-1 px-2" style="min-width: 100px">
