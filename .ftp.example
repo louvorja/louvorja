@@ -1,6 +1,0 @@
-HOST=ftp.example.com
-USER=seu_usuario_ftp
-PASSWORD=sua_senha_ftp
-PORT=21
-LOCAL_ROOT=dist
-REMOTE_ROOT=/caminho/remoto/para/seus/arquivos

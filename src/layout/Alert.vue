@@ -1,37 +1,49 @@
 <template>
-  <v-snackbar v-model="alert.show" :timeout="alert.timeout" :color="alert.type">
-    <span v-if="typeof alert.text == 'string'">
-      {{ alert.text }}
-    </span>
-    <ul v-else class="mx-2">
-      <li v-for="(msg, index) in alert.text" :key="index">
-        {{ msg }}
-      </li>
-    </ul>
-
-    <template v-slot:actions>
-      <v-btn color="white" icon @click="alert.show = false">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-    </template>
-  </v-snackbar>
+  <v-dialog
+    v-model="alert.show"
+    max-width="450"
+    persistent
+    :theme="$theme.primary()"
+  >
+    <v-card :color="alert.color">
+      <v-card-title v-if="alert.title">
+        <div v-if="alert.translate" v-html="$t(alert.title)" />
+        <div v-else v-html="alert.title" />
+      </v-card-title>
+      <v-spacer></v-spacer>
+      <v-card-text v-if="alert.text">
+        <div v-if="alert.translate" v-html="$t(alert.text)" />
+        <div v-else v-html="alert.text" />
+        <small v-if="alert.error" class="text-error" v-html="alert.error" />
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          v-for="(btn, index) in alert.buttons"
+          :key="index"
+          :color="btn.color ? btn.color : layout.color"
+          @click="clickBtn(btn.value)"
+          variant="text"
+        >
+          {{ $t(btn.text) }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
 export default {
-  data() {
-    return this.$store.state;
+  name: "AlertLayout",
+  computed: {
+    alert: function () {
+      return this.$appdata.get("alert");
+    },
   },
-  watch: {
-    alert: {
-      handler: function () {
-        if (!this.alert.show) {
-          this.alert.type = "";
-          this.alert.text = null;
-          this.timeout = 5000;
-        }
-      },
-      deep: true,
+  methods: {
+    clickBtn(value) {
+      this.$appdata.set("alert.value", value);
+      this.$appdata.set("alert.show", false);
     },
   },
 };

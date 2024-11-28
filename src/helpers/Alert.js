@@ -1,30 +1,92 @@
-import store from '../store'
-const DevTools = require("./DevTools");
+import $dev from "@/helpers/Dev";
+import $appdata from "@/helpers/AppData";
 
-export function show(type, msg) {
-    DevTools.write('%cAlerta: ', 'color:red', type, msg);
-    if (store.state.alert.show && store.state.alert.type === type) {
-        if (typeof store.state.alert.text === 'string') {
-            store.state.alert.text = [store.state.alert.text];
-        }
-        store.state.alert.timeout += 5000;
-        store.state.alert.text.push(msg);
-    } else {
-        store.state.alert.show = true;
-        store.state.alert.text = msg;
-        store.state.alert.type = type;
-        store.state.alert.timeout = 5000;
+export default {
+  show(data, callback = function () {}) {
+    data = this.getData(data);
+
+    $dev.write("dialog", data, typeof data, Array.isArray(data));
+
+    $appdata.set("alert.value", "");
+    $appdata.set("alert.show", true);
+    $appdata.set("alert.title", data.title || null);
+    $appdata.set("alert.text", data.text || null);
+    $appdata.set("alert.error", data.error || null);
+    $appdata.set("alert.color", data.color || "");
+    $appdata.set(
+      "alert.translate",
+      data.translate == null || data.translate == undefined
+        ? true
+        : data.translate
+    );
+    $appdata.set(
+      "alert.buttons",
+      data.buttons || [{ text: "alert.close", color: "error", value: "close" }]
+    );
+
+    let tmr = setInterval(function () {
+      if (!$appdata.get("alert.show")) {
+        clearInterval(tmr);
+        callback($appdata.get("alert.value"));
+      }
+    }, 100);
+  },
+
+  yesno(data, callback = function () {}) {
+    data = this.getData(data);
+
+    this.show(
+      {
+        ...data,
+        buttons: [
+          { text: "alert.no", color: "error", value: "no" },
+          { text: "alert.yes", color: "info", value: "yes" },
+        ],
+      },
+      (resp, ret) => {
+        callback(resp, ret);
+      }
+    );
+  },
+
+  info(data, callback = function () {}) {
+    data = this.getData(data);
+
+    this.show(
+      {
+        ...data,
+        buttons: [{ text: "alert.close", color: "error", value: "close" }],
+      },
+      (resp, ret) => {
+        callback(resp, ret);
+      }
+    );
+  },
+
+  error(data, callback = function () {}) {
+    data = this.getData(data);
+
+    this.show(
+      {
+        ...data,
+        buttons: [{ text: "alert.close", color: "error", value: "close" }],
+      },
+      (resp, ret) => {
+        callback(resp, ret);
+      }
+    );
+  },
+
+  getData(data) {
+    if (typeof data == "string") {
+      data = { text: data };
+    } else if (Array.isArray(data)) {
+      data = {
+        title: data[0] ?? null,
+        text: data[1] ?? null,
+      };
     }
-}
-export function error(msg) {
-    this.show("error", msg)
-}
-export function info(msg) {
-    this.show("info", msg)
-}
-export function warning(msg) {
-    this.show("warning", msg)
-}
-export function success(msg) {
-    this.show("success", msg)
-}
+
+    return data;
+  },
+};

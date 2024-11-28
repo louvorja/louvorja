@@ -1,36 +1,68 @@
-import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as labsComponents from 'vuetify/labs/components'
-import * as directives from 'vuetify/directives'
+// Styles
+import "@mdi/font/css/materialdesignicons.css";
+import "vuetify/styles";
 
-import { pt, es } from 'vuetify/locale'
+// Vuetify
+import { createVuetify } from "vuetify";
 
-const vuetify = createVuetify({
-    components: {
-        ...components,
-        ...labsComponents,
+export default createVuetify({
+  theme: {
+    defaultTheme: "darkblue",
+    themes: {
+      light: {
+        dark: false,
+        colors: {
+          primary: "#29569b",
+        },
+      },
+      darkblue: {
+        dark: false,
+        colors: {
+          primary: "#1b2a41",
+        },
+      },
+      blue: {
+        dark: false,
+        colors: {
+          primary: "#0b3d62",
+        },
+      },
+      green: {
+        dark: false,
+        colors: {
+          primary: "#077568",
+        },
+      },
+      orange: {
+        dark: false,
+        colors: {
+          primary: "#d24726",
+        },
+      },
+      purple: {
+        dark: false,
+        colors: {
+          primary: "#80397b",
+        },
+      },
+      pink: {
+        dark: false,
+        colors: {
+          primary: "#e91e63",
+        },
+      },
+      black: {
+        dark: false,
+        colors: {
+          primary: "#2e2e2e",
+        },
+      },
+      dark: {
+        dark: true,
+        colors: {
+          primary: "#2e2e2e",
+        },
+      },
     },
-    directives,
-    locale: {
-        locale: 'pt',
-        fallback: 'pt',
-        messages: { pt, es }
-    },
-    defaults: {
-        VTextField: {
-            variant: "underlined",
-        },
-        VFileInput: {
-            variant: "underlined",
-        },
-        VAutocomplete: {
-            variant: "underlined",
-        },
-        VBtn: {
-            variant: "text",
-        },
-    },
-})
-
-export default vuetify;
+  },
+});
