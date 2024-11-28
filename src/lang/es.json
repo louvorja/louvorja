@@ -2,109 +2,106 @@
     "app": {
         "name": "Loor JA"
     },
-    "message": {
-        "task-in-progress": "¡Hay una tarea en progreso en esta pestaña! Cerrar la tarea primero",
-        "no-data-text": "No hay datos para mostrar",
-        "no-results-text": "Ningún resultado encontrado",
-        "loading-text": "Cargando...",
-        "hymnal-not-downloaded": "El himnario no se descargó en su programa. ¡Ve a la tienda y descarga el himnario!",
-        "musics-not-downloaded": "No se han descargado canciones en su programa. ¡Ve a la tienda y descarga las canciones!",
-        "label-hymn-name-or-number": "Ingrese el nombre o número del himno",
-        "label-song-name": "Introduce el nombre de la canción",
-        "screen-always-on-top": "Ventana siempre arriba",
-        "screen-lock": "Ventana siempre abierta",
-        "put-name-screen": "Pon un nombre para identificar esta pantalla",
-        "screen-delete": "Quitar pantalla inactiva",
-        "screen-background": "Dar formato al fondo de la pantalla",
-        "lazy-load-details": "Desmarcar esta opción hace que el audio solo se reproduzca después de una carga del 100 %. Ideal para internet lento."
-    },
-    "initials": {
-        "sung": "CA",
-        "instrumental": "PB",
-        "without-audio": "SA"
-    },
-    "lists": {
-        "size": {
-            "auto": "Original",
-            "contain": "Ajustado",
-            "cover": "Pantalla Completa"
+    "modules": {
+        "invalid": {
+            "title": "#Error#"
         },
-        "position": {
-            "top-left": "Superior Izquierda",
-            "top-center": "Superior",
-            "top-right": "Superior Derecha",
-            "center-left": "Centro Izquierda",
-            "center-center": "Centro",
-            "center-right": "Centro Derecha",
-            "bottom-left": "Abajo Izquierda",
-            "bottom-center": "Abajo",
-            "bottom-right": "Abajo Derecha"
+        "theme": {
+            "title": "Apariencia",
+            "light-themes": "Temas Claros",
+            "dark-themes": "Temas Oscuros"
+        },
+        "dev": {
+            "title": "Desarrollador",
+            "global-variables": "Variables Globales",
+            "user-variables": "Variables de Usuario",
+            "vue-variables": "Variables de Vue"
+        },
+        "musics": {
+            "title": "Músicas",
+            "inputs": {
+                "search": "Buscar por...",
+                "search_disabled": "Seleccione una opción de búsqueda para habilitar la búsqueda!",
+                "filter_name": "Nombre",
+                "filter_lyric": "Letra",
+                "filter_album": "Álbum",
+                "filter_instrumental": "Con Pista"
+            },
+            "table": {
+                "track": "Pista",
+                "music_name": "Nombre",
+                "album_name": "Álbum",
+                "duration": "Duración"
+            },
+            "data": {
+                "records": "Registros totales",
+                "not_found": "No se encontraron registros con los filtros seleccionados. Intente cambiar los filtros de búsqueda."
+            }
+        },
+        "hymnal": {
+            "title": "Himnario Adventista",
+            "inputs": {
+                "search": "Escriba el número o nombre del himno..."
+            }
+        },
+        "hymnal_1996": {
+            "title": "Himnario Adventista 1996"
+        },
+        "collections": {
+            "title": "Colecciones",
+            "general": {
+                "all_collections": "Todas las Colecciones"
+            }
+        },
+        "bible": {
+            "title": "Biblia"
+        },
+        "biblical-research": {
+            "title": "Investigación Bíblica"
+        },
+        "media": {
+            "alerts": {
+                "not_found": "Medio no encontrada!",
+                "not_loaded": "¡Ocurrió un error al cargar este audio!",
+                "close": "¿Quieres cerrar esta diapositiva?"
+            },
+            "general": {
+                "sung": "Cantado",
+                "instrumental": "Pista",
+                "no_audio": "Sin Audio",
+                "lyric": "Letra de la Canción",
+                "track": "Pista"
+            },
+            "inputs": {
+                "lazy_load": "Carga Dinámica",
+                "lazy_load_tooltip": "Si se desmarca, el audio solo se reproducirá después de cargarse completamente en la memoria."
+            }
         }
     },
-    "home": "Comienzo",
-    "hymnal": "Himnario Adventista",
-    "hymnals": "Himnarios",
-    "find-musics": "Encontrar Canciones",
-    "online-videos": "Vídeos En-línea",
-    "bible": "Biblia",
-    "bibles": "Biblias",
-    "liturgy": "Liturgia",
-    "scheduled-items": "Elementos Programados",
-    "stopwatch": "Cronógrafo",
-    "clock": "Reloj",
-    "worship-timer": "Temporizador de Adoración",
-    "sweepstake": "Sorteo",
-    "slide-editor": "Editor",
-    "collections": "Colecciones",
-    "online-collections": "Colecciones En-Llínea",
-    "utilities": "Utilidades",
-    "task-in-progress": "Tarea en progreso",
-    "refresh-page": "Actualizar Página",
-    "access-store": "Tienda de Acceso",
-    "store": "Tienda",
-    "number": "Número",
-    "title": "Título",
-    "album": "Álbum",
-    "slide": "Slide",
-    "instrumental-slide": "Slide Playback",
-    "instrumental": "Playback",
-    "sung": "Cantado",
-    "slide-without-audio": "Slide sin Audio",
-    "without-audio": "Sin Audio",
-    "audio": "Audio",
-    "listen-to-music": "Oír Música",
-    "listen-to-instrumental-music": "Oír Música Playback",
-    "lyrics": "Letra de musica",
-    "version": "Versión",
-    "track": "Rango",
-    "save": "Ahorrar",
-    "save-and-close": "Ahorrar y Cerrar",
-    "close": "Cerca",
-    "annual-collections": "Varias Colecciones",
-    "various-collections": "Colecciones Anuales",
-    "all-collections": "Todas las Colecciones",
-    "my-downloads": "Mis Descargas",
-    "download-center": "Centro de Descargas",
-    "database": "Banco de Datos",
-    "configs": "Ajustes",
-    "skin": "Apariencia",
-    "streaming": "Transmisión",
-    "light-themes": "Temas Claros",
-    "dark-themes": "Temas Oscuros",
-    "minimize": "Minimizar",
-    "refresh-screens": "Actualizar Pantallas",
-    "screens": "Pantallas",
-    "no-signal": "sin señal",
-    "identify-monitors": "Identificar monitores",
-    "rename-screen": "Renombrar pantalla",
-    "format-screen-background": "Dar formato al fondo de la pantalla",
-    "background-image": "Imagen de fondo",
-    "size": "Tamano",
-    "position": "Posición",
-    "fading-effect-on-screens": "Efecto de desvanecimiento en las pantallas",
-    "load-while-running": "Cargar mientras se ejecuta",
-    "about": "Acerca de",
-    "about-the-program": "Sobre el programa",
-    "developer": "Desarrollador",
-    "music-slides": "Diapositivas de música"
+    "module_group": {
+        "musics": {
+            "title": "Músicas"
+        },
+        "bible": {
+            "title": "Biblia"
+        },
+        "utilities": {
+            "title": "Utilidades"
+        }
+    },
+    "components": {
+        "letterpagination": {
+            "all": "Todas"
+        },
+        "datatable": {
+            "alerts": {
+                "not_found": "¡No se pudo encontrar el archivo para mostrar esta información!"
+            }
+        }
+    },
+    "alert": {
+        "close": "Cerrar",
+        "yes": "Sí",
+        "no": "No"
+    }
 }

@@ -1,26 +1,23 @@
 <template>
-  <v-card
-    v-if="!(media.has_music && !media.show)"
-    theme="dark"
-    :color="$store.state.data.layout.color"
-    :rounded="0"
-    class="w-100"
-  >
-    <span class="text-caption">&nbsp;{{ $t("version") }}: {{ version }}</span>
-  </v-card>
+  <v-footer id="footer-bar" class="pa-0" color="primary">
+    <l-player v-if="$media.isMinimized()" location="footer" />
+    <v-row v-else justify="center" no-gutters> </v-row>
+  </v-footer>
 </template>
 
 <script>
-import packageJson from "../../package.json";
+import LPlayer from "@/components/Player.vue";
 
 export default {
-  computed: {
-    version: function () {
-      return packageJson.version;
-    },
-    media: function () {
-      return this.$store.state.media;
-    },
+  name: "FooterLayout",
+  components: {
+    LPlayer,
   },
 };
 </script>
+
+<style scoped>
+#footer-bar {
+  flex: 0 !important;
+}
+</style>

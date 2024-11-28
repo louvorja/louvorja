@@ -1,21 +1,23 @@
-import { createI18n } from 'vue-i18n/dist/vue-i18n.esm-bundler.js';
+import { createI18n } from "vue-i18n";
 
-const i18n = createI18n({
-  locale: 'pt',
-  messages: loadLocaleMessages(),
-});
-
-function loadLocaleMessages() {
-  const locales = require.context('./lang', true, /[A-Za-z0-9-_,\s]+\.json$/i);
+const loadLocaleMessages = async () => {
+  const locales = ["pt", "es"];
   const messages = {};
-  locales.keys().forEach(key => {
-    const matched = key.match(/([A-Za-z0-9-_]+)\./i);
-    if (matched && matched.length > 1) {
-      const locale = matched[1];
-      messages[locale] = locales(key);
-    }
-  });
-  return messages;
-}
 
-export default i18n;
+  for (const locale of locales) {
+    messages[locale] = await import(`./lang/${locale}.json`);
+  }
+
+  return messages;
+};
+
+export const createI18nInstance = async () => {
+  const messages = await loadLocaleMessages();
+
+  return createI18n({
+    legacy: false, // Usando a API Composition
+    locale: "pt", // Idioma padrão
+    fallbackLocale: "pt", // Idioma de fallback
+    messages, // Carregar as mensagens
+  });
+};
