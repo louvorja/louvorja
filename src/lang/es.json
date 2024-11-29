@@ -25,7 +25,7 @@
                 "filter_name": "Nombre",
                 "filter_lyric": "Letra",
                 "filter_album": "Álbum",
-                "filter_instrumental": "Con Pista"
+                "filter_instrumental": "Con Instrumental"
             },
             "table": {
                 "track": "Pista",
@@ -62,7 +62,7 @@
         "media": {
             "alerts": {
                 "not_loaded": "¡Ocurrió un error al cargar este audio!",
-                "close": "¿Quieres cerrar esta diapositiva?"
+                "close": "¿Quieres cerrar esta presentacion?"
             },
             "general": {
                 "sung": "Cantado",
