@@ -1,16 +1,10 @@
-import $userdata from "@/helpers/UserData";
-
 export default {
   db(path) {
-    return path;
+    const url = import.meta.env.VITE_URL_DATABASE;
+    return url + path;
   },
   file(path) {
-    let url = import.meta.env.VITE_URL_FILES;
-    const lang = $userdata.get("language");
-
-    url = url.replace("{lang}", lang);
-    url = url.replace("{LANG}", lang.toUpperCase());
-
+    const url = import.meta.env.VITE_URL_FILES;
     return url + path;
   },
 };

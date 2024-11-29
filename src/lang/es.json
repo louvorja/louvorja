@@ -61,7 +61,6 @@
         },
         "media": {
             "alerts": {
-                "not_found": "Medio no encontrada!",
                 "not_loaded": "¡Ocurrió un error al cargar este audio!",
                 "close": "¿Quieres cerrar esta diapositiva?"
             },
@@ -103,5 +102,8 @@
         "close": "Cerrar",
         "yes": "Sí",
         "no": "No"
+    },
+    "messages": {
+        "file_database_not_found": "Archivo de datos no encontrado!"
     }
 }

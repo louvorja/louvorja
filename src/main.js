@@ -26,6 +26,7 @@ import Path from "@/helpers/Path";
 import Media from "@/helpers/Media";
 import Alert from "@/helpers/Alert";
 import Popup from "@/helpers/Popup";
+import Database from "@/helpers/Database";
 app.mixin({
   beforeCreate() {
     this.$userdata = UserData;
@@ -39,6 +40,7 @@ app.mixin({
     this.$media = Media;
     this.$alert = Alert;
     this.$popup = Popup;
+    this.$database = Database;
   },
 });
 

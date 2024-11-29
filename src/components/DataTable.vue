@@ -82,11 +82,9 @@ export default {
       this.data = [];
       this.loading = true;
 
-      try {
-        const response = await fetch(this.file);
-        if (!response.ok) throw new Error();
-        this.all_data = await response.json();
-      } catch (error) {
+      this.all_data = await this.$database.get(this.file);
+
+      if (this.all_data == null) {
         this.error = this.$t("components.datatable.alerts.not_found");
       }
 

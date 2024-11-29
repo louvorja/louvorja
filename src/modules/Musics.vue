@@ -66,7 +66,7 @@
       :scroll="scroll"
       :has_scroll="has_scroll"
       sort_by="name"
-      :file="$path.db(`/database/${$i18n.locale}_musics.json`)"
+      :file="`${$i18n.locale}_musics`"
     >
       <thead>
         <tr>

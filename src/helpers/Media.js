@@ -5,6 +5,7 @@ import $datetime from "@/helpers/DateTime";
 import $path from "@/helpers/Path";
 import $alert from "@/helpers/Alert";
 import $modules from "@/helpers/Modules";
+import $database from "@/helpers/Database";
 
 export default {
   async open(params) {
@@ -22,19 +23,13 @@ export default {
     let mode = params.mode ? params.mode : "no_audio";
 
     $appdata.set("modules.media.loading", true);
-    try {
-      const response = await fetch(
-        $path.db(`/database/music_${id_music}.json`)
-      );
-      if (!response.ok) throw new Error();
-      $appdata.set("modules.media.data", await response.json());
-    } catch (error) {
-      $alert.error("modules.media.alerts.not_found");
+
+    let data = await $database.get(`music_${id_music}`);
+    if (data == null) {
       this.close(true);
       return;
     }
-
-    let data = $appdata.get("modules.media.data");
+    $appdata.set("modules.media.data", data);
 
     $appdata.set("modules.media.id_music", id_music);
     $appdata.set("modules.media.id_album", id_album);
@@ -185,19 +180,14 @@ export default {
     const id_album = params.id_album ? params.id_album : null;
 
     $appdata.set("modules.lyric.loading", true);
-    try {
-      const response = await fetch(
-        $path.db(`/database/music_${id_music}.json`)
-      );
-      if (!response.ok) throw new Error();
-      $appdata.set("modules.lyric.data", await response.json());
-    } catch (error) {
-      $alert.error("modules.media.alerts.not_found");
-      this.close(true);
+
+    let data = await $database.get(`music_${id_music}`);
+    if (data == null) {
+      this.closeLyric();
       return;
     }
 
-    let data = $appdata.get("modules.lyric.data");
+    $appdata.set("modules.lyric.data", data);
 
     $appdata.set("modules.lyric.id_music", id_music);
     $appdata.set("modules.lyric.id_album", id_album);
@@ -223,19 +213,15 @@ export default {
     $dev.write("open album", id_album);
 
     $appdata.set("modules.album.loading", true);
-    try {
-      const response = await fetch(
-        $path.db(`/database/album_${id_album}.json`)
-      );
-      if (!response.ok) throw new Error();
-      $appdata.set("modules.album.data", await response.json());
-    } catch (error) {
-      $alert.error("modules.media.alerts.not_found");
-      this.close(true);
+
+    let data = await $database.get(`album_${id_album}`);
+    if (data == null) {
+      this.closeAlbum();
       return;
     }
 
-    let data = $appdata.get("modules.album.data");
+    $appdata.set("modules.album.data", data);
+
     let hymnal = data.categories.filter((item) =>
       item.startsWith("hymnal.")
     )[0];

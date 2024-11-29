@@ -194,14 +194,13 @@ export default {
       this.categories = [];
       this.loading = true;
 
-      try {
-        const response = await fetch(
-          this.$path.db(`/database/${this.$i18n.locale}_categories.json`)
-        );
-        if (!response.ok) throw new Error();
-        this.categories = await response.json();
-      } catch (error) {
-        this.error = this.$t("components.datatable.alerts.not_found");
+      this.categories = await this.$database.get(
+        `${this.$i18n.locale}_categories`
+      );
+
+      if (this.categories == null) {
+        this.$modules.close(this.module_id);
+        return;
       }
 
       if (this.categories.length > 0) {
