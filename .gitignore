@@ -1,5 +1,6 @@
 /files/
 /tmp/
+/dev-dist
 
 .env.development
 

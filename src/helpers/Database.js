@@ -9,7 +9,7 @@ export default {
       if (!response.ok) throw new Error();
       return await response.json();
     } catch (error) {
-      $alert.error("messages.file_database_not_found");
+      $alert.error({ text: "messages.file_database_not_found", error });
       return null;
     }
   },
