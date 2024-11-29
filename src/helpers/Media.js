@@ -73,7 +73,6 @@ export default {
         $appdata.get("is_online") &&
         $userdata.get("modules.media.lazy_load")
       ) {
-        console.log("lazy");
         //Se a opção lazy_load estiver marcada, execução rápida (o audio vai carregando enquanto é executado)
         $appdata.set("modules.media.config.lazy", true);
         audio.src = $appdata.get("modules.media.config.audio");
@@ -81,7 +80,6 @@ export default {
         $appdata.set("modules.media.loading", false);
         this.play();
       } else {
-        console.log("complete");
         //Se a opção lazy_load estiver desmarcada, execução lenta (o audio só é executado depois de totalmente carregado)
         $appdata.set("modules.media.config.lazy", false);
         let self = this;
@@ -102,7 +100,6 @@ export default {
 
         request.responseType = "blob";
         request.onload = function () {
-          console.log("ERRRRRRRRRRR", this.status);
           if (this.status == 200) {
             audio.src = URL.createObjectURL(this.response);
             audio.load();

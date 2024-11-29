@@ -87,7 +87,6 @@ export default {
           const popup = this.$appdata.get("popup");
           if (popup) {
             const data = this.$appdata.getFlatten();
-            console.log("DATA", data);
             Object.keys(data).map((item) => {
               popup.postMessage(
                 { param: item, value: data[item] },

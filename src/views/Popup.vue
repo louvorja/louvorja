@@ -26,7 +26,6 @@ export default {
       if (event.origin === window.location.origin) {
         this.message = event.data;
         if (event.data.param) {
-          console.log(event.data.param, event.data.value);
           this.$appdata.set(event.data.param, event.data.value);
         }
       }

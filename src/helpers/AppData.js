@@ -12,7 +12,6 @@ export default {
       param != "is_fullscreen"
     ) {
       if (popup.closed) {
-        console.log("Popup foi fechado");
         this.set("popup", null);
         //this.set("popup_module", null);
       } else {
