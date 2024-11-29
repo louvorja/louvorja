@@ -5,7 +5,11 @@ export default {
   async get(file) {
     try {
       const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-      const response = await fetch(`${$path.db(`/${file}.json`)}?${date}`);
+      const response = await fetch(`${$path.db(`/${file}`)}?${date}`, {
+        headers: {
+          "Api-Token": "02@v2nFB2Dc",
+        },
+      });
       if (!response.ok) throw new Error();
       return await response.json();
     } catch (error) {
