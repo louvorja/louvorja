@@ -21,3 +21,6 @@ export const createI18nInstance = async () => {
     messages, // Carregar as mensagens
   });
 };
+
+// export default i18n;
+export default createI18nInstance;
