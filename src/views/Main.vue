@@ -105,7 +105,7 @@ export default {
     if (is_dev) {
       //this.$media.open({ id_music: 112, mode: "audio", minimized: false });
       //this.$modules.open("musics");
-      this.$modules.open("collections");
+      //this.$modules.open("collections");
       //this.$media.openAlbum(9);
     }
     /*********************************************************************/

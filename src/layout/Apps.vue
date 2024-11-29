@@ -5,12 +5,12 @@
         v-for="(group, group_key) in module_group"
         :key="group_key"
       >
-        <v-expansion-panel-title>
+        <v-expansion-panel-title class="my-0 py-0">
           {{ $t(group.title) }}
         </v-expansion-panel-title>
         <v-expansion-panel-text>
-          <v-container fluid>
-            <v-row>
+          <v-container fluid class="my-0 py-0">
+            <v-row class="my-0 py-0">
               <template
                 v-for="(module, module_key) in group.modules"
                 :key="module_key"
@@ -24,7 +24,7 @@
                   hover
                   :color="module.invalid ? 'error' : $theme.primary()"
                   @click="$modules.open(module_key)"
-                  class="mx-2"
+                  class="ma-2"
                   :width="130"
                 >
                   <div
