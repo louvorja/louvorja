@@ -1,9 +1,6 @@
 // @/helpers/PluginManager.js
-import AppData from './AppData';
-import $dev from './Dev';
-
-// import ExamplePlugin from '@/plugins/app/ExamplePlugin'
-import CounterModulePlugin from '@/plugins/app/counter';
+import AppData from "./AppData";
+import $dev from "./Dev";
 
 export default {
   plugins: new Map(),
@@ -26,22 +23,24 @@ export default {
       AppData.set(`modules.${manifest.id}`, {
         id: manifest.id,
         title: manifest.translationKey || `modules.${manifest.id}.title`,
-        icon: manifest.icon || 'mdi-puzzle',
-        component: manifest.componentName || manifest.id.charAt(0).toUpperCase() + manifest.id.slice(1),
+        icon: manifest.icon || "mdi-puzzle",
+        component:
+          manifest.componentName ||
+          manifest.id.charAt(0).toUpperCase() + manifest.id.slice(1),
         show: false,
         type: "plugin",
-        ...(manifest.moduleOptions || {})
+        ...(manifest.moduleOptions || {}),
       });
 
       // Add to module groups
-      const moduleGroups = AppData.get('module_group') || {};
-      const category = manifest.category || 'utilities';
+      const moduleGroups = AppData.get("module_group") || {};
+      const category = manifest.category || "utilities";
 
       // Create category if not exists
       if (!moduleGroups[category]) {
         moduleGroups[category] = {
           title: `module_group.${category}.title`,
-          modules: []
+          modules: [],
         };
       }
 
@@ -51,13 +50,17 @@ export default {
       }
 
       // Save updated module groups
-      AppData.set('module_group', moduleGroups);
+      AppData.set("module_group", moduleGroups);
 
       // Auto-load translations
       if (manifest.translations) {
-        Object.entries(manifest.translations).forEach(([lang, translations]) => {
-          this.i18n.global.mergeLocaleMessage(lang, translations);
-        });
+        Object.entries(manifest.translations).forEach(
+          ([lang, translations]) => {
+            this.i18n.global.mergeLocaleMessage(lang, {
+              modules: { [manifest.id]: translations },
+            });
+          }
+        );
       }
 
       // Log installation
@@ -90,7 +93,7 @@ export default {
 
       return null;
     } catch (error) {
-      console.error('Remote plugin installation failed:', error);
+      console.error("Remote plugin installation failed:", error);
       throw error;
     }
   },
@@ -98,11 +101,19 @@ export default {
   async init(i18n) {
     this.i18n = i18n;
 
-    // Auto-install local plugins
-    const localPlugins = [
-      CounterModulePlugin
-      // Add other local plugins here
-    ];
+    // Carregar os plugins dinamicamente
+    const localPlugins = [];
+
+    const modules = import.meta.glob("@/plugins/app/**/index.js", {
+      eager: true,
+    });
+
+    for (const path in modules) {
+      const plugin = modules[path].default;
+      if (typeof plugin === "function") {
+        localPlugins.push(plugin);
+      }
+    }
 
     for (const PluginClass of localPlugins) {
       const plugin = new PluginClass();
@@ -114,7 +125,7 @@ export default {
       // Uncomment and modify as needed
       // await PluginManager.installRemotePlugin('some-plugin-id');
     } catch (error) {
-      console.error('Failed to install remote plugin', error);
+      console.error("Failed to install remote plugin", error);
     }
-  }
-}
+  },
+};

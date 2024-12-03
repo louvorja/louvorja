@@ -1,7 +1,4 @@
 {
-    "modules": {
-        "counter": {
-            "title": "Contable"
-        }
-    }
+    "title": "Contable",
+    "text": "ESPANHOL"
 }

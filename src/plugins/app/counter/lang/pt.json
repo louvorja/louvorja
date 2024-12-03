@@ -1,7 +1,4 @@
 {
-    "modules": {
-        "counter": {
-            "title": "Contador"
-        }
-    }
+    "title": "Contador",
+    "text": "PORTUGUES"
 }
