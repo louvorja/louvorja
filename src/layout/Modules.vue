@@ -1,15 +1,7 @@
 <template>
   <div>
-    <!-- Core modules -->
     <component
-      v-for="component in components"
-      :key="component"
-      :is="defineAsyncComponent(() => import(`@/modules/${component}.vue`))"
-    />
-
-    <!-- Plugin modules -->
-    <component
-      v-for="plugin in pluginComponents"
+      v-for="plugin in plugins"
       :key="plugin.id"
       :is="loadPluginComponent(plugin)"
     />
@@ -22,29 +14,11 @@ import { defineAsyncComponent } from "vue";
 export default {
   name: "ModulesLayout",
   computed: {
-    components() {
-      const modules = this.$modules.get();
-      return [
-        ...new Set(
-          Object.keys(modules)
-            .filter((item) => !modules[item].type)
-            .map((item) => modules[item].component)
-        ),
-      ];
-    },
-    pluginComponents() {
-      const modules = this.$modules.get();
-      return [
-        ...new Set(
-          Object.keys(modules)
-            .filter((item) => modules[item].type === "plugin")
-            .map((item) => modules[item])
-        ),
-      ];
+    plugins() {
+      return this.$modules.get();
     },
   },
   methods: {
-    defineAsyncComponent,
     loadPluginComponent(plugin) {
       return defineAsyncComponent(() => {
         // Try to load from plugin interface directory

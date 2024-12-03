@@ -8,12 +8,6 @@ export default class extends BasePlugin {
     // Load translations
     manifest.translations = { pt, es };
 
-    // Load components (All files and folders in the components folder will be loaded)
-    const componentsContext = import.meta.glob("./interface/**/*.vue");
-
-    manifest.components = componentsContext;
-    manifest.componentsEntry = "Index"; // Default component to load (without the .vue extension)
-
     // Load manifest
     super(manifest);
   }

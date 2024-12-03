@@ -12,8 +12,6 @@ export default class BasePlugin {
       dependencies: manifest.dependencies || [],
       permissions: manifest.permissions || [],
       translations: manifest.translations || {},
-      components: manifest.components || {},
-      componentsEntry: manifest.componentsEntry || 'Index'
     };
   }
 
