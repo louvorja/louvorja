@@ -1,7 +1,7 @@
 <template>
   <l-window
     v-model="module.show"
-    :title="$t(module.title)"
+    :title="t('title')"
     :icon="module.icon"
     closable
     minimizable
@@ -32,7 +32,7 @@
 
               <v-list-item
                 class="mt-auto"
-                :title="$t('modules.collections.general.all_collections')"
+                :title="t('all_collections')"
                 :active="id_category == 0"
                 @click="setCategory(0)"
               />
@@ -43,7 +43,7 @@
         <v-toolbar-title
           v-if="!id_category || id_category == 0"
           class="text-h6"
-          :text="$t('modules.collections.general.all_collections')"
+          :text="t('all_collections')"
         />
         <v-toolbar-title
           v-else
@@ -75,7 +75,7 @@
 
         <v-list-item
           class="mt-auto"
-          :title="$t('modules.collections.general.all_collections')"
+          :title="t('all_collections')"
           :active="id_category == 0"
           @click="setCategory(0)"
         />
@@ -128,6 +128,7 @@
 </template>
 
 <script>
+import manifest from "../manifest.json";
 import LWindow from "@/components/Window.vue";
 
 export default {
@@ -144,12 +145,16 @@ export default {
     error: null,
   }),
   computed: {
+    /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
+    /* NÃO MODIFICAR */
     module_id() {
-      return "collections";
+      return manifest.id;
     },
     module() {
       return this.$modules.get(this.module_id);
     },
+    /* COMPUTEDS OBRIGATÓRIAS - FIM */
+
     show() {
       return this.module.show;
     },
@@ -189,6 +194,13 @@ export default {
     },
   },
   methods: {
+    /* METHODS OBRIGATÓRIOS - INÍCIO */
+    /* NÃO MODIFICAR */
+    t(text) {
+      return this.$t(`modules.${this.module_id}.${text}`);
+    },
+    /* METHODS OBRIGATÓRIOS - FIM */
+
     async loadData() {
       this.id_category = null;
       this.categories = [];

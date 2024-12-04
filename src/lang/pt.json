@@ -17,42 +17,6 @@
             "user-variables": "Variáveis do Usuário",
             "vue-variables": "Variáveis do Vue"
         },
-        "musics": {
-            "title": "Músicas",
-            "inputs": {
-                "search": "Buscar por...",
-                "search_disabled": "Selecione uma opção de busca para habilitar a busca!",
-                "filter_name": "Nome",
-                "filter_lyric": "Letra",
-                "filter_album": "Álbum",
-                "filter_instrumental": "Com Playback"
-            },
-            "table": {
-                "track": "Faixa",
-                "music_name": "Nome",
-                "album_name": "Álbum",
-                "duration": "Duração"
-            },
-            "data": {
-                "records": "Total de registros",
-                "not_found": "Não foram encontados registros com os filtros selecionados! Tente alterar os filtros de pesquisa."
-            }
-        },
-        "hymnal": {
-            "title": "Hinário Adventista",
-            "inputs": {
-                "search": "Digite o número ou nome do hino..."
-            }
-        },
-        "hymnal_1996": {
-            "title": "Hinário Adventista 1996"
-        },
-        "collections": {
-            "title": "Coletâneas",
-            "general": {
-                "all_collections": "Todas as Coletâneas"
-            }
-        },
         "bible": {
             "title": "Bíblia"
         },

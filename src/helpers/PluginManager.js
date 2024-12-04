@@ -19,15 +19,18 @@ export default {
       // Auto-configure plugin
       const manifest = plugin.manifest;
 
+      if (!(manifest.active ?? true)) {
+        console.warn(`Plugin ${plugin.manifest.id} disabled`);
+        return;
+      }
+
       // Register module in application's modules
       AppData.set(`modules.${manifest.id}`, {
         id: manifest.id,
         title: manifest.translationKey || `modules.${manifest.id}.title`,
         icon: manifest.icon || "mdi-puzzle",
-        component:
-          manifest.componentName ||
-          manifest.id.charAt(0).toUpperCase() + manifest.id.slice(1),
         show: false,
+        language: manifest.language,
         type: "plugin",
         ...(manifest.moduleOptions || {}),
       });

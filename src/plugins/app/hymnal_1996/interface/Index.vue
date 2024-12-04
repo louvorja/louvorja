@@ -1,7 +1,7 @@
 <template>
   <l-window
     v-model="module.show"
-    :title="$t(module.title)"
+    :title="t('title')"
     :icon="module.icon"
     closable
     minimizable
@@ -20,7 +20,7 @@
         <div :class="classform.group_item" style="flex-basis: 600px">
           <l-search
             v-model="search"
-            :label="$t('modules.hymnal.inputs.search')"
+            :label="t('inputs.search')"
             :error="data.filter_count <= 0"
           />
         </div>
@@ -92,6 +92,8 @@
 </template>
 
 <script>
+import manifest from "../manifest.json";
+
 import LWindow from "@/components/Window.vue";
 import LTable from "@/components/DataTable.vue";
 import LSearch from "@/components/inputs/InputSearch.vue";
@@ -113,12 +115,16 @@ export default {
     has_scroll: false,
   }),
   computed: {
+    /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
+    /* NÃO MODIFICAR */
     module_id() {
-      return "hymnal_1996";
+      return manifest.id;
     },
     module() {
       return this.$modules.get(this.module_id);
     },
+    /* COMPUTEDS OBRIGATÓRIAS - FIM */
+
     classform() {
       return {
         group: "d-flex flex-wrap",
@@ -131,6 +137,13 @@ export default {
     },
   },
   methods: {
+    /* METHODS OBRIGATÓRIOS - INÍCIO */
+    /* NÃO MODIFICAR */
+    t(text) {
+      return this.$t(`modules.${this.module_id}.${text}`);
+    },
+    /* METHODS OBRIGATÓRIOS - FIM */
+
     onScroll(data) {
       this.scroll = data;
     },

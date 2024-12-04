@@ -49,20 +49,28 @@ export default {
       return $appdata.get(`modules.${list}`);
     }
 
-    return {
-      ...Object.fromEntries(
-        list.map((module) => {
-          return [
-            module,
-            { id: module, ...$appdata.get(`modules.${module}`) } || {
-              invalid: true,
-              title: "modules.invalid.title",
-              icon: "mdi-alert-circle-outline",
-            },
-          ];
-        })
-      ),
-    };
+    if (!list || list.length <= 0) {
+      return {};
+    }
+
+    try {
+      return {
+        ...Object.fromEntries(
+          list.map((module) => {
+            return [
+              module,
+              { id: module, ...$appdata.get(`modules.${module}`) } || {
+                invalid: true,
+                title: "modules.invalid.title",
+                icon: "mdi-alert-circle-outline",
+              },
+            ];
+          })
+        ),
+      };
+    } catch (e) {
+      return {};
+    }
   },
   addTray(id) {
     if (!this.check(id)) {
@@ -94,10 +102,11 @@ export default {
       JSON.stringify($appdata.get("module_group") || {})
     );
     Object.keys(module_group).forEach((key) => {
-      if (module_group[key].modules.length <= 0) {
+      if (module_group[key].modules?.length <= 0) {
         module_group[key].modules = {};
       }
-      module_group[key].modules = this.get(module_group[key].modules);
+
+      module_group[key].modules = this.get(module_group[key].modules || []);
     });
     return module_group;
   },

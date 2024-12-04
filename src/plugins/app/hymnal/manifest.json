@@ -1,0 +1,12 @@
+{
+  "id": "hymnal",
+  "name": "Hinário Adventista",
+  "version": "1.0.0",
+  "description": "Busca de Hinos",
+  "author": "MaycoRolbuche",
+  "category": "musics",
+  "icon": "mdi-music-clef-treble",
+  "minAppVersion": "1.0.0",
+  "dependencies": [],
+  "permissions": []
+}

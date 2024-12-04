@@ -1,7 +1,7 @@
 <template>
   <l-window
     v-model="module.show"
-    :title="$t(module.title)"
+    :title="t('title')"
     :icon="module.icon"
     closable
     minimizable
@@ -20,24 +20,21 @@
         <div :class="classform.group_item" style="flex-basis: 600px">
           <l-search
             v-model="search"
-            :label="$t('modules.musics.inputs.search')"
+            :label="t('inputs.search')"
             :error="data.filter_count <= 0"
             :disabled="disabled"
-            :disabled-hint="$t('modules.musics.inputs.search_disabled')"
+            :disabled-hint="t('inputs.search_disabled')"
           />
         </div>
         <div :class="classform.group_item" style="flex-basis: 250px">
-          <l-checkbox
-            v-model="search_name"
-            :label="$t('modules.musics.inputs.filter_name')"
-          />
+          <l-checkbox v-model="search_name" :label="t('inputs.filter_name')" />
           <l-checkbox
             v-model="search_lyric"
-            :label="$t('modules.musics.inputs.filter_lyric')"
+            :label="t('inputs.filter_lyric')"
           />
           <l-checkbox
             v-model="search_album"
-            :label="$t('modules.musics.inputs.filter_album')"
+            :label="t('inputs.filter_album')"
           />
         </div>
         <v-divider vertical />
@@ -46,7 +43,7 @@
             <l-checkbox
               switch
               v-model="filter_instrumental_music"
-              :label="$t('modules.musics.inputs.filter_instrumental')"
+              :label="t('inputs.filter_instrumental')"
             />
           </div>
         </div>
@@ -70,11 +67,11 @@
     >
       <thead>
         <tr>
-          <th class="text-left">{{ $t("modules.musics.table.music_name") }}</th>
+          <th class="text-left">{{ t("table.music_name") }}</th>
           <th v-if="!compact" class="text-left">
-            {{ $t("modules.musics.table.album_name") }}
+            {{ t("table.album_name") }}
           </th>
-          <th class="text-right">{{ $t("modules.musics.table.duration") }}</th>
+          <th class="text-right">{{ t("table.duration") }}</th>
           <th />
         </tr>
       </thead>
@@ -121,7 +118,7 @@
     <v-alert
       v-if="search && data.filter_count <= 0"
       type="error"
-      :text="$t('modules.musics.data.not_found')"
+      :text="t('data.not_found')"
       variant="tonal"
       border="start"
       class="ma-2"
@@ -132,7 +129,7 @@
         <l-letter-paginate v-model="letter" />
         <div class="text-right">
           <small>
-            {{ $t("modules.musics.data.records") }}:
+            {{ t("data.records") }}:
             {{ data.filter_count }}
           </small>
         </div>
@@ -142,6 +139,8 @@
 </template>
 
 <script>
+import manifest from "../manifest.json";
+
 import LWindow from "@/components/Window.vue";
 import LTable from "@/components/DataTable.vue";
 import LSearch from "@/components/inputs/InputSearch.vue";
@@ -168,12 +167,16 @@ export default {
     letter: "",
   }),
   computed: {
+    /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
+    /* NÃO MODIFICAR */
     module_id() {
-      return "musics";
+      return manifest.id;
     },
     module() {
       return this.$modules.get(this.module_id);
     },
+    /* COMPUTEDS OBRIGATÓRIAS - FIM */
+
     disabled() {
       return !this.search_name && !this.search_lyric && !this.search_album;
     },
@@ -226,6 +229,13 @@ export default {
     },
   },
   methods: {
+    /* METHODS OBRIGATÓRIOS - INÍCIO */
+    /* NÃO MODIFICAR */
+    t(text) {
+      return this.$t(`modules.${this.module_id}.${text}`);
+    },
+    /* METHODS OBRIGATÓRIOS - FIM */
+
     onScroll(data) {
       this.scroll = data;
     },

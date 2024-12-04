@@ -1,0 +1,12 @@
+{
+  "id": "collections",
+  "name": "Álbums",
+  "version": "1.0.0",
+  "description": "Exibe os álbuns",
+  "author": "MaycoRolbuche",
+  "category": "musics",
+  "icon": "mdi-music-box-multiple",
+  "minAppVersion": "1.0.0",
+  "dependencies": [],
+  "permissions": []
+}

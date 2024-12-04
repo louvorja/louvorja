@@ -12,7 +12,7 @@
           <v-container fluid class="my-0 py-0">
             <v-row class="my-0 py-0">
               <template
-                v-for="(module, module_key) in group.modules"
+                v-for="(module, module_key) in sortModules(group.modules)"
                 :key="module_key"
               >
                 <v-card
@@ -38,7 +38,7 @@
                         class="text-caption text-center"
                         style="text-wrap: initial"
                       >
-                        {{ $t(module.title) }}
+                        {{ module.title ? $t(module.title) : "" }}
                       </v-card-title>
                     </div>
                   </div>
@@ -61,13 +61,35 @@ export default {
     selectedTheme: "",
     themes: [],
   }),
-  computed: {
+  watch: {
     module_group() {
-      return this.$modules.getGroups();
+      this.panels_active = Object.keys(this.module_group).map((_, key) => key);
     },
   },
-  mounted() {
-    this.panels_active = Object.keys(this.module_group).map((_, key) => key);
+  computed: {
+    module_group() {
+      return Object.entries(this.$modules.getGroups())
+        .filter(([, value]) => Object.keys(value.modules).length > 0)
+        .reduce((result, [key, value]) => {
+          result[key] = value;
+          return result;
+        }, {});
+    },
+  },
+  methods: {
+    sortModules(modules) {
+      //Ordena pelo idioma selecionado
+      return Object.entries(modules)
+        .sort(([, v1], [, v2]) => {
+          const t1 = v1?.title ? this.$t(v1.title).toLowerCase() : "";
+          const t2 = v2?.title ? this.$t(v2.title).toLowerCase() : "";
+          return t1.localeCompare(t2);
+        })
+        .reduce((acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        }, {});
+    },
   },
 };
 </script>

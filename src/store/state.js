@@ -21,31 +21,7 @@ export default {
       icon: "mdi-palette",
       component: "Theme",
     },
-    musics: {
-      show: false,
-      title: "modules.musics.title",
-      icon: "mdi-music",
-      component: "Musics",
-    },
-    hymnal: {
-      show: false,
-      title: "modules.hymnal.title",
-      icon: "mdi-music-clef-treble",
-      component: "Hymnal",
-    },
-    hymnal_1996: {
-      show: false,
-      language: "pt",
-      title: "modules.hymnal_1996.title",
-      icon: "mdi-music-clef-treble",
-      component: "Hymnal1996",
-    },
-    collections: {
-      show: false,
-      title: "modules.collections.title",
-      icon: "mdi-music-box-multiple",
-      component: "Collections",
-    },
+    /*
     bible: {
       show: false,
       title: "modules.bible.title",
@@ -57,7 +33,7 @@ export default {
       title: "modules.biblical-research.title",
       icon: "mdi-book-search ",
       component: "BiblicalResearch",
-    },
+    },*/
 
     //Módulos Dependentes
     media: {
@@ -114,22 +90,16 @@ export default {
   module_group: {
     musics: {
       title: "module_group.musics.title",
-      modules: ["musics", "hymnal", "hymnal_1996", "collections"],
+      modules: ["musics", "hymnal", "hymnal_1996"],
     },
-    /*bible: {
+    bible: {
       title: "module_group.bible.title",
-      modules: ["bible", "biblical_research"],
+      modules: [],
     },
     utilities: {
       title: "module_group.utilities.title",
-      modules: [
-        "musics",
-        "hymnal",
-        "collections",
-        "bible",
-        "biblical_research",
-      ],
-    },*/
+      modules: [],
+    },
   },
   menu: {
     show: false,
