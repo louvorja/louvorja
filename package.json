@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "version": "git tag -a v$(npm pkg get version | tr -d '\"') -m \"Versão $(npm pkg get version | tr -d '\"')\" && git push origin v$(npm pkg get version | tr -d '\"')",
     "serve": "vite preview",
     "build": "vite build",
     "lint": "vue-cli-service lint",
