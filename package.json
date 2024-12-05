@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "version": "npm version major && git tag -a -f v%npm_package_version% -m \"Versão %npm_package_version%\" && git push origin -f v%npm_package_version%",
     "serve": "vite preview",
     "build": "vite build",
     "lint": "vue-cli-service lint",
