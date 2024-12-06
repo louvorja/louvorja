@@ -3,9 +3,9 @@
   "version": "1.2.0",
   "private": true,
   "scripts": {
-    "version:major": "npm version major && npm run git:tag && npm run git:publish",
-    "version:minor": "npm version minor && npm run git:tag && npm run git:publish",
-    "version:patch": "npm version patch && npm run git:tag && npm run git:publish",
+    "version:major": "npm version major",
+    "version:minor": "npm version minor",
+    "version:patch": "npm version patch",
     "serve": "vite preview",
     "build": "vite build",
     "lint": "vue-cli-service lint",
