@@ -5,7 +5,7 @@
     :cover="slide.cover == true"
     :text="slide.lyric"
     :aux_text="slide.aux_lyric"
-    :image="$path.file(slide.url_image)"
+    :image="slide.url_image ? $path.file(slide.url_image) : null"
     :image_position="slide.image_position"
   />
 </template>

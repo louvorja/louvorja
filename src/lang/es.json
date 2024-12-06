@@ -68,6 +68,8 @@
         "no": "No"
     },
     "messages": {
-        "file_database_not_found": "Archivo de datos no encontrado!"
+        "file_database_not_found": "Archivo de datos no encontrado!",
+        "developer_mode_enabled": "Modo DESARROLLADOR activado!",
+        "developer_mode_disabled": "Modo DESARROLLADOR desactivado!"
     }
 }

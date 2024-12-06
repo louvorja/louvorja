@@ -109,6 +109,7 @@
       >
         <div class="d-flex flex-no-wrap justify-space-between align-center">
           <v-avatar
+            v-if="album.url_image"
             class="ma-3"
             :size="this.$vuetify.display.width > 350 ? 125 : 75"
             tile

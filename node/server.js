@@ -10,6 +10,7 @@ const setCorsHeaders = (res) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); // Permitir todas as origens
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS"); // Métodos permitidos
   res.setHeader("Access-Control-Allow-Headers", "Content-Type"); // Cabeçalhos permitidos
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
 };
 
 // Função para lidar com as requisições
@@ -25,7 +26,11 @@ const requestHandler = (req, res) => {
   // Adicionar cabeçalhos CORS para outras requisições
   setCorsHeaders(res);
 
-  const filePath = path.join(DIRECTORY, req.url.split("?")[0]);
+  const filePath = path.join(
+    DIRECTORY,
+    decodeURIComponent(req.url).split("?")[0]
+  );
+  console.log("Diretório", filePath);
 
   // Impede acesso a diretórios fora da pasta "files"
   if (!filePath.startsWith(DIRECTORY)) {
@@ -37,13 +42,42 @@ const requestHandler = (req, res) => {
   fs.stat(filePath, (err, stats) => {
     if (err) {
       res.writeHead(404, { "Content-Type": "text/plain" });
-      res.end("Arquivo não encontrado");
+      res.end("Arquivo nao encontrado");
       return;
     }
 
     if (stats.isDirectory()) {
-      res.writeHead(403, { "Content-Type": "text/plain" });
-      res.end("Diretórios não podem ser acessados diretamente");
+      fs.readdir(filePath, { encoding: "utf8" }, (err, files) => {
+        if (err) {
+          res.writeHead(500, { "Content-Type": "text/plain" });
+          res.end("Erro ao ler diretorio");
+          return;
+        }
+
+        const list = files
+          .map(
+            (file) =>
+              `<li><a href="${path.join(
+                req.url,
+                encodeURIComponent(file)
+              )}">${file}</a></li>`
+          )
+          .join("");
+        const html = `
+          <html>
+            <head>
+              <meta charset="UTF-8">
+              <title>Arquivos em ${req.url}</title>
+            </head>
+            <body>
+              <h1>Arquivos em ${req.url}</h1>
+              <ul>${list}</ul>
+            </body>
+          </html>
+        `;
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+        res.end(html);
+      });
       return;
     }
 

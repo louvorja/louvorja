@@ -1,5 +1,5 @@
 // @/helpers/PluginManager.js
-import AppData from "./AppData";
+import $appdata from "./AppData";
 import $dev from "./Dev";
 
 export default {
@@ -20,12 +20,15 @@ export default {
       const manifest = plugin.manifest;
 
       if (!(manifest.active ?? true)) {
-        console.warn(`Plugin ${plugin.manifest.id} disabled`);
+        if ($appdata.get("is_dev")) {
+          //Mostra o alerta somente no modo de desenvolvimento!
+          console.warn(`Plugin ${plugin.manifest.id} disabled`);
+        }
         return;
       }
 
       // Register module in application's modules
-      AppData.set(`modules.${manifest.id}`, {
+      $appdata.set(`modules.${manifest.id}`, {
         id: manifest.id,
         title: manifest.translationKey || `modules.${manifest.id}.title`,
         icon: manifest.icon || "mdi-puzzle",
@@ -36,7 +39,7 @@ export default {
       });
 
       // Add to module groups
-      const moduleGroups = AppData.get("module_group") || {};
+      const moduleGroups = $appdata.get("module_group") || {};
       const category = manifest.category || "utilities";
 
       // Create category if not exists
@@ -53,7 +56,7 @@ export default {
       }
 
       // Save updated module groups
-      AppData.set("module_group", moduleGroups);
+      $appdata.set("module_group", moduleGroups);
 
       // Auto-load translations
       if (manifest.translations) {
