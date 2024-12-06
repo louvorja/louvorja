@@ -1,3 +1,6 @@
 {
-    "title": "Hinário Adventista 1996"
+    "title": "Hinário Adventista 1996",
+    "inputs": {
+        "search": "Digite o número ou nome do hino..."
+    }
 }
