@@ -1,12 +1,14 @@
 export default {
-  set(item, data) {
+  set(item, data, type = "local") {
     if (typeof data == "object") {
       data = JSON.stringify(data);
     }
-    localStorage.setItem(item, data);
+
+    this.storage(type).setItem(item, data);
   },
-  get(item, ifnull = null) {
-    let data = localStorage.getItem(item);
+  get(item, ifnull = null, type = "local") {
+    let data = this.storage(type).getItem(item);
+
     if (!data) {
       return ifnull;
     }
@@ -25,15 +27,23 @@ export default {
       return data;
     }
   },
-  remove(item) {
-    localStorage.removeItem(item);
+  remove(item, type = "local") {
+    this.storage(type).removeItem(item);
   },
-  removeAll(item) {
-    for (let i = localStorage.length - 1; i >= 0; i--) {
-      const key = localStorage.key(i);
+  removeAll(item, type = "local") {
+    for (let i = this.storage(type).length - 1; i >= 0; i--) {
+      const key = this.storage(type).key(i);
       if (key.split(":")[0] == item) {
         this.remove(key);
       }
+    }
+  },
+
+  storage(type = "local") {
+    if (type == "session") {
+      return sessionStorage;
+    } else {
+      return localStorage;
     }
   },
 };

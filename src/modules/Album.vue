@@ -25,19 +25,19 @@
               class="text-right"
               :style="{ backgroundColor: module.data.color, color: '#FFF' }"
             >
-              {{ $t("modules.musics.table.track") }}
+              {{ $t("modules.album.table.track") }}
             </th>
             <th
               class="text-left"
               :style="{ backgroundColor: module.data.color, color: '#FFF' }"
             >
-              {{ $t("modules.musics.table.music_name") }}
+              {{ $t("modules.album.table.music_name") }}
             </th>
             <th
               class="text-right"
               :style="{ backgroundColor: module.data.color, color: '#FFF' }"
             >
-              {{ $t("modules.musics.table.duration") }}
+              {{ $t("modules.album.table.duration") }}
             </th>
             <th
               :style="{ backgroundColor: module.data.color, color: '#FFF' }"

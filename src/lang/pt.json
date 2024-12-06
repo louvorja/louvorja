@@ -17,11 +17,12 @@
             "user-variables": "Variáveis do Usuário",
             "vue-variables": "Variáveis do Vue"
         },
-        "bible": {
-            "title": "Bíblia"
-        },
-        "biblical-research": {
-            "title": "Pesquisa Bíblica"
+        "album": {
+            "table": {
+                "track": "Faixa",
+                "music_name": "Nome",
+                "duration": "Duração"
+            }
         },
         "media": {
             "alerts": {

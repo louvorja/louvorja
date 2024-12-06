@@ -1,19 +1,17 @@
-import $appdata from "@/helpers/AppData";
 import $alert from "@/helpers/Alert";
 import $path from "@/helpers/Path";
 import $dev from "@/helpers/Dev";
+import $storage from "@/helpers/Storage";
 
 export default {
   async get(file) {
     try {
-      //Se estiver usando versão On-line, salva em cache os dados
-      const is_online = $appdata.get("is_online");
-      const cache_name = `db-${file}`;
-      const cache = window.sessionStorage.getItem(cache_name);
+      const cache_name = `db:${file}`;
+      const cache = $storage.get(cache_name, null, "session");
 
-      if (is_online && cache) {
+      if (cache) {
         $dev.write(`Lendo BD do cache`, file);
-        return JSON.parse(cache);
+        return cache;
       }
 
       $dev.write("Abrindo BD", file);
@@ -27,15 +25,9 @@ export default {
       if (!response.ok) throw new Error();
       const data = await response.json();
 
-      if (is_online) {
-        $dev.write("Salvando BD em cache", file);
-        window.sessionStorage.setItem(cache_name, JSON.stringify(data));
-        const expiration = 1000 * 60 * 60 * 24; // 1 dia
-        window.sessionStorage.setItem(
-          `${cache_name}-expiration`,
-          (Date.now() + expiration).toString()
-        );
-      }
+      $dev.write("Salvando BD em cache", file);
+      $storage.set(cache_name, data, "session");
+
       return data;
     } catch (error) {
       $alert.error({ text: "messages.file_database_not_found", error });
