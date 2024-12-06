@@ -10,7 +10,7 @@
     "host": "vite --host",
     "files": "node node/server.js",
     "deploy:web": "vite build && node node/zip_dist.js && node node/send_ftp.js && node node/publish_ftp.js",
-    "git:tag": "git tag -a -f v%npm_package_version% -m \"Versão %npm_package_version%\" && git push origin -f v%npm_package_version%",
+    "git:tag": "git tag -a -f v%npm_package_version% -m \"Versão %npm_package_version%\" && git push origin -f v%npm_package_version% && git push -u origin develop",
     "git:publish": "git pull origin main && git checkout main && git merge develop && git push -u origin main && git checkout develop"
   },
   "dependencies": {
