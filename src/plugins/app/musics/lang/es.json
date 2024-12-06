@@ -9,7 +9,6 @@
         "filter_instrumental": "Con Instrumental"
     },
     "table": {
-        "track": "Pista",
         "music_name": "Nombre",
         "album_name": "Álbum",
         "duration": "Duración"

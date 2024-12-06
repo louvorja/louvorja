@@ -9,7 +9,6 @@
         "filter_instrumental": "Com Playback"
     },
     "table": {
-        "track": "Faixa",
         "music_name": "Nome",
         "album_name": "Álbum",
         "duration": "Duração"

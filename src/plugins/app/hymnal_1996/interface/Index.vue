@@ -42,9 +42,9 @@
     >
       <thead>
         <tr>
-          <th class="text-right">{{ $t("modules.musics.table.track") }}</th>
-          <th class="text-left">{{ $t("modules.musics.table.music_name") }}</th>
-          <th class="text-right">{{ $t("modules.musics.table.duration") }}</th>
+          <th class="text-right">{{ t("table.track") }}</th>
+          <th class="text-left">{{ t("table.music_name") }}</th>
+          <th class="text-right">{{ t("table.duration") }}</th>
           <th />
         </tr>
       </thead>
@@ -72,7 +72,7 @@
     <v-alert
       v-if="search && data.filter_count <= 0"
       type="error"
-      :text="$t('modules.musics.data.not_found')"
+      :text="t('data.not_found')"
       variant="tonal"
       border="start"
       class="ma-2"
@@ -82,7 +82,7 @@
       <div class="w-100">
         <div class="text-right">
           <small>
-            {{ $t("modules.musics.data.records") }}:
+            {{ t("data.records") }}:
             {{ data.filter_count }}
           </small>
         </div>
