@@ -1,7 +1,7 @@
 export default class BasePlugin {
   constructor(manifest) {
     this.manifest = {
-      active: manifest.active,
+      active: manifest.active ?? true,
       id: manifest.id,
       name: manifest.name,
       version: manifest.version,
@@ -9,6 +9,8 @@ export default class BasePlugin {
       author: manifest.author,
       category: manifest.category,
       icon: manifest.icon,
+      showInMainMenu: manifest.showInMainMenu || false,
+      development: manifest.development || false,
       language: manifest.language || null,
       minAppVersion: manifest.minAppVersion,
       dependencies: manifest.dependencies || [],

@@ -1,7 +1,7 @@
 <template>
   <l-window
     v-model="module.show"
-    :title="$t(module.title)"
+    :title="t('title')"
     :icon="module.icon"
     closable
     minimizable
@@ -10,9 +10,9 @@
   >
     <template v-slot:header>
       <v-tabs v-model="tab" align-tabs="center" :color="$theme.primary()">
-        <v-tab :value="1">{{ $t("modules.dev.global-variables") }}</v-tab>
-        <v-tab :value="2">{{ $t("modules.dev.user-variables") }}</v-tab>
-        <v-tab :value="3">{{ $t("modules.dev.vue-variables") }}</v-tab>
+        <v-tab :value="1">{{ t("global-variables") }}</v-tab>
+        <v-tab :value="2">{{ t("user-variables") }}</v-tab>
+        <v-tab :value="3">{{ t("vue-variables") }}</v-tab>
       </v-tabs>
     </template>
 
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import manifest from "../manifest.json";
+
 import VueJsonPretty from "vue-json-pretty";
 import "vue-json-pretty/lib/styles.css";
 
@@ -41,13 +43,26 @@ export default {
     VueJsonPretty,
   },
   data: () => ({
-    module_id: "dev",
     tab: null,
   }),
   computed: {
+    /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
+    /* NÃO MODIFICAR */
+    module_id() {
+      return manifest.id;
+    },
     module() {
       return this.$modules.get(this.module_id);
     },
+    /* COMPUTEDS OBRIGATÓRIAS - FIM */
+  },
+  methods: {
+    /* METHODS OBRIGATÓRIOS - INÍCIO */
+    /* NÃO MODIFICAR */
+    t(text) {
+      return this.$t(`modules.${this.module_id}.${text}`);
+    },
+    /* METHODS OBRIGATÓRIOS - FIM */
   },
 };
 </script>

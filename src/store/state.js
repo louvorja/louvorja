@@ -7,14 +7,9 @@ export default {
   is_online: false,
   popup: null,
   popup_module: null,
+  system_modules: ["dev", "theme"],
   modules: {
     //Módulos Principais
-    dev: {
-      show: false,
-      title: "modules.dev.title",
-      icon: "mdi-code-braces",
-      component: "Dev",
-    },
     theme: {
       show: false,
       title: "modules.theme.title",
@@ -103,7 +98,7 @@ export default {
   },
   menu: {
     show: false,
-    modules: ["theme"],
+    modules: [],
   },
   tray_area: {
     modules: [],

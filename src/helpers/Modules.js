@@ -114,4 +114,17 @@ export default {
   check(id) {
     return $appdata.exists(`modules.${id}`);
   },
+
+  sort(modules, $t) {
+    return Object.entries(modules)
+      .sort(([, v1], [, v2]) => {
+        const t1 = v1?.title ? $t(v1.title).toLowerCase() : "";
+        const t2 = v2?.title ? $t(v2.title).toLowerCase() : "";
+        return t1.localeCompare(t2);
+      })
+      .reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      }, {});
+  },
 };

@@ -11,12 +11,6 @@
             "light-themes": "Temas Claros",
             "dark-themes": "Temas Escuros"
         },
-        "dev": {
-            "title": "Desenvolvedor",
-            "global-variables": "Variáveis Globais",
-            "user-variables": "Variáveis do Usuário",
-            "vue-variables": "Variáveis do Vue"
-        },
         "album": {
             "table": {
                 "track": "Faixa",

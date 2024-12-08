@@ -19,7 +19,7 @@ export default {
       // Auto-configure plugin
       const manifest = plugin.manifest;
 
-      if (!(manifest.active ?? true)) {
+      if (!manifest.active) {
         if ($appdata.get("is_dev")) {
           //Mostra o alerta somente no modo de desenvolvimento!
           console.warn(`Plugin ${plugin.manifest.id} disabled`);
@@ -35,28 +35,43 @@ export default {
         show: false,
         language: manifest.language,
         type: "plugin",
+        showInMainMenu: manifest.showInMainMenu || false,
+        development: manifest.development || false,
         ...(manifest.moduleOptions || {}),
       });
 
       // Add to module groups
-      const moduleGroups = $appdata.get("module_group") || {};
-      const category = manifest.category || "utilities";
-
-      // Create category if not exists
-      if (!moduleGroups[category]) {
+      const category = manifest.category;
+      if (category) {
+        const moduleGroups = $appdata.get("module_group") || {};
+        // Create category if not exists
+        /*if (!moduleGroups[category]) {
         moduleGroups[category] = {
           title: `module_group.${category}.title`,
           modules: [],
         };
+      }*/
+
+        // Add module to category if not already present
+        if (!moduleGroups[category].modules.includes(manifest.id)) {
+          moduleGroups[category].modules.push(manifest.id);
+        }
+
+        // Save updated module groups
+        $appdata.set("module_group", moduleGroups);
       }
 
-      // Add module to category if not already present
-      if (!moduleGroups[category].modules.includes(manifest.id)) {
-        moduleGroups[category].modules.push(manifest.id);
+      // Add to main menu
+      const showInMainMenu = manifest.showInMainMenu;
+      if (showInMainMenu) {
+        const moduleMainMenu = $appdata.get("menu") || {};
+        // Add module to main menu if not already present
+        if (!moduleMainMenu.modules.includes(manifest.id)) {
+          moduleMainMenu.modules.push(manifest.id);
+        }
+        // Save updated module groups
+        $appdata.set("menu", moduleMainMenu);
       }
-
-      // Save updated module groups
-      $appdata.set("module_group", moduleGroups);
 
       // Auto-load translations
       if (manifest.translations) {

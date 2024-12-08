@@ -18,8 +18,8 @@
                 <v-card
                   v-if="
                     module.language
-                      ? module.language == $userdata.get('language')
-                      : true
+                      ? module.language == language
+                      : !module.development || (is_dev && module.development)
                   "
                   hover
                   :color="module.invalid ? 'error' : $theme.primary()"
@@ -75,20 +75,31 @@ export default {
           return result;
         }, {});
     },
+    is_dev: {
+      get() {
+        return this.$appdata.get("is_dev");
+      },
+      set(value) {
+        if (!value) {
+          this.$appdata.set("is_dev", value);
+        }
+      },
+    },
+    language: {
+      get() {
+        return this.$userdata.get("language");
+      },
+      set(value) {
+        if (!value) {
+          this.$userdata.set("language", value);
+        }
+      },
+    },
   },
   methods: {
     sortModules(modules) {
       //Ordena pelo idioma selecionado
-      return Object.entries(modules)
-        .sort(([, v1], [, v2]) => {
-          const t1 = v1?.title ? this.$t(v1.title).toLowerCase() : "";
-          const t2 = v2?.title ? this.$t(v2.title).toLowerCase() : "";
-          return t1.localeCompare(t2);
-        })
-        .reduce((acc, [key, value]) => {
-          acc[key] = value;
-          return acc;
-        }, {});
+      return this.$modules.sort(modules, this.$t);
     },
   },
 };
