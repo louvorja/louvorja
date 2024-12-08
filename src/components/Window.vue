@@ -68,8 +68,7 @@
       </v-card-title>
       <v-card-text
         ref="container"
-        class="d-flex align-stretch overflow-hidden"
-        :class="{ 'pa-0': compact, 'ma-0': compact }"
+        class="d-flex align-stretch overflow-hidden pa-0 ma-0"
       >
         <div
           v-if="$slots.left"
@@ -81,6 +80,7 @@
         <div
           ref="main_container"
           class="flex-grow-1 overflow-auto"
+          :class="{ 'pa-5': !compact, 'pa-0': compact, 'ma-0': compact }"
           @scroll="scroll"
         >
           <slot />
