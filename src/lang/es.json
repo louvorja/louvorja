@@ -6,11 +6,6 @@
         "invalid": {
             "title": "#Error#"
         },
-        "theme": {
-            "title": "Apariencia",
-            "light-themes": "Temas Claros",
-            "dark-themes": "Temas Oscuros"
-        },
         "album": {
             "table": {
                 "track": "Pista",

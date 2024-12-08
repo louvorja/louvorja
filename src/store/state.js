@@ -9,27 +9,6 @@ export default {
   popup_module: null,
   system_modules: ["dev", "theme"],
   modules: {
-    //Módulos Principais
-    theme: {
-      show: false,
-      title: "modules.theme.title",
-      icon: "mdi-palette",
-      component: "Theme",
-    },
-    /*
-    bible: {
-      show: false,
-      title: "modules.bible.title",
-      icon: "mdi-book-cross",
-      component: "Bible",
-    },
-    biblical_research: {
-      show: false,
-      title: "modules.biblical-research.title",
-      icon: "mdi-book-search ",
-      component: "BiblicalResearch",
-    },*/
-
     //Módulos Dependentes
     media: {
       show: false,

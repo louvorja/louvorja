@@ -1,7 +1,7 @@
 <template>
   <l-window
     v-model="module.show"
-    :title="$t(module.title)"
+    :title="t('title')"
     :icon="module.icon"
     closable
     minimizable
@@ -11,11 +11,7 @@
   >
     <div v-for="(group, mode) in themes" :key="mode" class="mb-3">
       <div class="subtitle-1 font-weight-medium">
-        {{
-          mode == "dark"
-            ? $t("modules.theme.dark-themes")
-            : $t("modules.theme.light-themes")
-        }}
+        {{ mode == "dark" ? t("dark-themes") : t("light-themes") }}
       </div>
 
       <v-btn
@@ -34,6 +30,8 @@
 </template>
 
 <script>
+import manifest from "../manifest.json";
+
 import LWindow from "@/components/Window.vue";
 
 export default {
@@ -42,16 +40,27 @@ export default {
     LWindow,
   },
   data: () => ({
-    module_id: "theme",
     current: {},
     themes: {},
   }),
   computed: {
+    /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
+    /* NÃO MODIFICAR */
+    module_id() {
+      return manifest.id;
+    },
     module() {
       return this.$modules.get(this.module_id);
     },
+    /* COMPUTEDS OBRIGATÓRIAS - FIM */
   },
   methods: {
+    /* METHODS OBRIGATÓRIOS - INÍCIO */
+    /* NÃO MODIFICAR */
+    t(text) {
+      return this.$t(`modules.${this.module_id}.${text}`);
+    },
+    /* METHODS OBRIGATÓRIOS - FIM */
     setTheme(theme_id) {
       this.current = theme_id;
       this.$vuetify.theme.global.name = this.current;

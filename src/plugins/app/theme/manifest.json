@@ -1,0 +1,13 @@
+{
+  "id": "theme",
+  "name": "Temas",
+  "version": "1.0.0",
+  "description": "Exibe os álbuns",
+  "author": "MaycoRolbuche",
+  "category": null,
+  "showInMainMenu": true,
+  "icon": "mdi-palette",
+  "minAppVersion": "1.0.0",
+  "dependencies": [],
+  "permissions": []
+}

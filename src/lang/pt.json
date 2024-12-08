@@ -6,11 +6,6 @@
         "invalid": {
             "title": "#Erro#"
         },
-        "theme": {
-            "title": "Aparência",
-            "light-themes": "Temas Claros",
-            "dark-themes": "Temas Escuros"
-        },
         "album": {
             "table": {
                 "track": "Faixa",
