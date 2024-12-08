@@ -53,13 +53,13 @@ export default {
         image: "",
       },
     },
-    album: {
+    /* album: {
       show: false,
       component: "Album",
       loading: false,
       id_album: null,
       data: {},
-    },
+    },*/
   },
   module_group: {
     musics: {

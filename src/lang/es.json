@@ -6,13 +6,6 @@
         "invalid": {
             "title": "#Error#"
         },
-        "album": {
-            "table": {
-                "track": "Pista",
-                "music_name": "Nombre",
-                "duration": "Duración"
-            }
-        },
         "media": {
             "alerts": {
                 "not_loaded": "¡Ocurrió un error al cargar este audio!",

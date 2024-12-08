@@ -6,13 +6,6 @@
         "invalid": {
             "title": "#Erro#"
         },
-        "album": {
-            "table": {
-                "track": "Faixa",
-                "music_name": "Nome",
-                "duration": "Duração"
-            }
-        },
         "media": {
             "alerts": {
                 "not_loaded": "Ocorreu um erro ao carregar este áudio!",

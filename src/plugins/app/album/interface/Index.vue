@@ -1,13 +1,13 @@
 <template>
   <l-window
     v-model="module.show"
-    :title="module.data.name"
-    :image="module.data.url_image ? $path.file(module.data.url_image) : ''"
+    :title="module?.data?.name"
+    :image="module?.data?.url_image ? $path.file(module.data.url_image) : ''"
     closable
     compact
     title-class="text-h4 font-weight-light"
     :image-size="125"
-    :color="module.data.color"
+    :color="module?.data?.color"
     @close="$media.closeAlbum()"
     slot-left-class="w-100"
   >
@@ -25,19 +25,19 @@
               class="text-right"
               :style="{ backgroundColor: module.data.color, color: '#FFF' }"
             >
-              {{ $t("modules.album.table.track") }}
+              {{ t("table.track") }}
             </th>
             <th
               class="text-left"
               :style="{ backgroundColor: module.data.color, color: '#FFF' }"
             >
-              {{ $t("modules.album.table.music_name") }}
+              {{ t("table.music_name") }}
             </th>
             <th
               class="text-right"
               :style="{ backgroundColor: module.data.color, color: '#FFF' }"
             >
-              {{ $t("modules.album.table.duration") }}
+              {{ t("table.duration") }}
             </th>
             <th
               :style="{ backgroundColor: module.data.color, color: '#FFF' }"
@@ -70,6 +70,8 @@
 </template>
 
 <script>
+import manifest from "../manifest.json";
+
 import LWindow from "@/components/Window.vue";
 import LMusicMenuTable from "@/components/MusicMenuTable.vue";
 
@@ -80,15 +82,26 @@ export default {
     LMusicMenuTable,
   },
   computed: {
+    /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
+    /* NÃO MODIFICAR */
     module_id() {
-      return "album";
+      return manifest.id;
     },
     module() {
       return this.$modules.get(this.module_id);
     },
+    /* COMPUTEDS OBRIGATÓRIAS - FIM */
     loading() {
       return this.$appdata.get("modules.album.loading");
     },
+  },
+  methods: {
+    /* METHODS OBRIGATÓRIOS - INÍCIO */
+    /* NÃO MODIFICAR */
+    t(text) {
+      return this.$t(`modules.${this.module_id}.${text}`);
+    },
+    /* METHODS OBRIGATÓRIOS - FIM */
   },
 };
 </script>
