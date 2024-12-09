@@ -5,23 +5,6 @@
     "modules": {
         "invalid": {
             "title": "#Error#"
-        },
-        "media": {
-            "alerts": {
-                "not_loaded": "¡Ocurrió un error al cargar este audio!",
-                "close": "¿Quieres cerrar esta presentacion?"
-            },
-            "general": {
-                "sung": "Cantado",
-                "instrumental": "Pista",
-                "no_audio": "Sin Audio",
-                "lyric": "Letra de la Canción",
-                "track": "Pista"
-            },
-            "inputs": {
-                "lazy_load": "Carga Dinámica",
-                "lazy_load_tooltip": "Si se desmarca, el audio solo se reproducirá después de cargarse completamente en la memoria."
-            }
         }
     },
     "module_group": {
@@ -53,6 +36,7 @@
     "messages": {
         "file_database_not_found": "Archivo de datos no encontrado!",
         "developer_mode_enabled": "Modo DESARROLLADOR activado!",
-        "developer_mode_disabled": "Modo DESARROLLADOR desactivado!"
+        "developer_mode_disabled": "Modo DESARROLLADOR desactivado!",
+        "error_import_module": "Error al importar el módulo"
     }
 }

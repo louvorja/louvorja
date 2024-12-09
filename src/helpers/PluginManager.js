@@ -141,6 +141,9 @@ export default {
       await this.installPlugin(plugin);
     }
 
+    //Importa as interfaces dos plugins
+    $appdata.set("import_modules", true);
+
     // Optional: Remote plugin installation
     try {
       // Uncomment and modify as needed

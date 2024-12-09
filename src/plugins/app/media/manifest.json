@@ -1,6 +1,6 @@
 {
-  "id": "lyric",
-  "name": "Letra",
+  "id": "media",
+  "name": "Álbuns",
   "version": "1.0.0",
   "description": "Exibe os álbuns",
   "author": "MaycoRolbuche",

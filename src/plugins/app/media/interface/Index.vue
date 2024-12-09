@@ -1,14 +1,12 @@
 <template>
   <l-window
     v-model="module.show"
-    :title="config.title"
+    :title="config?.title"
     :subtitle="
-      config.subtitle +
-      (config.track > 0
-        ? ' | ' + $t('modules.media.general.track') + ' ' + config.track
-        : '')
+      config?.subtitle +
+      (config?.track > 0 ? ' | ' + t('general.track') + ' ' + config.track : '')
     "
-    :image="config.image ? $path.file(config.image) : ''"
+    :image="config?.image ? $path.file(config.image) : ''"
     title-class="text-h4 font-weight-light"
     closable
     minimizable
@@ -34,13 +32,13 @@
         </template>
         <v-card>
           <v-card-text>
-            <v-tooltip :text="$t('modules.media.inputs.lazy_load_tooltip')">
+            <v-tooltip :text="t('inputs.lazy_load_tooltip')">
               <template v-slot:activator="{ props }">
                 <v-switch
                   color="blue"
                   v-bind="props"
                   v-model="lazy_load"
-                  :label="$t('modules.media.inputs.lazy_load')"
+                  :label="t('inputs.lazy_load')"
                 />
               </template>
             </v-tooltip>
@@ -119,6 +117,8 @@
 </template>
 
 <script>
+import manifest from "../manifest.json";
+
 import LWindow from "@/components/Window.vue";
 import LSlide from "@/components/Slide.vue";
 import LPlayer from "@/components/Player.vue";
@@ -137,12 +137,15 @@ export default {
     scrollPos: 0,
   }),
   computed: {
+    /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
+    /* NÃO MODIFICAR */
     module_id() {
-      return "media";
+      return manifest.id;
     },
     module() {
       return this.$modules.get(this.module_id);
     },
+    /* COMPUTEDS OBRIGATÓRIAS - FIM */
     is_online() {
       return this.$appdata.get("is_online");
     },
@@ -153,7 +156,7 @@ export default {
       return this.$media.config();
     },
     slide_index() {
-      return this.config.slide_index;
+      return this.config?.slide_index;
     },
     slides() {
       return this.$media.slides();
@@ -171,10 +174,10 @@ export default {
     },
     lazy_load: {
       get() {
-        return this.$userdata.get("modules.media.lazy_load");
+        return this.$userdata.gt("lazy_load");
       },
       set(value) {
-        this.$userdata.set("modules.media.lazy_load", value);
+        this.$userdata.st("lazy_load", value);
       },
     },
   },
@@ -194,6 +197,12 @@ export default {
     },
   },
   methods: {
+    /* METHODS OBRIGATÓRIOS - INÍCIO */
+    /* NÃO MODIFICAR */
+    t(text) {
+      return this.$t(`modules.${this.module_id}.${text}`);
+    },
+    /* METHODS OBRIGATÓRIOS - FIM */
     resize(data) {
       this.preview_height = data.container_height;
     },

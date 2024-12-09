@@ -1,0 +1,17 @@
+{
+    "alerts": {
+        "not_loaded": "Ocorreu um erro ao carregar este áudio!",
+        "close": "Deseja fechar este slide?"
+    },
+    "general": {
+        "sung": "Cantado",
+        "instrumental": "Playback",
+        "no_audio": "Sem Áudio",
+        "lyric": "Letra da Música",
+        "track": "Faixa"
+    },
+    "inputs": {
+        "lazy_load": "Carregamento Dinâmico",
+        "lazy_load_tooltip": "Se desmarcado, o áudio só será executado depois de totalmente carregado na memória."
+    }
+}
