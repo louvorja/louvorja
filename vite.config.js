@@ -26,36 +26,36 @@ export default ({ mode }) => {
           globPatterns: ["**/*.{html,js,css,svg,png}"], // Arquivos que o Service Worker deve cachear
         },
         manifest: {
-          name: "Minha Aplicação PWA",
-          short_name: "PWA",
-          description: "Descrição do meu app PWA",
-          theme_color: "#ffffff",
-          background_color: "#ffffff",
-          display: "standalone", // Ou 'fullscreen', 'minimal-ui', ou 'browser'
+          name: "LouvorJA",
+          short_name: "LJA",
+          description: "Software de músicas para Louvor e Adoração",
           start_url: "/",
+          display: "standalone",
+          background_color: "#000000",
+          theme_color: "#000000",
           icons: [
             {
-              src: "/ico/favicon-16x16.png", // Caminho para os ícones
+              src: "/ico/favicon-16x16.png",
               sizes: "16x16",
               type: "image/png",
             },
             {
-              src: "/ico/favicon-32x32.png", // Caminho para os ícones
+              src: "/ico/favicon-32x32.png",
               sizes: "32x32",
               type: "image/png",
             },
             {
-              src: "/ico/favicon-144x144.png", // Caminho para os ícones
+              src: "/ico/favicon-144x144.png",
               sizes: "144x144",
               type: "image/png",
             },
             {
-              src: "/ico/favicon-152x152.png", // Caminho para os ícones
+              src: "/ico/favicon-152x152.png",
               sizes: "152x152",
               type: "image/png",
             },
             {
-              src: "/ico/favicon-180x180.png", // Caminho para os ícones
+              src: "/ico/favicon-180x180.png",
               sizes: "180x180",
               type: "image/png",
             },
