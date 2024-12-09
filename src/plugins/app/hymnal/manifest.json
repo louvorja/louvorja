@@ -2,11 +2,14 @@
   "id": "hymnal",
   "name": "Hinário Adventista",
   "version": "1.0.0",
-  "description": "Busca de Hinos",
+  "description": "Lista as músicas do Hinário Adventista",
   "author": "MaycoRolbuche",
   "category": "musics",
   "icon": "mdi-music-clef-treble",
   "minAppVersion": "1.0.0",
-  "dependencies": [],
+  "dependencies": [
+    "media",
+    "lyric"
+  ],
   "permissions": []
 }

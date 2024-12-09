@@ -1,12 +1,13 @@
 {
   "id": "media",
-  "name": "Álbuns",
+  "name": "Slide",
   "version": "1.0.0",
-  "description": "Exibe os álbuns",
+  "description": "Monta o slide da música (função $media.open)",
   "author": "MaycoRolbuche",
   "category": null,
   "icon": null,
   "minAppVersion": "1.0.0",
   "dependencies": [],
-  "permissions": []
+  "permissions": [],
+  "system": true
 }

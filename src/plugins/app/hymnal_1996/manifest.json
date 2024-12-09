@@ -2,12 +2,15 @@
   "id": "hymnal_1996",
   "name": "Hinário Adventista - 1996",
   "version": "1.0.0",
-  "description": "Busca de Hinos do Hinário versão de 1996",
+  "description": "Lista as músicas do Hinário Adventistal, versão de 1996",
   "author": "MaycoRolbuche",
   "category": "musics",
   "icon": "mdi-music-clef-treble",
   "language": "pt",
   "minAppVersion": "1.0.0",
-  "dependencies": [],
+  "dependencies": [
+    "media",
+    "lyric"
+  ],
   "permissions": []
 }

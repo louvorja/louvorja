@@ -2,11 +2,15 @@
   "id": "musics",
   "name": "Músicas",
   "version": "1.0.0",
-  "description": "Busca de Músicas",
+  "description": "Lista todas as músicas do programa, com filtros de busca.",
   "author": "MaycoRolbuche",
   "category": "musics",
   "icon": "mdi-music",
   "minAppVersion": "1.0.0",
-  "dependencies": [],
+  "dependencies": [
+    "media",
+    "lyric",
+    "album"
+  ],
   "permissions": []
 }

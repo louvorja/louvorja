@@ -2,7 +2,7 @@
   "id": "dev",
   "name": "Desenvolvedor",
   "version": "1.0.0",
-  "description": "Exibe os álbuns",
+  "description": "Exibir informações do sistema ao desenvolvedor.",
   "author": "MaycoRolbuche",
   "category": null,
   "showInMainMenu": true,

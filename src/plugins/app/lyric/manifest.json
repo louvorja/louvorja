@@ -2,11 +2,12 @@
   "id": "lyric",
   "name": "Letra",
   "version": "1.0.0",
-  "description": "Exibe os álbuns",
+  "description": "Exibe a letra da música (função $media.openLyric)",
   "author": "MaycoRolbuche",
   "category": null,
   "icon": null,
   "minAppVersion": "1.0.0",
   "dependencies": [],
-  "permissions": []
+  "permissions": [],
+  "system": true
 }

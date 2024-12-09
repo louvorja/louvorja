@@ -38,6 +38,7 @@ export default {
         showInMainMenu: manifest.showInMainMenu || false,
         development: manifest.development || false,
         ...(manifest.moduleOptions || {}),
+        manifest,
       });
 
       // Add to module groups

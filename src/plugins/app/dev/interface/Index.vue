@@ -10,18 +10,20 @@
   >
     <template v-slot:header>
       <v-tabs v-model="tab" align-tabs="center" :color="$theme.primary()">
-        <v-tab :value="1">{{ t("global-variables") }}</v-tab>
-        <v-tab :value="2">{{ t("user-variables") }}</v-tab>
-        <v-tab :value="3">{{ t("vue-variables") }}</v-tab>
+        <v-tab :value="1">{{ t("plugins") }}</v-tab>
+        <v-tab :value="2">{{ t("global-variables") }}</v-tab>
+        <v-tab :value="3">{{ t("user-variables") }}</v-tab>
+        <v-tab :value="4">{{ t("vue-variables") }}</v-tab>
       </v-tabs>
     </template>
 
     <v-tabs-window v-model="tab">
-      <v-tabs-window-item v-for="n in 3" :key="n" :value="n">
+      <v-tabs-window-item v-for="n in 4" :key="n" :value="n">
         <v-container fluid>
-          <vue-json-pretty v-if="n == 1" :data="$appdata.get()" />
-          <vue-json-pretty v-if="n == 2" :data="$userdata.get()" />
-          <vue-json-pretty v-if="n == 3" :data="$vuetify" />
+          <plugin-list v-if="n == 1" />
+          <vue-json-pretty v-if="n == 2" :data="$appdata.get()" />
+          <vue-json-pretty v-if="n == 3" :data="$userdata.get()" />
+          <vue-json-pretty v-if="n == 4" :data="$vuetify" />
         </v-container>
       </v-tabs-window-item>
     </v-tabs-window>
@@ -36,11 +38,14 @@ import "vue-json-pretty/lib/styles.css";
 
 import LWindow from "@/components/Window.vue";
 
+import PluginList from "../components/PluginList.vue";
+
 export default {
   name: "DevModule",
   components: {
     LWindow,
     VueJsonPretty,
+    PluginList,
   },
   data: () => ({
     tab: null,

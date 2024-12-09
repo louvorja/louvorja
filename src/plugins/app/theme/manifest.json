@@ -2,7 +2,7 @@
   "id": "theme",
   "name": "Temas",
   "version": "1.0.0",
-  "description": "Exibe os álbuns",
+  "description": "Fornece ferramentas para customização das cores do programa.",
   "author": "MaycoRolbuche",
   "category": null,
   "showInMainMenu": true,

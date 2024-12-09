@@ -16,6 +16,7 @@ export default class BasePlugin {
       dependencies: manifest.dependencies || [],
       permissions: manifest.permissions || [],
       translations: manifest.translations || {},
+      system: manifest.system ?? false,
     };
   }
 
