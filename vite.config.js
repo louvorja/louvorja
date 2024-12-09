@@ -27,7 +27,7 @@ export default ({ mode }) => {
         },
         manifest: {
           name: "LouvorJA",
-          short_name: "LJA",
+          short_name: "LouvorJA",
           description: "Software de músicas para Louvor e Adoração",
           start_url: "/",
           display: "standalone",
