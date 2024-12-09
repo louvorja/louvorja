@@ -7,7 +7,6 @@ export default {
   is_online: false,
   popup: null,
   popup_module: null,
-  system_modules: ["dev", "theme"],
   import_modules: false,
   modules: {},
   module_group: {
