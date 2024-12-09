@@ -39,7 +39,7 @@ export default {
       },
       times: [],
     },
-    lyric: {
+    /*  lyric: {
       show: false,
       component: "Lyric",
       loading: false,
@@ -52,7 +52,7 @@ export default {
         track: 0,
         image: "",
       },
-    },
+    },*/
     /* album: {
       show: false,
       component: "Album",
