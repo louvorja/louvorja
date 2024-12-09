@@ -1,23 +1,35 @@
 <template>
   <div class="w-100 h-100" style="background: #000">
-    <p-media v-if="module == 'media'" />
+    <component v-if="module" :is="loadPluginComponent()" />
   </div>
 </template>
 
 <script>
-import PMedia from "@/views/popup/Media.vue";
+import { defineAsyncComponent } from "vue";
 
 export default {
   name: "PopupPage",
-  components: {
-    PMedia,
-  },
   data: () => ({
     message: null,
   }),
   computed: {
     module() {
       return this.$appdata.get("popup_module");
+    },
+  },
+  methods: {
+    loadPluginComponent() {
+      return defineAsyncComponent(() => {
+        // Try to load from plugin interface directory
+        return import(`@/plugins/app/${this.module}/interface/Popup.vue`).catch(
+          (e) => {
+            this.$alert.error({
+              text: "messages.error_import_module",
+              error: e,
+            });
+          }
+        );
+      });
     },
   },
   mounted() {

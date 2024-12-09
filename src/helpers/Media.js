@@ -37,7 +37,6 @@ export default {
     $appdata.set("modules.media.config.title", data.name);
     $appdata.set("modules.media.config.last_slide", this.slides().length);
     $appdata.set("modules.media.times", []);
-
     this.setAlbumInfo(id_album);
 
     if (minimized) {
@@ -485,7 +484,10 @@ export default {
 
     const times = $appdata.get("modules.media.times");
     const slide_index = times.filter((time) => time <= current_time).length - 1;
-    $appdata.set("modules.media.config.slide_index", slide_index);
+    $appdata.set(
+      "modules.media.config.slide_index",
+      slide_index <= 0 ? 0 : slide_index
+    );
 
     const start_time = times[slide_index];
     const end_time = times[slide_index + 1] || duration;

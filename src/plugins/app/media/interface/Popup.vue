@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import manifest from "../manifest.json";
+
 import LSlide from "@/components/Slide.vue";
 
 export default {
@@ -19,12 +21,15 @@ export default {
     LSlide,
   },
   computed: {
+    /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
+    /* NÃO MODIFICAR */
     module_id() {
-      return "media";
+      return manifest.id;
     },
     module() {
       return this.$modules.get(this.module_id);
     },
+    /* COMPUTEDS OBRIGATÓRIAS - FIM */
     loading() {
       return this.module.loading;
     },
