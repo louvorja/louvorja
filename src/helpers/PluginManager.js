@@ -133,7 +133,7 @@ export default {
       if (typeof PluginClass === "function") {
         const plugin = new PluginClass();
         const parts = path.split("/");
-        if (plugin.manifest.id != parts[parts.length - 2]) {
+        if (plugin?.manifest?.id != parts[parts.length - 2]) {
           $alert.error({
             text: "messages.misconfigured_module",
             error: path,
