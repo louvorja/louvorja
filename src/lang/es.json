@@ -37,6 +37,7 @@
         "file_database_not_found": "Archivo de datos no encontrado!",
         "developer_mode_enabled": "Modo DESARROLLADOR activado!",
         "developer_mode_disabled": "Modo DESARROLLADOR desactivado!",
-        "error_import_module": "Error al importar el módulo"
+        "error_import_module": "Error al importar el módulo",
+        "misconfigured_module": "Este módulo está mal configurado. ¡La identificación ingresada en manifest.json debe tener el mismo nombre que la carpeta donde se encuentra!"
     }
 }

@@ -1,6 +1,7 @@
 // @/helpers/PluginManager.js
 import $appdata from "./AppData";
 import $dev from "./Dev";
+import $alert from "./Alert";
 
 export default {
   plugins: new Map(),
@@ -123,23 +124,24 @@ export default {
   async init(i18n) {
     this.i18n = i18n;
 
-    // Carregar os plugins dinamicamente
-    const localPlugins = [];
-
     const modules = import.meta.glob("@/plugins/app/**/index.js", {
       eager: true,
     });
 
     for (const path in modules) {
-      const plugin = modules[path].default;
-      if (typeof plugin === "function") {
-        localPlugins.push(plugin);
+      const PluginClass = modules[path].default;
+      if (typeof PluginClass === "function") {
+        const plugin = new PluginClass();
+        const parts = path.split("/");
+        if (plugin.manifest.id != parts[parts.length - 2]) {
+          $alert.error({
+            text: "messages.misconfigured_module",
+            error: path,
+          });
+        } else {
+          await this.installPlugin(plugin);
+        }
       }
-    }
-
-    for (const PluginClass of localPlugins) {
-      const plugin = new PluginClass();
-      await this.installPlugin(plugin);
     }
 
     //Importa as interfaces dos plugins

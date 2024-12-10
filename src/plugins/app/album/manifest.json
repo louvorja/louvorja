@@ -1,6 +1,6 @@
 {
   "id": "album",
-  "name": "Álbuns",
+  "name": "Álbum",
   "version": "1.0.0",
   "description": "Exibe as músicas de um álbum (função $media.openAlbum)",
   "author": "MaycoRolbuche",
