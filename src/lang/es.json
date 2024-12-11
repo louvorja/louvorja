@@ -31,7 +31,8 @@
     "alert": {
         "close": "Cerrar",
         "yes": "Sí",
-        "no": "No"
+        "no": "No",
+        "wait": "Aguardar..."
     },
     "messages": {
         "file_database_not_found": "Archivo de datos no encontrado!",

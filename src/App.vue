@@ -1,4 +1,5 @@
 <template>
+  <AppLoading />
   <v-btn
     v-show="false"
     @shortkey="handleKeydown()"
@@ -10,8 +11,13 @@
 </template>
 
 <script>
+import AppLoading from "@/layout/Loading.vue";
+
 export default {
   name: "App",
+  components: {
+    AppLoading,
+  },
   methods: {
     handleKeydown() {
       console.log("click ");

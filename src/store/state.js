@@ -8,6 +8,7 @@ export default {
   popup: null,
   popup_module: null,
   import_modules: false,
+  loading: false,
   modules: {},
   module_group: {
     musics: {

@@ -114,7 +114,7 @@ export default {
     },
     menu() {
       return [
-        {
+        /* {
           title: "Adicionar em",
           icon: "mdi-plus",
           menu: [
@@ -134,7 +134,7 @@ export default {
               click: () => null,
             },
           ],
-        },
+        },*/
         {
           title: "Executar",
           icon: "mdi-play",
@@ -171,14 +171,21 @@ export default {
             {
               title: "Arquivo Cantado",
               icon: "mdi-file-music",
+              click: () => this.$media.openAudio(this.id_music),
             },
             {
               title: "Arquivo Playback",
               icon: "mdi-file-music-outline",
+              click: () =>
+                this.$media.openAudio({
+                  id_music: this.id_music,
+                  mode: "instrumental",
+                }),
+              disabled: !this.has_instrumental_music,
             },
           ],
         },
-        {
+        /*{
           title: "Exportar",
           icon: "mdi-export",
           menu: [
@@ -213,7 +220,7 @@ export default {
               disabled: !this.has_instrumental_music,
             },
           ],
-        },
+        },*/
       ];
     },
     compact: function () {

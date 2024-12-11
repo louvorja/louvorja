@@ -10,7 +10,7 @@ const setCorsHeaders = (res) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); // Permitir todas as origens
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS"); // Métodos permitidos
   res.setHeader("Access-Control-Allow-Headers", "Content-Type"); // Cabeçalhos permitidos
-  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  //res.setHeader("Content-Type", "text/html; charset=utf-8");
 };
 
 // Função para lidar com as requisições

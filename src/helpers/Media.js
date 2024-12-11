@@ -194,7 +194,7 @@ export default {
     $appdata.set("modules.lyric.show", true);
     $appdata.set("modules.lyric.loading", false);
   },
-  async closeLyric() {
+  closeLyric() {
     $dev.write("close lyric");
     $appdata.set("modules.lyric.show", false);
 
@@ -230,13 +230,38 @@ export default {
     $appdata.set("modules.album.show", true);
     $appdata.set("modules.album.loading", false);
   },
-  async closeAlbum() {
+  closeAlbum() {
     $dev.write("close album");
     $appdata.set("modules.album.show", false);
 
     $appdata.set("modules.album.data", {});
     $appdata.set("modules.album.id_album", null);
     $appdata.set("modules.album.loading", false);
+  },
+
+  async openAudio(params) {
+    if (typeof params != "object") {
+      params = { id_music: params };
+    }
+    $dev.write("open audio", params);
+
+    const id_music = params.id_music;
+    let mode = params.mode ? params.mode : "audio";
+
+    $appdata.set("loading", true);
+
+    let data = await $database.get(`music_${id_music}`);
+    if (data == null) {
+      $appdata.set("loading", false);
+      return;
+    }
+
+    const url =
+      mode == "instrumental" ? data.url_instrumental_music : data.url_music;
+
+    window.open($path.file(url), "_blank");
+
+    $appdata.set("loading", false);
   },
 
   stopAudio() {
