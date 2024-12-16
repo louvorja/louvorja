@@ -105,7 +105,7 @@ export default {
     if (is_dev) {
       const self = this;
       setTimeout(function () {
-        self.$media.open({ id_music: 112, mode: "audio", minimized: false });
+        //self.$media.open({ id_music: 112, mode: "audio", minimized: false });
         //self.$modules.open("bible");
         //self.$modules.open("collections");
         //self.$media.openAlbum(9);

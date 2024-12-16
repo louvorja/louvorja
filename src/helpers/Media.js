@@ -578,7 +578,11 @@ export default {
     $appdata.set("modules.media.config.buffered", buffered);
 
     const times = $appdata.get("modules.media.times");
-    const slide_index = times.filter((time) => time <= current_time).length - 1;
+
+    const slide_index =
+      times && times?.length
+        ? times.filter((time) => time <= current_time).length - 1
+        : 1;
     $appdata.set(
       "modules.media.config.slide_index",
       slide_index <= 0 ? 0 : slide_index
