@@ -1,0 +1,13 @@
+{
+  "active": false,
+  "id": "bible",
+  "name": "Bíblia",
+  "version": "1.0.0",
+  "description": "Bíblia",
+  "author": "MaycoRolbuche",
+  "category": "bible",
+  "icon": "mdi-book-cross",
+  "minAppVersion": "1.0.0",
+  "dependencies": [],
+  "permissions": []
+}

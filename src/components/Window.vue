@@ -85,7 +85,11 @@
         >
           <slot />
         </div>
-        <div v-if="$slots.right" :style="`height:${container_height}px`">
+        <div
+          v-if="$slots.right"
+          :style="`height:${container_height}px`"
+          :class="slotRightClass"
+        >
           <slot name="right" />
         </div>
       </v-card-text>
@@ -124,6 +128,7 @@ export default {
     imageSize: Number,
     color: String,
     slotLeftClass: String,
+    slotRightClass: String,
   },
 
   data: () => ({

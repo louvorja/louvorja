@@ -103,10 +103,13 @@ export default {
     /*********************************************************************/
     /* ********************* PROVISORIO ******************************** */
     if (is_dev) {
-      //this.$media.open({ id_music: 112, mode: "audio", minimized: false });
-      //this.$modules.open("musics");
-      //this.$modules.open("collections");
-      //this.$media.openAlbum(9);
+      const self = this;
+      setTimeout(function () {
+        //this.$media.open({ id_music: 112, mode: "audio", minimized: false });
+        self.$modules.open("bible");
+        //this.$modules.open("collections");
+        //this.$media.openAlbum(9);
+      }, 100);
     }
     /*********************************************************************/
     /*********************************************************************/
