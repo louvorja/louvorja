@@ -61,6 +61,7 @@ export default {
       },
       media: {
         lazy_load: true,
+        fade_audio: true,
       },
     },
   },

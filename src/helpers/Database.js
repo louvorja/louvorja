@@ -14,8 +14,8 @@ export default {
         return cache;
       }
 
-      $dev.write("Abrindo BD", file);
       const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+      $dev.write("Abrindo BD", `${$path.db(`/${file}`)}?${date}`);
       const response = await fetch(`${$path.db(`/${file}`)}?${date}`, {
         headers: {
           "Api-Token": import.meta.env.VITE_API_TOKEN,

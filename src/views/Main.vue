@@ -105,10 +105,10 @@ export default {
     if (is_dev) {
       const self = this;
       setTimeout(function () {
-        //this.$media.open({ id_music: 112, mode: "audio", minimized: false });
-        self.$modules.open("bible");
-        //this.$modules.open("collections");
-        //this.$media.openAlbum(9);
+        self.$media.open({ id_music: 112, mode: "audio", minimized: false });
+        //self.$modules.open("bible");
+        //self.$modules.open("collections");
+        //self.$media.openAlbum(9);
       }, 100);
     }
     /*********************************************************************/

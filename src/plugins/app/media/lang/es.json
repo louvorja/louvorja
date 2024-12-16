@@ -12,6 +12,8 @@
     },
     "inputs": {
         "lazy_load": "Carga Dinámica",
-        "lazy_load_tooltip": "Si se desmarca, el audio solo se reproducirá después de cargarse completamente en la memoria."
+        "lazy_load_tooltip": "Si se desmarca, el audio solo se reproducirá después de cargarse completamente en la memoria.",
+        "fade_audio": "Efecto de Desvanecimiento en el audio",
+        "fade_audio_tooltip": "Si se marca, el audio reducirá o aumentará el volumen suavemente al pausar o reproducir."
     }
 }

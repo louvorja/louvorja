@@ -48,6 +48,9 @@ export default {
     if (mode == "audio" || mode == "instrumental") {
       //Será executado com áudio... cria o elemento de audio
       const audio = this.getElement();
+      const volume = $appdata.get("modules.media.config.volume");
+      audio.volume = volume / 100;
+
       this.pause(true);
       audio.currentTime = 0;
 
@@ -154,12 +157,11 @@ export default {
       });
       return;
     }
-    this.fadeOutAudio(() => {
-      this.stopAudio();
-      this.clearVariables();
-      $appdata.set("modules.media.show", false);
-      $appdata.set("modules.media.minimized", false);
-    });
+
+    this.stopAudio();
+    this.clearVariables();
+    $appdata.set("modules.media.show", false);
+    $appdata.set("modules.media.minimized", false);
   },
 
   async openLyric(params) {
@@ -195,7 +197,7 @@ export default {
     $appdata.set("modules.lyric.show", true);
     $appdata.set("modules.lyric.loading", false);
   },
-  async closeLyric() {
+  closeLyric() {
     $dev.write("close lyric");
     $appdata.set("modules.lyric.show", false);
 
@@ -231,7 +233,7 @@ export default {
     $appdata.set("modules.album.show", true);
     $appdata.set("modules.album.loading", false);
   },
-  async closeAlbum() {
+  closeAlbum() {
     $dev.write("close album");
     $appdata.set("modules.album.show", false);
 
@@ -240,10 +242,36 @@ export default {
     $appdata.set("modules.album.loading", false);
   },
 
+  async openAudio(params) {
+    if (typeof params != "object") {
+      params = { id_music: params };
+    }
+    $dev.write("open audio", params);
+
+    const id_music = params.id_music;
+    let mode = params.mode ? params.mode : "audio";
+
+    $appdata.set("loading", true);
+
+    let data = await $database.get(`music_${id_music}`);
+    if (data == null) {
+      $appdata.set("loading", false);
+      return;
+    }
+
+    const url =
+      mode == "instrumental" ? data.url_instrumental_music : data.url_music;
+
+    window.open($path.file(url), "_blank");
+
+    $appdata.set("loading", false);
+  },
+
   stopAudio() {
     const audio = this.getElement();
-    this.pause(true);
-    audio.setAttribute("src", "");
+    this.pause(true, () => {
+      audio.setAttribute("src", "");
+    });
   },
 
   clearVariables() {
@@ -262,6 +290,9 @@ export default {
     $appdata.set("modules.media.config.progress", 0);
     $appdata.set("modules.media.config.slide_progress", 0);
     $appdata.set("modules.media.config.buffered", 0);
+    $appdata.set("modules.media.config.volume", 100);
+    $appdata.set("modules.media.config.is_paused", false);
+    $appdata.set("modules.media.config.is_fading", false);
   },
 
   minimize() {
@@ -367,115 +398,89 @@ export default {
   },
 
   play() {
-    this.fadeInAudio();
     this.pause(false);
   },
-
-  pause(bool = true) {
+  pause(bool = true, callback) {
     const audio = this.getElement();
+    const fade_audio = $userdata.get("modules.media.fade_audio");
+
     if (bool) {
-      this.fadeOutAudio(() => {
+      if (fade_audio) {
+        this.fadeOutAudio(() => {
+          audio.pause();
+          $appdata.set("modules.media.config.is_paused", bool);
+          if (callback) callback();
+        });
+      } else {
         audio.pause();
-      });
+        $appdata.set("modules.media.config.is_paused", bool);
+        if (callback) callback();
+      }
     } else {
-      this.fadeInAudio(() => {
-        // Adiciona verificação para evitar repetição do play().
-        if (audio.paused) {
-          audio.play().catch((e) => {
-            $alert.error({ text: "Erro ao iniciar reprodução", error: e || "" });
-          });
-        }
+      let self = this;
+      audio.play().catch((e) => {
+        $alert.error(
+          {
+            text: "modules.media.alerts.not_loaded",
+            error: e || "",
+          },
+          function (a) {
+            if (a) {
+              self.open($appdata.get("modules.media.id_music"));
+            }
+          }
+        );
       });
+      if (fade_audio) {
+        this.fadeInAudio(() => {
+          if (callback) callback();
+        });
+      } else {
+        const volume = $appdata.get("modules.media.config.volume") / 100;
+        audio.volume = volume;
+        if (callback) callback();
+      }
+      $appdata.set("modules.media.config.is_paused", bool);
     }
-    $appdata.set("modules.media.config.is_paused", bool);
   },
-  
-  
+
   fadeInAudio(callback) {
     const audio = this.getElement();
-  
-    // Se o áudio já estiver tocando, evita duplicações.
-    if (!audio.paused) {
-      if (callback) callback();
-      return;
-    }
-  
-    // Garante que o volume inicie em zero.
-    audio.volume = 0;
-  
-    // Tenta iniciar o áudio antes de aplicar o fade.
-    const playPromise = audio.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          // Inicia o incremento gradual de volume.
-          const fadeIn = setInterval(() => {
-            if (audio.volume < 1) {
-              audio.volume = Math.min(audio.volume + 0.05, 1); // Incrementa suavemente.
-            } else {
-              clearInterval(fadeIn);
-              if (callback) callback(); // Executa o callback após atingir volume total.
-            }
-          }, 100); // Atualiza o volume a cada 100ms.
-        })
-        .catch((error) => {
-          if (error.name !== "AbortError") {
-            $alert.error({ text: "Erro ao iniciar reprodução", error });
-          }
-        });
-    } else {
-      // Se não for possível chamar `play()`.
-      $alert.error({ text: "Não foi possível iniciar o áudio." });
-    }
-  },
-  
-  
-  fadeOutAudio(callback) {
-    const audio = this.getElement();
-  
-    if (audio.paused) {
-      if (callback) callback();
-      return;
-    }
-  
+
+    $appdata.set("modules.media.config.is_fading", true);
+    const max_volume = $appdata.get("modules.media.config.volume") / 100;
+
     const fadeOut = setInterval(() => {
-      if (audio.volume > 0) {
-        audio.volume = Math.max(audio.volume - 0.05, 0);
+      if (audio.volume < max_volume) {
+        audio.volume = Math.min(audio.volume + 0.05, max_volume); // Incrementa suavemente.
       } else {
+        $appdata.set("modules.media.config.is_fading", false);
         clearInterval(fadeOut);
-        audio.pause(); // Garante que pause seja chamado após o volume zerar.
         if (callback) callback();
       }
     }, 60);
   },
-  
-  
-  
-
-  stopAudio() {
+  fadeOutAudio(callback) {
     const audio = this.getElement();
-    this.pause(true);
-    audio.setAttribute("src", "");
-    audio.volume = 1; // Reseta o volume ao padrão
+
+    if (audio.paused) {
+      if (callback) callback();
+      return;
+    }
+
+    $appdata.set("modules.media.config.is_fading", true);
+
+    const fadeOut = setInterval(() => {
+      if (audio.volume > 0) {
+        audio.volume = Math.max(audio.volume - 0.05, 0);
+      } else {
+        $appdata.set("modules.media.config.is_fading", false);
+        clearInterval(fadeOut);
+        if (callback) callback();
+      }
+    }, 60);
   },
 
-  clearVariables() {
-    $appdata.set("modules.media.data", {});
-    $appdata.set("modules.media.id_music", null);
-    $appdata.set("modules.media.config.title", "");
-    $appdata.set("modules.media.config.subtitle", "");
-    $appdata.set("modules.media.config.track", 0);
-    $appdata.set("modules.media.config.image", "");
-    $appdata.set("modules.media.config.slide_index", 0);
-    $appdata.set("modules.media.config.last_slide", 0);
-    $appdata.set("modules.media.config.audio", "");
-    $appdata.set("modules.media.config.lazy", false);
-    $appdata.set("modules.media.config.current_time", 0);
-    $appdata.set("modules.media.config.duration", 0);
-    $appdata.set("modules.media.config.progress", 0);
-    $appdata.set("modules.media.config.slide_progress", 0);
-    $appdata.set("modules.media.config.buffered", 0);
-  },
   firstSlide() {
     this.goToSlide(0);
   },
@@ -537,9 +542,17 @@ export default {
   },
 
   timeUpdate() {
+    const duration_db =
+      $appdata.get("modules.media.config.mode") == "audio"
+        ? $appdata.get("modules.media.data.duration", "00:00")
+        : $appdata.get("modules.media.data.instrumental_duration", "00:00");
+
     const audio = this.getElement();
     const current_time = isNaN(audio.currentTime) ? 0 : audio.currentTime;
-    const duration = isNaN(audio.duration) ? 0 : audio.duration;
+    const duration =
+      isNaN(audio.duration) || !isFinite(audio.duration)
+        ? $datetime.toNumber(duration_db)
+        : audio.duration;
     const progress = duration <= 0 ? 0 : (current_time / duration) * 100;
     let buffered = 0;
 

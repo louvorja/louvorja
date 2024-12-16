@@ -42,6 +42,16 @@
                 />
               </template>
             </v-tooltip>
+            <v-tooltip :text="t('inputs.fade_audio_tooltip')">
+              <template v-slot:activator="{ props }">
+                <v-switch
+                  color="blue"
+                  v-bind="props"
+                  v-model="fade_audio"
+                  :label="t('inputs.fade_audio')"
+                />
+              </template>
+            </v-tooltip>
           </v-card-text>
         </v-card>
       </v-menu>
@@ -174,10 +184,18 @@ export default {
     },
     lazy_load: {
       get() {
-        return this.$userdata.gt("lazy_load");
+        return this.$userdata.get("modules.media.lazy_load");
       },
       set(value) {
-        this.$userdata.st("lazy_load", value);
+        this.$userdata.set("modules.media.lazy_load", value);
+      },
+    },
+    fade_audio: {
+      get() {
+        return this.$userdata.get("modules.media.fade_audio");
+      },
+      set(value) {
+        this.$userdata.set("modules.media.fade_audio", value);
       },
     },
   },
