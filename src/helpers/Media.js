@@ -588,8 +588,9 @@ export default {
       slide_index <= 0 ? 0 : slide_index
     );
 
-    const start_time = times[slide_index];
-    const end_time = times[slide_index + 1] || duration;
+    const start_time = times && times?.length ? times[slide_index] : 0;
+    const end_time =
+      times && times?.length ? times[slide_index + 1] || duration : duration;
     const slide_progress =
       ((current_time - start_time) / (end_time - start_time)) * 100;
     $appdata.set("modules.media.config.slide_progress", slide_progress);

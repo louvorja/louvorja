@@ -9,7 +9,7 @@ const DIRECTORY = path.join(__dirname, "..", "files"); // Pasta a ser servida
 const setCorsHeaders = (res) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); // Permitir todas as origens
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS"); // Métodos permitidos
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type"); // Cabeçalhos permitidos
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, api-token"); // Cabeçalhos permitidos
   //res.setHeader("Content-Type", "text/html; charset=utf-8");
 };
 
@@ -26,7 +26,7 @@ const requestHandler = (req, res) => {
   // Adicionar cabeçalhos CORS para outras requisições
   setCorsHeaders(res);
 
-  const filePath = path.join(
+  let filePath = path.join(
     DIRECTORY,
     decodeURIComponent(req.url).split("?")[0]
   );
@@ -37,6 +37,14 @@ const requestHandler = (req, res) => {
     res.writeHead(403, { "Content-Type": "text/plain" });
     res.end("Acesso negado");
     return;
+  }
+
+  const parts = filePath.split("\\");
+  const dir = parts[parts.length - 2];
+  if (dir == "database") {
+    if (!filePath.endsWith(".json")) {
+      filePath = filePath + ".json";
+    }
   }
 
   fs.stat(filePath, (err, stats) => {
