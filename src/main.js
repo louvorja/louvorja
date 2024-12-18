@@ -9,13 +9,14 @@ import shortkey from "vue3-shortkey";
 import VueFullscreen from "vue-fullscreen";
 import "./assets/styles/main.css";
 import "./assets/styles/fonts.css";
+import "./assets/styles/layout.scss";
 
 loadFonts();
 
 const app = createApp(App);
 
 //Plugins
-import PluginManager from '@/helpers/PluginManager';
+import PluginManager from "@/helpers/PluginManager";
 
 //Helpers
 import Modules from "@/helpers/Modules";
@@ -55,6 +56,6 @@ app.use(VueFullscreen);
 
 createI18nInstance().then((i18n) => {
   app.use(i18n);
-  PluginManager.init(i18n)
+  PluginManager.init(i18n);
   app.mount("#app");
 });

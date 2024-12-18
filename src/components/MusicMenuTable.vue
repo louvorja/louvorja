@@ -42,7 +42,11 @@
         </v-list-item>
         <v-divider v-if="compact" />
 
-        <v-list-item v-for="(item, key) in menu" :key="key">
+        <v-list-item
+          v-for="(item, key) in menu"
+          :key="key"
+          class="cursor-pointer"
+        >
           <template v-slot:prepend>
             <v-icon :icon="item.icon"></v-icon>
           </template>

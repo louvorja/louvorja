@@ -12,102 +12,59 @@
     "
     @minimize="$modules.minimize(module_id)"
     @resize="resize"
-    slot-left-class="w-50"
+    slot-left-class="w-60"
   >
-    <template v-slot:header> HEADER|{{ tab }}|{{ height }} </template>
+    <template v-slot:header>
+      HEADER|{{ tab }}|{{ height }}| {{ book?.name }} {{ bible.chapter }}
+    </template>
 
     <template v-slot:left>
-      <div class="d-flex flex-row h-100">
-        <v-tabs v-model="tab" :color="$theme.primary()" direction="vertical">
-          <v-tab value="option-1">
-            <v-avatar :color="$theme.primary()">VER</v-avatar>
-          </v-tab>
-          <v-tab value="option-2">
-            <v-avatar :color="$theme.primary()">LIV</v-avatar>
-          </v-tab>
-          <v-tab value="option-3">
-            <v-avatar :color="$theme.primary()">CAP</v-avatar>
-          </v-tab>
-        </v-tabs>
-
-        <v-tabs-window v-model="tab" class="w-100">
-          <v-tabs-window-item value="option-1">
-            <v-card flat>
-              <v-toolbar :height="40">
-                <v-toolbar-title class="text-h5">Versão</v-toolbar-title>
-              </v-toolbar>
-              <v-card-text
-                :style="{ height: height - 40 + 'px' }"
-                class="overflow-auto d-flex flex-wrap justify-center ma-0 pa-0"
+      <div v-if="!error" class="d-flex flex-row h-100">
+        <div class="w-70 h-100">
+          <div
+            :style="`height: ${height}px`"
+            class="overflow-auto d-flex flex-row flex-wrap justify-center"
+          >
+            <v-card
+              v-for="book in books"
+              :key="book.id_bible_book"
+              :color="book.color"
+              class="ma-1 d-flex align-center flex-column"
+              height="80"
+              width="100"
+              hover
+              @click="selBook(book.id_bible_book)"
+              :variant="
+                book.id_bible_book == bible.id_bible_book ? 'flat' : 'tonal'
+              "
+            >
+              <v-card-title
+                class="flex-grow-1 pa-0 ma-0 text-h4 d-flex align-center"
               >
-                <v-card
-                  color="#952175"
-                  width="100%"
-                  :height="80"
-                  class="ma-1"
-                  v-for="n in 100"
-                  :key="n"
-                >
-                  <v-card-title class="text-h4 text-center pa-0 ma-0">
-                    VARA
-                  </v-card-title>
-                  <v-card-subtitle class="text-center pa-0 ma-0 mx-1">
-                    Ellie Goulding fgh dfhg fdgh fdgh fg
-                  </v-card-subtitle>
-                </v-card>
-              </v-card-text>
-            </v-card>
-          </v-tabs-window-item>
-
-          <v-tabs-window-item value="option-2">
-            <v-card flat>
-              <v-toolbar :height="40">
-                <v-toolbar-title class="text-h5">Versão</v-toolbar-title>
-              </v-toolbar>
+                {{ book.abbreviation }}
+              </v-card-title>
               <v-card-text
-                :style="{ height: height - 40 + 'px' }"
-                class="overflow-auto d-flex flex-wrap justify-center ma-0 pa-0"
+                class="flex-grow-0 pa-0 px-1 ma-0 text-caption text-truncate text-center w-100"
               >
-                <v-card
-                  color="#952175"
-                  :width="120"
-                  :height="80"
-                  class="ma-1"
-                  v-for="n in 100"
-                  :key="n"
-                >
-                  <v-card-title class="text-h4 text-center pa-0 ma-0">
-                    VARA
-                  </v-card-title>
-                  <v-card-subtitle class="text-center pa-0 ma-0 mx-1">
-                    Ellie Goulding fgh dfhg fdgh fdgh fg
-                  </v-card-subtitle>
-                </v-card>
+                {{ book.name }}
               </v-card-text>
             </v-card>
-          </v-tabs-window-item>
-
-          <v-tabs-window-item value="option-3">
-            <v-card flat>
-              <v-card-text>
-                <p>
-                  Fusce a quam. Phasellus nec sem in justo pellentesque
-                  facilisis. Nam eget dui. Proin viverra, ligula sit amet
-                  ultrices semper, ligula arcu tristique sapien, a accumsan nisi
-                  mauris ac eros. In dui magna, posuere eget, vestibulum et,
-                  tempor auctor, justo.
-                </p>
-
-                <p class="mb-0">
-                  Cras sagittis. Phasellus nec sem in justo pellentesque
-                  facilisis. Proin sapien ipsum, porta a, auctor quis, euismod
-                  ut, mi. Donec quam felis, ultricies nec, pellentesque eu,
-                  pretium quis, sem. Nam at tortor in tellus interdum sagittis.
-                </p>
-              </v-card-text>
-            </v-card>
-          </v-tabs-window-item>
-        </v-tabs-window>
+          </div>
+        </div>
+        <div class="w-30 h-100">
+          <div :style="`height: ${height}px`" class="overflow-auto text-center">
+            <v-avatar
+              v-for="chapter in chapters"
+              :key="chapter"
+              :color="book?.color"
+              class="ma-1 cursor-pointer"
+              @click="selChapter(chapter)"
+              :variant="chapter == bible.chapter ? 'flat' : 'tonal'"
+            >
+              {{ chapter }}
+            </v-avatar>
+          </div>
+        </div>
       </div>
     </template>
 
@@ -120,7 +77,13 @@
       class="ma-2"
     />
 
-    <template v-slot:right> RIGHT </template>
+    <template v-slot:right>
+      <pre>
+        {{ bible }}
+        ....
+        {{ book }}
+      </pre>
+    </template>
   </l-window>
 </template>
 
@@ -139,6 +102,11 @@ export default {
     error: null,
     tab: null,
     height: 0,
+    bible: {
+      id_bible_book: null,
+      chapter: null,
+    },
+    books: [],
   }),
   computed: {
     /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
@@ -154,10 +122,24 @@ export default {
     show() {
       return this.module.show;
     },
+
+    book() {
+      return this.books.find(
+        (b) => b.id_bible_book == this.bible.id_bible_book
+      );
+    },
+    chapters() {
+      return this.book?.chapters;
+    },
   },
   watch: {
     async show() {
       if (this.show && this.lang != this.$i18n.locale) {
+        this.books = [];
+        this.bible = {
+          id_bible_book: null,
+          chapter: null,
+        };
         await this.loadData();
       }
     },
@@ -171,7 +153,18 @@ export default {
     /* METHODS OBRIGATÓRIOS - FIM */
 
     async loadData() {
+      console.log("LOAD");
       this.loading = true;
+
+      if (this.books.length <= 0) {
+        console.log("BOOOK");
+        this.books = await this.$database.get(
+          `${this.$i18n.locale}_bible_book`
+        );
+        if (!this.bible.id_bible_book) {
+          this.selBook(this.books[0].id_bible_book);
+        }
+      }
       /*
       this.categories = await this.$database.get(
         `${this.$i18n.locale}_categories`
@@ -195,6 +188,22 @@ export default {
     resize(data) {
       this.height = data.container_height;
     },
+
+    selBook(id_bible_book) {
+      this.bible.id_bible_book = id_bible_book;
+      if (!this.bible.chapter) {
+        this.selChapter(1);
+      } else if (this.bible.chapter > this.book.chapters) {
+        this.selChapter(this.book.chapters);
+      } else {
+        this.loadData();
+      }
+    },
+    selChapter(chapter) {
+      this.bible.chapter = chapter;
+      this.loadData();
+    },
+
     close() {
       //Se fechar a janela, não manter o histórico.
       /* */
