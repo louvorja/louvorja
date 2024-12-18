@@ -12,18 +12,20 @@
     "
     @minimize="$modules.minimize(module_id)"
     @resize="resize"
-    slot-left-class="w-60"
+    :slot-left-style="`width: ${(width / 100) * 60}px`"
+    :slot-right-style="`width: ${(width / 100) * 40}px`"
   >
     <template v-slot:header>
-      HEADER|{{ tab }}|{{ height }}| {{ book?.name }} {{ bible.chapter }}
+      HEADER|{{ tab }}|{{ width }} x {{ height }}| {{ book?.name }}
+      {{ bible.chapter }} | {{ last_verse }}
     </template>
 
     <template v-slot:left>
-      <div v-if="!error" class="d-flex flex-row h-100">
+      <div class="d-flex flex-row h-100">
         <div class="w-70 h-100">
           <div
             :style="`height: ${height}px`"
-            class="overflow-auto d-flex flex-row flex-wrap justify-center"
+            class="overflow-auto d-flex flex-row flex-wrap justify-center align-content-start"
           >
             <v-card
               v-for="book in books"
@@ -33,10 +35,10 @@
               height="80"
               width="100"
               hover
-              @click="selBook(book.id_bible_book)"
               :variant="
                 book.id_bible_book == bible.id_bible_book ? 'flat' : 'tonal'
               "
+              @click="selBook(book.id_bible_book)"
             >
               <v-card-title
                 class="flex-grow-1 pa-0 ma-0 text-h4 d-flex align-center"
@@ -52,37 +54,62 @@
           </div>
         </div>
         <div class="w-30 h-100">
-          <div :style="`height: ${height}px`" class="overflow-auto text-center">
-            <v-avatar
+          <div
+            :style="`height: ${height}px`"
+            class="overflow-auto d-flex flex-row flex-wrap justify-center align-content-start"
+          >
+            <v-card
               v-for="chapter in chapters"
               :key="chapter"
               :color="book?.color"
-              class="ma-1 cursor-pointer"
-              @click="selChapter(chapter)"
+              class="ma-1 d-flex align-center flex-column"
+              height="40"
+              width="40"
+              hover
               :variant="chapter == bible.chapter ? 'flat' : 'tonal'"
+              @click="selChapter(chapter)"
             >
-              {{ chapter }}
-            </v-avatar>
+              <v-card-title
+                class="flex-grow-1 pa-0 ma-0 d-flex align-center font-weight-regular"
+                style="font-size: 16px"
+              >
+                {{ chapter }}
+              </v-card-title>
+            </v-card>
           </div>
         </div>
       </div>
     </template>
 
-    <v-alert
-      v-if="error"
-      type="error"
-      :text="error"
-      variant="tonal"
-      border="start"
-      class="ma-2"
-    />
-
     <template v-slot:right>
-      <pre>
-        {{ bible }}
-        ....
-        {{ book }}
-      </pre>
+      <div class="d-flex flex-row h-100">
+        <div :style="`height: ${height}px; width: ${(width / 100) * 40}px`">
+          <div class="h-50">
+            <v-list class="overflow h-100 ma-0 pa-0" width="100%">
+              <v-list-item
+                v-for="(verse, num) in verses"
+                :key="num"
+                link
+                variant="flat"
+                :value="verse"
+                :active="bible.verses.includes(+num)"
+                @click="selVerse($event, num)"
+              >
+                <template v-slot:prepend>
+                  <v-chip class="mr-2">{{ num }}</v-chip>
+                </template>
+
+                <div v-html="verse" class="text-caption"></div>
+              </v-list-item>
+            </v-list>
+          </div>
+          <div>
+            {{ bible }}
+            ..
+            {{ select_bible }}
+          </div>
+        </div>
+      </div>
     </template>
   </l-window>
 </template>
@@ -99,14 +126,26 @@ export default {
   data: () => ({
     lang: null,
     loading: false,
-    error: null,
     tab: null,
+    width: 0,
     height: 0,
     bible: {
+      id_bible_version: null,
       id_bible_book: null,
       chapter: null,
+      verses: [],
     },
+    select_bible: {
+      id_bible_version: null,
+      id_bible_book: null,
+      chapter: null,
+      verses: [],
+    },
+    versions: [],
     books: [],
+    verses: [],
+    last_verse: 1,
+    last_bible_file: null,
   }),
   computed: {
     /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
@@ -135,11 +174,16 @@ export default {
   watch: {
     async show() {
       if (this.show && this.lang != this.$i18n.locale) {
+        this.versions = [];
         this.books = [];
+        this.verses = [];
         this.bible = {
+          id_bible_version: null,
           id_bible_book: null,
           chapter: null,
+          verses: [],
         };
+        this.select_bible = Object.assign({}, this.bible);
         await this.loadData();
       }
     },
@@ -162,46 +206,98 @@ export default {
           `${this.$i18n.locale}_bible_book`
         );
         if (!this.bible.id_bible_book) {
-          this.selBook(this.books[0].id_bible_book);
+          await this.selBook(this.books[0].id_bible_book);
         }
       }
-      /*
-      this.categories = await this.$database.get(
-        `${this.$i18n.locale}_categories`
-      );
 
-      if (this.categories == null) {
-        this.$modules.close(this.module_id);
-        return;
+      if (this.versions.length <= 0) {
+        console.log("versions");
+        this.versions = await this.$database.get(
+          `${this.$i18n.locale}_bible_version`
+        );
+        if (!this.bible.id_bible_version) {
+          await this.selVersion(this.versions[0].id_bible_version);
+        }
       }
 
-      if (this.categories.length > 0) {
-        this.categories.sort((a, b) => a.order - b.order);
-        this.id_category = this.categories[0].id_category;
-      } else {
-        this.id_category = 0;
+      const bible_file = `bible_${this.bible.id_bible_version}_${this.bible.id_bible_book}_${this.bible.chapter}.json`;
+      if (bible_file != this.last_bible_file) {
+        console.log("VERSE");
+        this.verses = await this.$database.get(bible_file);
+        this.last_bible_file = bible_file;
       }
-*/
+
+      if (
+        this.select_bible.id_bible_book == this.bible.id_bible_book &&
+        this.select_bible.chapter == this.bible.chapter
+      ) {
+        this.bible.verses = this.select_bible.verses;
+      }
+
       this.lang = this.$i18n.locale;
       this.loading = false;
     },
     resize(data) {
+      this.width = data.container_width;
       this.height = data.container_height;
     },
 
-    selBook(id_bible_book) {
+    async selVersion(id_bible_version) {
+      this.bible.id_bible_version = id_bible_version;
+      this.last_verse = 1;
+      await this.loadData();
+    },
+    async selBook(id_bible_book) {
       this.bible.id_bible_book = id_bible_book;
+      this.bible.verses = [];
+      this.last_verse = 1;
       if (!this.bible.chapter) {
         this.selChapter(1);
       } else if (this.bible.chapter > this.book.chapters) {
         this.selChapter(this.book.chapters);
       } else {
-        this.loadData();
+        await this.loadData();
       }
     },
-    selChapter(chapter) {
+    async selChapter(chapter) {
       this.bible.chapter = chapter;
-      this.loadData();
+      this.bible.verses = [];
+      this.last_verse = 1;
+      await this.loadData();
+    },
+    async selVerse(event, num) {
+      event.preventDefault();
+
+      num = parseInt(num);
+      if (isNaN(num)) {
+        console.error("Invalid verse number:", num);
+        return;
+      }
+
+      if (event.ctrlKey) {
+        console.log("CTRL+Click no verso:", num);
+        const index = this.bible.verses.indexOf(num);
+        if (index === -1) {
+          this.bible.verses.push(num);
+        } else {
+          this.bible.verses.splice(index, 1);
+        }
+      } else if (event.shiftKey) {
+        console.log("SHIFT+Click no verso:", num, this.last_verse);
+        const start = Math.min(num, this.last_verse);
+        const end = Math.max(num, this.last_verse);
+        for (let i = start; i <= end; i++) {
+          if (!this.bible.verses.includes(i)) {
+            this.bible.verses.push(i);
+          }
+        }
+      } else {
+        console.log("Clique normal no verso:", num);
+        this.bible.verses = [num];
+      }
+      this.last_verse = num;
+      this.bible.verses.sort((a, b) => a - b);
+      this.select_bible = Object.assign({}, this.bible);
     },
 
     close() {

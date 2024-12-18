@@ -72,7 +72,7 @@
       >
         <div
           v-if="$slots.left"
-          :style="`height:${container_height}px`"
+          :style="`height:${container_height}px;${slotLeftStyle};`"
           :class="slotLeftClass"
         >
           <slot name="left" />
@@ -87,7 +87,7 @@
         </div>
         <div
           v-if="$slots.right"
-          :style="`height:${container_height}px`"
+          :style="`height:${container_height}px;${slotRightStyle};`"
           :class="slotRightClass"
         >
           <slot name="right" />
@@ -129,6 +129,8 @@ export default {
     color: String,
     slotLeftClass: String,
     slotRightClass: String,
+    slotLeftStyle: String,
+    slotRightStyle: String,
   },
 
   data: () => ({
