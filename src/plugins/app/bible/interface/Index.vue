@@ -6,18 +6,17 @@
     closable
     minimizable
     compact
-    @close="
-      close();
-      $modules.close(module_id);
-    "
+    @close="$modules.close(module_id)"
     @minimize="$modules.minimize(module_id)"
     @resize="resize"
     :slot-left-style="`width: ${(width / 100) * 60}px`"
     :slot-right-style="`width: ${(width / 100) * 40}px`"
   >
     <template v-slot:header>
-      HEADER|{{ tab }}|{{ width }} x {{ height }}| {{ book?.name }}
-      {{ bible.chapter }} | {{ last_verse }}
+      HEADER|{{ tab }}|{{ width }} x {{ height }}|
+      {{ scripturalReference(bible) }} |
+      {{ scripturalReference(select_bible) }} |
+      {{ last_verse }}
     </template>
 
     <template v-slot:left>
@@ -84,8 +83,16 @@
     <template v-slot:right>
       <div class="d-flex flex-row h-100">
         <div :style="`height: ${height}px; width: ${(width / 100) * 40}px`">
+          <div>
+            <v-autocomplete
+              v-model="bible.id_bible_version"
+              :items="versions_list"
+              hide-details
+              density="compact"
+            />
+          </div>
           <div class="h-50">
-            <v-list class="overflow h-100 ma-0 pa-0" width="100%">
+            <v-list class="overflow h-100 ma-0 pa-0 no-select" width="100%">
               <v-list-item
                 v-for="(verse, num) in verses"
                 :key="num"
@@ -94,6 +101,7 @@
                 :value="verse"
                 :active="bible.verses.includes(+num)"
                 @click="selVerse($event, num)"
+                density="compact"
               >
                 <template v-slot:prepend>
                   <v-chip class="mr-2">{{ num }}</v-chip>
@@ -104,9 +112,9 @@
             </v-list>
           </div>
           <div>
-            {{ bible }}
-            ..
-            {{ select_bible }}
+            {{ select_bible.text }}
+            <br />
+            {{ select_bible.scriptural_reference }}
           </div>
         </div>
       </div>
@@ -132,14 +140,20 @@ export default {
     bible: {
       id_bible_version: null,
       id_bible_book: null,
+      version: null,
+      book: null,
       chapter: null,
       verses: [],
     },
     select_bible: {
       id_bible_version: null,
       id_bible_book: null,
+      version: null,
+      book: null,
       chapter: null,
       verses: [],
+      scriptural_reference: null,
+      text: null,
     },
     versions: [],
     books: [],
@@ -167,8 +181,19 @@ export default {
         (b) => b.id_bible_book == this.bible.id_bible_book
       );
     },
+    version() {
+      return this.versions.find(
+        (b) => b.id_bible_version == this.bible.id_bible_version
+      );
+    },
     chapters() {
       return this.book?.chapters;
+    },
+    versions_list() {
+      return this.versions.map((version) => ({
+        title: version.abbreviation + " - " + version.name,
+        value: version.id_bible_version,
+      }));
     },
   },
   watch: {
@@ -180,12 +205,17 @@ export default {
         this.bible = {
           id_bible_version: null,
           id_bible_book: null,
+          version: null,
+          book: null,
           chapter: null,
           verses: [],
         };
         this.select_bible = Object.assign({}, this.bible);
         await this.loadData();
       }
+    },
+    async "bible.id_bible_version"() {
+      await this.selVersion();
     },
   },
   methods: {
@@ -229,7 +259,8 @@ export default {
 
       if (
         this.select_bible.id_bible_book == this.bible.id_bible_book &&
-        this.select_bible.chapter == this.bible.chapter
+        this.select_bible.chapter == this.bible.chapter &&
+        this.select_bible.id_bible_version == this.bible.id_bible_version
       ) {
         this.bible.verses = this.select_bible.verses;
       }
@@ -243,12 +274,17 @@ export default {
     },
 
     async selVersion(id_bible_version) {
-      this.bible.id_bible_version = id_bible_version;
+      if (id_bible_version) {
+        this.bible.id_bible_version = id_bible_version;
+      }
+      this.bible.version = this.version?.abbreviation;
+      this.bible.verses = [];
       this.last_verse = 1;
       await this.loadData();
     },
     async selBook(id_bible_book) {
       this.bible.id_bible_book = id_bible_book;
+      this.bible.book = this.book.name;
       this.bible.verses = [];
       this.last_verse = 1;
       if (!this.bible.chapter) {
@@ -298,11 +334,71 @@ export default {
       this.last_verse = num;
       this.bible.verses.sort((a, b) => a - b);
       this.select_bible = Object.assign({}, this.bible);
+      this.select_bible.scriptural_reference = this.scripturalReference(
+        this.select_bible
+      );
+      this.select_bible.text = this.getSelectedVerses(this.bible.verses);
+    },
+    numbersInterval(numbers) {
+      if (!numbers || numbers.length === 0) return "";
+
+      numbers.sort((a, b) => a - b);
+
+      let result = [];
+      let start = numbers[0];
+      let end = numbers[0];
+
+      for (let i = 1; i <= numbers.length; i++) {
+        if (numbers[i] === end + 1) {
+          // O número atual é uma continuação da sequência
+          end = numbers[i];
+        } else {
+          // A sequência terminou
+          if (start === end) {
+            result.push(`${start}`);
+          } else {
+            result.push(`${start}-${end}`);
+          }
+          // Reinicia para a próxima sequência
+          start = numbers[i];
+          end = numbers[i];
+        }
+      }
+
+      return result.join(", ");
+    },
+    scripturalReference(data) {
+      const verses_interval = this.numbersInterval(data.verses);
+
+      if (!data.book || !data.version) {
+        return "";
+      }
+
+      return (
+        data.book +
+        " " +
+        data.chapter +
+        (verses_interval ? `:${verses_interval}` : "") +
+        (data.version ? ` (${data.version})` : "")
+      ).trim();
     },
 
-    close() {
-      //Se fechar a janela, não manter o histórico.
-      /* */
+    getSelectedVerses(keys) {
+      keys.sort((a, b) => a - b); // Ordena os versículos para garantir a sequência correta
+      let result = "";
+      let previousKey = null;
+
+      keys.forEach((key) => {
+        if (previousKey !== null && key - previousKey > 1) {
+          result += " [...] "; // Adiciona "..." se os versos não forem sequenciais
+        } else if (result) {
+          result += " "; // Adiciona um espaço entre versos consecutivos
+        }
+        result += this.verses[key];
+        previousKey = key;
+      });
+
+      return result;
     },
   },
   async mounted() {
