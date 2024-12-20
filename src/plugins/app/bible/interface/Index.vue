@@ -6,7 +6,10 @@
     closable
     minimizable
     compact
-    @close="$modules.close(module_id)"
+    @close="
+      close();
+      $modules.close(module_id);
+    "
     @minimize="$modules.minimize(module_id)"
     @resize="resize"
     :slot-left-style="`width: ${(width / 100) * 60}px`"
@@ -112,9 +115,11 @@
             </v-list>
           </div>
           <div>
+            <a @click="popup()">ABRIR PPUP</a>
             {{ select_bible.text }}
             <br />
             {{ select_bible.scriptural_reference }}
+            <Screen />
           </div>
         </div>
       </div>
@@ -125,11 +130,13 @@
 <script>
 import manifest from "../manifest.json";
 import LWindow from "@/components/Window.vue";
+import Screen from "../components/Screen.vue";
 
 export default {
   name: "CollectionsModule",
   components: {
     LWindow,
+    Screen,
   },
   data: () => ({
     lang: null,
@@ -217,6 +224,10 @@ export default {
     async "bible.id_bible_version"() {
       await this.selVersion();
     },
+    select_bible() {
+      this.send("scriptural_reference", this.select_bible.scriptural_reference);
+      this.send("text", this.select_bible.text);
+    },
   },
   methods: {
     /* METHODS OBRIGATÓRIOS - INÍCIO */
@@ -225,13 +236,13 @@ export default {
       return this.$t(`modules.${this.module_id}.${text}`);
     },
     /* METHODS OBRIGATÓRIOS - FIM */
-
+    send(param, value) {
+      this.$appdata.set(`modules.${this.module_id}.data.${param}`, value);
+    },
     async loadData() {
-      console.log("LOAD");
       this.loading = true;
 
       if (this.books.length <= 0) {
-        console.log("BOOOK");
         this.books = await this.$database.get(
           `${this.$i18n.locale}_bible_book`
         );
@@ -241,7 +252,6 @@ export default {
       }
 
       if (this.versions.length <= 0) {
-        console.log("versions");
         this.versions = await this.$database.get(
           `${this.$i18n.locale}_bible_version`
         );
@@ -252,7 +262,6 @@ export default {
 
       const bible_file = `bible_${this.bible.id_bible_version}_${this.bible.id_bible_book}_${this.bible.chapter}.json`;
       if (bible_file != this.last_bible_file) {
-        console.log("VERSE");
         this.verses = await this.$database.get(bible_file);
         this.last_bible_file = bible_file;
       }
@@ -306,12 +315,10 @@ export default {
 
       num = parseInt(num);
       if (isNaN(num)) {
-        console.error("Invalid verse number:", num);
         return;
       }
 
       if (event.ctrlKey) {
-        console.log("CTRL+Click no verso:", num);
         const index = this.bible.verses.indexOf(num);
         if (index === -1) {
           this.bible.verses.push(num);
@@ -319,7 +326,6 @@ export default {
           this.bible.verses.splice(index, 1);
         }
       } else if (event.shiftKey) {
-        console.log("SHIFT+Click no verso:", num, this.last_verse);
         const start = Math.min(num, this.last_verse);
         const end = Math.max(num, this.last_verse);
         for (let i = start; i <= end; i++) {
@@ -328,7 +334,6 @@ export default {
           }
         }
       } else {
-        console.log("Clique normal no verso:", num);
         this.bible.verses = [num];
       }
       this.last_verse = num;
@@ -399,6 +404,24 @@ export default {
       });
 
       return result;
+    },
+    popup: function () {
+      this.$popup.open("bible");
+    },
+
+    close() {
+      this.$popup.exit();
+      this.bible.verses = [];
+      this.select_bible = {
+        id_bible_version: null,
+        id_bible_book: null,
+        version: null,
+        book: null,
+        chapter: null,
+        verses: [],
+        scriptural_reference: null,
+        text: null,
+      };
     },
   },
   async mounted() {

@@ -30,17 +30,11 @@ export default {
       return this.$modules.get(this.module_id);
     },
     /* COMPUTEDS OBRIGATÓRIAS - FIM */
-    loading() {
-      return this.module.loading;
-    },
     config() {
       return this.$media.config();
     },
     slide_index() {
       return this.config.slide_index;
-    },
-    slides() {
-      return this.$media.slides();
     },
     slide() {
       return this.$media.slide();
