@@ -15,12 +15,7 @@
     :slot-left-style="`width: ${(width / 100) * 60}px`"
     :slot-right-style="`width: ${(width / 100) * 40}px`"
   >
-    <template v-slot:header>
-      HEADER|{{ tab }}|{{ width }} x {{ height }}|
-      {{ scripturalReference(bible) }} |
-      {{ scripturalReference(select_bible) }} |
-      {{ last_verse }}
-    </template>
+    <template v-slot:header> {{ scripturalReference(bible) }} </template>
 
     <template v-slot:left>
       <div class="d-flex flex-row h-100">
@@ -86,7 +81,7 @@
     <template v-slot:right>
       <div class="d-flex flex-row h-100">
         <div :style="`height: ${height}px; width: ${(width / 100) * 40}px`">
-          <div>
+          <div style="height: 40px">
             <v-autocomplete
               v-model="bible.id_bible_version"
               :items="versions_list"
@@ -94,7 +89,7 @@
               density="compact"
             />
           </div>
-          <div class="h-50">
+          <div :style="`height: ${height / 2}px;`">
             <v-list class="overflow h-100 ma-0 pa-0 no-select" width="100%">
               <v-list-item
                 v-for="(verse, num) in verses"
@@ -114,13 +109,18 @@
               </v-list-item>
             </v-list>
           </div>
-          <div>
-            <a @click="popup()">ABRIR PPUP</a>
-            {{ select_bible.text }}
-            <br />
-            {{ select_bible.scriptural_reference }}
-            <Screen />
+          <div style="height: 48px">
+            <v-toolbar density="compact">
+              <v-spacer />
+              <v-btn icon @click="clean()">
+                <v-icon>mdi-eraser</v-icon>
+              </v-btn>
+              <v-btn icon @click="popup()">
+                <v-icon>mdi-open-in-new</v-icon>
+              </v-btn>
+            </v-toolbar>
           </div>
+          <Screen :height="height / 2 - 88" />
         </div>
       </div>
     </template>
@@ -407,6 +407,19 @@ export default {
     },
     popup: function () {
       this.$popup.open("bible");
+    },
+    clean: function () {
+      this.bible.verses = [];
+      this.select_bible = {
+        id_bible_version: null,
+        id_bible_book: null,
+        version: null,
+        book: null,
+        chapter: null,
+        verses: [],
+        scriptural_reference: null,
+        text: null,
+      };
     },
 
     close() {
