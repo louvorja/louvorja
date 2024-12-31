@@ -260,7 +260,7 @@ export default {
         }
       }
 
-      const bible_file = `bible_${this.bible.id_bible_version}_${this.bible.id_bible_book}_${this.bible.chapter}.json`;
+      const bible_file = `bible_${this.bible.id_bible_version}_${this.bible.id_bible_book}_${this.bible.chapter}`;
       if (bible_file != this.last_bible_file) {
         this.verses = await this.$database.get(bible_file);
         this.last_bible_file = bible_file;
