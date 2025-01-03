@@ -174,13 +174,7 @@
           icon="mdi-fullscreen"
           @click="fullscreen()"
         />
-        <v-btn
-          v-if="location !== 'fullscreen' && !is_mobile"
-          variant="text"
-          size="small"
-          icon="mdi-open-in-new"
-          @click="popup()"
-        />
+        <LScreenBtn v-if="location !== 'fullscreen'" module="media" />
 
         <v-menu v-if="location !== 'fullscreen' && compact">
           <template v-slot:activator="{ props }">
@@ -260,10 +254,15 @@
 </template>
 
 <script>
+import LScreenBtn from "@/components/buttons/Screen.vue";
+
 export default {
   name: "PlayerComponent",
   props: {
     location: String,
+  },
+  components: {
+    LScreenBtn,
   },
   computed: {
     media() {
@@ -479,9 +478,6 @@ export default {
     },
     maximize: function () {
       this.$media.maximize();
-    },
-    popup: function () {
-      this.$popup.open("media");
     },
     close: function () {
       this.$media.close();

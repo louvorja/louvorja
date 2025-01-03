@@ -112,12 +112,13 @@
           <div style="height: 48px">
             <v-toolbar density="compact">
               <v-spacer />
-              <v-btn icon @click="clean()">
-                <v-icon>mdi-eraser</v-icon>
-              </v-btn>
-              <v-btn icon @click="popup()">
-                <v-icon>mdi-open-in-new</v-icon>
-              </v-btn>
+              <v-btn
+                variant="text"
+                size="small"
+                icon="mdi-eraser"
+                @click="clean()"
+              />
+              <LScreenBtn module="bible" />
             </v-toolbar>
           </div>
           <Screen :height="height / 2 - 88" />
@@ -131,12 +132,14 @@
 import manifest from "../manifest.json";
 import LWindow from "@/components/Window.vue";
 import Screen from "../components/Screen.vue";
+import LScreenBtn from "@/components/buttons/Screen.vue";
 
 export default {
   name: "CollectionsModule",
   components: {
     LWindow,
     Screen,
+    LScreenBtn,
   },
   data: () => ({
     lang: null,
@@ -404,9 +407,6 @@ export default {
       });
 
       return result;
-    },
-    popup: function () {
-      this.$popup.open("bible");
     },
     clean: function () {
       this.bible.verses = [];
