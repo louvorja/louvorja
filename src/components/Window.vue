@@ -174,6 +174,7 @@ export default {
     },
     index() {
       this.checkScroll();
+      this.windowResize();
     },
     scrollPos(value) {
       const container = this.$refs.main_container;

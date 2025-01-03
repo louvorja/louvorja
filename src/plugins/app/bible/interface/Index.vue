@@ -14,6 +14,7 @@
     @resize="resize"
     :slot-left-style="`width: ${(width / 100) * 60}px`"
     :slot-right-style="`width: ${(width / 100) * 40}px`"
+    :index="loading"
   >
     <template v-slot:header> {{ scripturalReference(bible) }} </template>
 
