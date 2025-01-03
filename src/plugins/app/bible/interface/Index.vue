@@ -25,13 +25,21 @@
             :style="`height: ${height}px`"
             class="overflow-auto d-flex flex-row flex-wrap justify-center align-content-start"
           >
+            <v-skeleton-loader
+              v-for="n in 10"
+              :key="n"
+              v-show="loading_book"
+              class="ma-1"
+              :height="80"
+              :width="100"
+            />
             <v-card
               v-for="book in books"
               :key="book.id_bible_book"
               :color="book.color"
               class="ma-1 d-flex align-center flex-column"
-              height="80"
-              width="100"
+              :height="80"
+              :width="100"
               hover
               :variant="
                 book.id_bible_book == bible.id_bible_book ? 'flat' : 'tonal'
@@ -56,13 +64,21 @@
             :style="`height: ${height}px`"
             class="overflow-auto d-flex flex-row flex-wrap justify-center align-content-start"
           >
+            <v-skeleton-loader
+              v-for="n in 10"
+              :key="n"
+              v-show="loading_book"
+              class="ma-1"
+              :height="40"
+              :width="40"
+            />
             <v-card
               v-for="chapter in chapters"
               :key="chapter"
               :color="book?.color"
               class="ma-1 d-flex align-center flex-column"
-              height="40"
-              width="40"
+              :height="40"
+              :width="40"
               hover
               :variant="chapter == bible.chapter ? 'flat' : 'tonal'"
               @click="selChapter(chapter)"
@@ -91,6 +107,10 @@
             />
           </div>
           <div :style="`height: ${height / 2}px;`">
+            <v-skeleton-loader
+              v-show="loading_book || loading_verses"
+              type="list-item-two-line"
+            />
             <v-list class="overflow h-100 ma-0 pa-0 no-select" width="100%">
               <v-list-item
                 v-for="(verse, num) in verses"
@@ -175,6 +195,8 @@ export default {
   data: () => ({
     lang: null,
     loading: false,
+    loading_book: false,
+    loading_verses: false,
     tab: null,
     width: 0,
     height: 0,
@@ -277,12 +299,14 @@ export default {
       this.loading = true;
 
       if (this.books.length <= 0) {
+        this.loading_book = true;
         this.books = await this.$database.get(
           `${this.$i18n.locale}_bible_book`
         );
         if (!this.bible.id_bible_book) {
           await this.selBook(this.books[0].id_bible_book);
         }
+        this.loading_book = false;
       }
 
       if (this.versions.length <= 0) {
@@ -296,9 +320,11 @@ export default {
 
       const bible_file = `bible_${this.bible.id_bible_version}_${this.bible.id_bible_book}_${this.bible.chapter}`;
       if (bible_file != this.last_bible_file) {
+        this.loading_verses = true;
         this.verses = {};
         this.verses = await this.$database.get(bible_file);
         this.last_bible_file = bible_file;
+        this.loading_verses = false;
       }
 
       if (
