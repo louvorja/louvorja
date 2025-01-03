@@ -12,14 +12,42 @@
     "
     @minimize="$modules.minimize(module_id)"
     @resize="resize"
-    :slot-left-style="`width: ${(width / 100) * 60}px`"
-    :slot-right-style="`width: ${(width / 100) * 40}px`"
+    :slot-left-style="{ width: compact ? 0 : (width / 100) * 60 + 'px' }"
+    :slot-right-style="{ width: compact ? width : (width / 100) * 40 + 'px' }"
     :index="loading"
   >
-    <template v-slot:header> {{ scripturalReference(bible) }} </template>
+    <template v-slot:header>
+      <div v-if="compact" :class="{ 'd-flex': !super_compact }">
+        <v-autocomplete
+          v-model="bible.id_bible_book"
+          :items="books_list"
+          hide-details
+          density="compact"
+          variant="plain"
+          min-width="30%"
+        />
+        <v-autocomplete
+          v-model="bible.chapter"
+          :items="chapters_list"
+          hide-details
+          density="compact"
+          variant="plain"
+          min-width="20%"
+        />
+        <v-autocomplete
+          v-model="bible.id_bible_version"
+          :items="versions_list"
+          hide-details
+          density="compact"
+          variant="plain"
+          min-width="50%"
+        />
+      </div>
+      <span v-else>{{ scripturalReference(bible) }} </span>
+    </template>
 
     <template v-slot:left>
-      <div class="d-flex flex-row h-100">
+      <div v-if="!compact" class="d-flex flex-row h-100">
         <div class="w-70 h-100">
           <div
             :style="`height: ${height}px`"
@@ -99,13 +127,19 @@
 
     <template v-slot:right>
       <div class="d-flex flex-row h-100">
-        <div :style="`height: ${height}px; width: ${(width / 100) * 40}px`">
-          <div style="height: 40px">
+        <div
+          :style="{
+            height: height + 'px',
+            width: (compact ? width : (width / 100) * 40) + 'px',
+          }"
+        >
+          <div v-if="!compact" style="height: 40px">
             <v-autocomplete
               v-model="bible.id_bible_version"
               :items="versions_list"
               hide-details
               density="compact"
+              variant="underlined"
             />
           </div>
           <div :style="`height: ${height / 2}px;`">
@@ -175,7 +209,7 @@
               <LScreenBtn module="bible" />
             </v-toolbar>
           </div>
-          <Screen :height="height / 2 - 88" />
+          <Screen :height="compact ? height / 2 - 48 : height / 2 - 88" />
         </div>
       </div>
     </template>
@@ -255,11 +289,26 @@ export default {
     chapters() {
       return this.book?.chapters;
     },
+    books_list() {
+      return this.books.map((book) => ({
+        title: book.name,
+        value: book.id_bible_book,
+      }));
+    },
+    chapters_list() {
+      return Array.from({ length: this.chapters }, (_, index) => index + 1);
+    },
     versions_list() {
       return this.versions.map((version) => ({
         title: version.abbreviation + " - " + version.name,
         value: version.id_bible_version,
       }));
+    },
+    compact: function () {
+      return this.$vuetify.display.width <= 750;
+    },
+    super_compact: function () {
+      return this.$vuetify.display.width <= 400;
     },
   },
   watch: {
@@ -279,6 +328,12 @@ export default {
         this.select_bible = Object.assign({}, this.bible);
         await this.loadData();
       }
+    },
+    async "bible.id_bible_book"() {
+      await this.selBook();
+    },
+    async "bible.chapter"() {
+      await this.selChapter();
     },
     async "bible.id_bible_version"() {
       await this.selVersion();
@@ -356,7 +411,9 @@ export default {
       await this.loadData();
     },
     async selBook(id_bible_book) {
-      this.bible.id_bible_book = id_bible_book;
+      if (id_bible_book) {
+        this.bible.id_bible_book = id_bible_book;
+      }
       this.bible.book = this.book.name;
       this.bible.verses = [];
       this.last_verse = 1;
@@ -374,7 +431,9 @@ export default {
       }
     },
     async selChapter(chapter) {
-      this.bible.chapter = chapter;
+      if (chapter) {
+        this.bible.chapter = chapter;
+      }
       this.bible.verses = [];
       this.last_verse = 1;
       await this.loadData();

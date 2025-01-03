@@ -129,8 +129,8 @@ export default {
     color: String,
     slotLeftClass: String,
     slotRightClass: String,
-    slotLeftStyle: String,
-    slotRightStyle: String,
+    slotLeftStyle: [String, Object],
+    slotRightStyle: [String, Object],
   },
 
   data: () => ({
