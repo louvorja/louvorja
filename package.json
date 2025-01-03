@@ -5,9 +5,10 @@
   "scripts": {
     "version:major": "npm version major",
     "version:minor": "npm version minor",
+    "version:patch": "npm version patch",
     "version:max": "npm version major",
     "version:min": "npm version minor",
-    "version:patch": "npm version patch",
+    "version:bug": "npm version patch",
     "serve": "vite preview",
     "build": "vite build",
     "build:web": "vite build && node node/zip_dist.js && node node/send_ftp.js && node node/publish_ftp.js",
