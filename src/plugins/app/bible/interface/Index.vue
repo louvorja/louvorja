@@ -45,6 +45,7 @@
                 book.id_bible_book == bible.id_bible_book ? 'flat' : 'tonal'
               "
               @click="selBook(book.id_bible_book)"
+              :id="`listBook_${book.id_bible_book}`"
             >
               <v-card-title
                 class="flex-grow-1 pa-0 ma-0 text-h4 d-flex align-center"
@@ -82,6 +83,7 @@
               hover
               :variant="chapter == bible.chapter ? 'flat' : 'tonal'"
               @click="selChapter(chapter)"
+              :id="`listChapter_${chapter}`"
             >
               <v-card-title
                 class="flex-grow-1 pa-0 ma-0 d-flex align-center font-weight-regular"
@@ -121,6 +123,7 @@
                 :active="bible.verses.includes(+num)"
                 @click="selVerse($event, num)"
                 density="compact"
+                :id="`listVerse_${num}`"
               >
                 <template v-slot:prepend>
                   <v-chip class="mr-2">{{ num }}</v-chip>
@@ -364,12 +367,22 @@ export default {
       } else {
         await this.loadData();
       }
+
+      const element = document.getElementById(`listBook_${id_bible_book}`);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     },
     async selChapter(chapter) {
       this.bible.chapter = chapter;
       this.bible.verses = [];
       this.last_verse = 1;
       await this.loadData();
+
+      const element = document.getElementById(`listChapter_${chapter}`);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     },
     async selVerse(event, num) {
       if (event) {
@@ -406,6 +419,11 @@ export default {
         this.select_bible
       );
       this.select_bible.text = this.getSelectedVerses(this.select_bible.verses);
+
+      const element = document.getElementById(`listVerse_${this.last_verse}`);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     },
     async prevVerse() {
       if (this.select_bible?.id_bible_version) {
@@ -452,7 +470,7 @@ export default {
         await this.selChapter(this.select_bible.chapter);
       }
       if (this.select_bible?.verses && this.select_bible.verses.length > 0) {
-        let verse = Math.max(this.select_bible.verses);
+        let verse = Math.max(...this.select_bible.verses);
         const max_verse = Math.max(...Object.keys(this.verses).map(Number));
         const max_chapter = this.book.chapters;
         if (verse < max_verse) {
