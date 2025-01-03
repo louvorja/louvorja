@@ -212,11 +212,16 @@ export default {
       }
     },
     windowResize() {
+      let el = this.$refs?.container?.$el;
+      if (!el) {
+        return;
+      }
+
       let data = {
-        container_width: this.$refs.container.$el.clientWidth,
-        container_height: this.$refs.container.$el.clientHeight,
+        container_width: el.clientWidth,
+        container_height: el.clientHeight,
       };
-      this.container_height = this.$refs.container.$el.clientHeight;
+      this.container_height = el.clientHeight;
       this.$emit("resize", data);
     },
 
