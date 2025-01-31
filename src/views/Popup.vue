@@ -1,6 +1,6 @@
 <template>
   <div class="w-100 h-100" style="background: #000">
-    <component v-if="module" :is="loadPluginComponent()" />
+    <component v-if="module" :is="loadModuleComponent()" />
   </div>
 </template>
 
@@ -18,10 +18,10 @@ export default {
     },
   },
   methods: {
-    loadPluginComponent() {
+    loadModuleComponent() {
       return defineAsyncComponent(() => {
-        // Try to load from plugin interface directory
-        return import(`@/plugins/app/${this.module}/interface/Popup.vue`).catch(
+        // Try to load from modules interface directory
+        return import(`@/modules/${this.module}/interface/Popup.vue`).catch(
           (e) => {
             this.$alert.error({
               text: "messages.error_import_module",
