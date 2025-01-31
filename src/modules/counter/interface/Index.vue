@@ -1,16 +1,8 @@
 <template>
-  <l-window
-    v-model="module.show"
-    :title="t('title')"
-    :icon="module.icon"
-    closable
-    minimizable
-    @close="$modules.close(module_id)"
-    @minimize="$modules.minimize(module_id)"
-  >
+  <ModuleContainer ref="moduleContainer" :manifest="manifest">
     <template v-slot:header>
       <v-tabs v-model="tab" align-tabs="center" :color="$theme.primary()">
-        <v-tab :value="1">{{ t("text") }}</v-tab>
+        <v-tab :value="1">Simple Counter</v-tab>
         <v-tab :value="2">Advanced Counter</v-tab>
         <v-tab :value="3">Counter History</v-tab>
       </v-tabs>
@@ -89,62 +81,48 @@
         </v-container>
       </v-tabs-window-item>
     </v-tabs-window>
-  </l-window>
+  </ModuleContainer>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
+import ModuleContainer from "@/layout/ModuleContainer.vue";
 import manifest from "../manifest.json";
-import LWindow from "@/components/Window.vue";
 
-export default {
-  name: "CounterModule",
-  components: {
-    LWindow,
-  },
-  data: () => ({
-    tab: 1,
-    count: 0,
-    step: 1,
-    history: [],
-  }),
-  computed: {
-    /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
-    /* NÃO MODIFICAR */
-    module_id() {
-      return manifest.id;
-    },
-    module() {
-      return this.$modules.get(this.module_id);
-    },
-    /* COMPUTEDS OBRIGATÓRIAS - FIM */
-  },
-  methods: {
-    /* METHODS OBRIGATÓRIOS - INÍCIO */
-    /* NÃO MODIFICAR */
-    t(text) {
-      return this.$t(`modules.${this.module_id}.${text}`);
-    },
-    /* METHODS OBRIGATÓRIOS - FIM */
-    increment() {
-      this.count++;
-      this.history.unshift(1);
-    },
-    decrement() {
-      this.count--;
-      this.history.unshift(-1);
-    },
-    incrementBy(value) {
-      this.count += value;
-      this.history.unshift(value);
-    },
-    decrementBy(value) {
-      this.count -= value;
-      this.history.unshift(-value);
-    },
-    reset() {
-      this.count = 0;
-      this.history = [];
-    },
-  },
+// ---- Obrigatório para tradução -------
+const moduleContainer = ref(null);
+const t = (key) => {
+  return moduleContainer.value?.t(key) || key;
 };
+// ---------------------------------------
+
+let tab = ref(1);
+let count = ref(0);
+let step = ref(1);
+let history = ref([]);
+
+function increment() {
+      count.value++;
+      history.value.unshift(1);
+}
+
+function decrement() {
+  count.value--;
+  history.value.unshift(-1);
+}
+
+function incrementBy(value) {
+  count.value += value;
+  history.value.unshift(value);
+}
+
+function decrementBy(value) {
+  count.value -= value;
+  history.value.unshift(-value);
+}
+
+function reset() {
+  count.value = 0;
+  history.value = [];
+}
 </script>
