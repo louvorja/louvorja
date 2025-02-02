@@ -15,8 +15,8 @@ loadFonts();
 
 const app = createApp(App);
 
-//Plugins
-import PluginManager from "@/helpers/PluginManager";
+//Modules
+import ModuleManager from "@/helpers/ModuleManager";
 
 //Helpers
 import Modules from "@/helpers/Modules";
@@ -56,6 +56,6 @@ app.use(VueFullscreen);
 
 createI18nInstance().then((i18n) => {
   app.use(i18n);
-  PluginManager.init(i18n);
+  ModuleManager.init(i18n);
   app.mount("#app");
 });

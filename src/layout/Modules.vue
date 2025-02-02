@@ -1,9 +1,9 @@
 <template>
   <div v-if="import_modules">
     <component
-      v-for="plugin in plugins"
-      :key="plugin.id"
-      :is="loadPluginComponent(plugin)"
+      v-for="module in modules"
+      :key="module.id"
+      :is="loadModuleComponent(module)"
     />
   </div>
 </template>
@@ -14,7 +14,7 @@ import { defineAsyncComponent } from "vue";
 export default {
   name: "ModulesLayout",
   computed: {
-    plugins() {
+    modules() {
       return this.$modules.get();
     },
     import_modules() {
@@ -22,14 +22,19 @@ export default {
     },
   },
   methods: {
-    loadPluginComponent(plugin) {
+    loadModuleComponent(module) {
       return defineAsyncComponent(() => {
-        // Try to load from plugin interface directory
-        return import(`@/plugins/app/${plugin.id}/interface/Index.vue`).catch(
-          (e) => {
-            this.$alert.error({
-              text: "messages.error_import_module",
-              error: e,
+        // Try to load from modules interface directory
+        return import(`@/modules/core/${module.id}/interface/Index.vue`).catch(
+          () => {
+            // Try to load from CUSTOM module interface directory
+            return import(`@/modules/${module.id}/interface/Index.vue`).catch((e) => {
+              this.$alert.error({
+                text: "messages.error_import_module",
+                error: e,
+              });
+
+              return null
             });
           }
         );
