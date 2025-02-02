@@ -1,13 +1,5 @@
 <template>
-  <l-window
-    v-model="module.show"
-    :title="t('title')"
-    :icon="module.icon"
-    closable
-    minimizable
-    @close="$modules.close(module_id)"
-    @minimize="$modules.minimize(module_id)"
-  >
+  <ModuleContainer ref="moduleContainer" :manifest="manifest">
     <template v-slot:header>
       <v-tabs v-model="tab" align-tabs="center" :color="$theme.primary()">
         <v-tab :value="1">{{ t("modules") }}</v-tab>
@@ -20,54 +12,46 @@
     <v-tabs-window v-model="tab">
       <v-tabs-window-item v-for="n in 4" :key="n" :value="n">
         <v-container fluid>
-          <module-list v-if="n == 1" />
-          <vue-json-pretty v-if="n == 2" :data="$appdata.get()" />
-          <vue-json-pretty v-if="n == 3" :data="$userdata.get()" />
-          <vue-json-pretty v-if="n == 4" :data="$vuetify" />
+          <ModuleList v-if="n == 1" />
+          <VueJsonPretty v-if="n == 2" :data="$appdata.get()" />
+          <VueJsonPretty v-if="n == 3" :data="$userdata.get()" />
+          <VueJsonPretty v-if="n == 4" :data="$vuetify" />
         </v-container>
       </v-tabs-window-item>
     </v-tabs-window>
-  </l-window>
+  </ModuleContainer>
 </template>
 
 <script>
-import manifest from "../manifest.json";
-
 import VueJsonPretty from "vue-json-pretty";
 import "vue-json-pretty/lib/styles.css";
-
-import LWindow from "@/components/Window.vue";
-
 import ModuleList from "../components/ModuleList.vue";
 
 export default {
-  name: "DevModule",
+  name: manifest.id,
   components: {
-    LWindow,
+    ModuleContainer,
     VueJsonPretty,
     ModuleList,
   },
   data: () => ({
     tab: null,
   }),
-  computed: {
-    /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
-    /* NÃO MODIFICAR */
-    module_id() {
-      return manifest.id;
-    },
-    module() {
-      return this.$modules.get(this.module_id);
-    },
-    /* COMPUTEDS OBRIGATÓRIAS - FIM */
-  },
-  methods: {
-    /* METHODS OBRIGATÓRIOS - INÍCIO */
-    /* NÃO MODIFICAR */
-    t(text) {
-      return this.$t(`modules.${this.module_id}.${text}`);
-    },
-    /* METHODS OBRIGATÓRIOS - FIM */
-  },
 };
 </script>
+
+<!-- ########################################################### -->
+<!-- ####### SETUP OBRIGATÓRIA PARA INSTALAÇÃO DO MODULO ####### -->
+<!-- ########################################################### -->
+<script setup>
+import manifest from "../manifest.json";
+import ModuleContainer from "@/layout/ModuleContainer.vue";
+import { ref } from "vue";
+const moduleContainer = ref(null);
+const t = (key) => {
+  return moduleContainer.value?.t(key) || key;
+};
+</script>
+<!-- ########################################################### -->
+<!-- ########################################################### -->
+<!-- ########################################################### -->

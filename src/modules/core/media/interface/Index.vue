@@ -1,5 +1,5 @@
 <template>
-  <l-window
+  <Window
     v-model="module.show"
     :title="config?.title"
     :subtitle="
@@ -123,13 +123,14 @@
     <template v-slot:footer>
       <l-player location="window" />
     </template>
-  </l-window>
+  </Window>
 </template>
 
 <script>
 import manifest from "../manifest.json";
 
-import LWindow from "@/components/Window.vue";
+import Window from "@/components/Window.vue";
+
 import LSlide from "@/components/Slide.vue";
 import LPlayer from "@/components/Player.vue";
 import LFullscreenPlayer from "@/components/FullscreenPlayer.vue";
@@ -137,7 +138,7 @@ import LFullscreenPlayer from "@/components/FullscreenPlayer.vue";
 export default {
   name: "MediaComponent",
   components: {
-    LWindow,
+    Window,
     LSlide,
     LPlayer,
     LFullscreenPlayer,

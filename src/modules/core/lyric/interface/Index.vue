@@ -1,5 +1,5 @@
 <template>
-  <l-window
+  <Window
     v-model="module.show"
     :title="config?.title"
     :subtitle="
@@ -18,18 +18,18 @@
         {{ line.lyric }}&nbsp;
       </div>
     </div>
-  </l-window>
+  </Window>
 </template>
 
 <script>
 import manifest from "../manifest.json";
 
-import LWindow from "@/components/Window.vue";
+import Window from "@/components/Window.vue";
 
 export default {
   name: "LyricModule",
   components: {
-    LWindow,
+    Window,
   },
   computed: {
     /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */

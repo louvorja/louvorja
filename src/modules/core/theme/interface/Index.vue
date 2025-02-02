@@ -1,14 +1,5 @@
 <template>
-  <l-window
-    v-model="module.show"
-    :title="t('title')"
-    :icon="module.icon"
-    closable
-    minimizable
-    size="small"
-    @close="$modules.close(module_id)"
-    @minimize="$modules.minimize(module_id)"
-  >
+  <ModuleContainer ref="moduleContainer" :manifest="manifest">
     <div v-for="(group, mode) in themes" :key="mode" class="mb-3">
       <div class="subtitle-1 font-weight-medium">
         {{ mode == "dark" ? t("dark-themes") : t("light-themes") }}
@@ -26,41 +17,17 @@
         <v-avatar :color="theme.colors.primary" size="22" />
       </v-btn>
     </div>
-  </l-window>
+  </ModuleContainer>
 </template>
 
 <script>
-import manifest from "../manifest.json";
-
-import LWindow from "@/components/Window.vue";
-
 export default {
-  name: "ThemeModule",
-  components: {
-    LWindow,
-  },
+  name: manifest.id,
   data: () => ({
     current: {},
     themes: {},
   }),
-  computed: {
-    /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
-    /* NÃO MODIFICAR */
-    module_id() {
-      return manifest.id;
-    },
-    module() {
-      return this.$modules.get(this.module_id);
-    },
-    /* COMPUTEDS OBRIGATÓRIAS - FIM */
-  },
   methods: {
-    /* METHODS OBRIGATÓRIOS - INÍCIO */
-    /* NÃO MODIFICAR */
-    t(text) {
-      return this.$t(`modules.${this.module_id}.${text}`);
-    },
-    /* METHODS OBRIGATÓRIOS - FIM */
     setTheme(theme_id) {
       this.current = theme_id;
       this.$vuetify.theme.global.name = this.current;
@@ -83,3 +50,19 @@ export default {
   },
 };
 </script>
+
+<!-- ########################################################### -->
+<!-- ####### SETUP OBRIGATÓRIA PARA INSTALAÇÃO DO MODULO ####### -->
+<!-- ########################################################### -->
+<script setup>
+import manifest from "../manifest.json";
+import ModuleContainer from "@/layout/ModuleContainer.vue";
+import { ref } from "vue";
+const moduleContainer = ref(null);
+const t = (key) => {
+  return moduleContainer.value?.t(key) || key;
+};
+</script>
+<!-- ########################################################### -->
+<!-- ########################################################### -->
+<!-- ########################################################### -->

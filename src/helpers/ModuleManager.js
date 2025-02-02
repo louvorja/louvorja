@@ -90,9 +90,7 @@ export default {
       $dev.write(
         "module_install",
         manifest.id,
-        manifest.development
-          ? "(modo DESENVOLVIMENTO | não será exibido em produção)"
-          : ""
+        manifest.development ? "[dev]" : ""
       );
 
       return true;

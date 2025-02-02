@@ -1,16 +1,9 @@
 <template>
-  <l-window
-    v-model="module.show"
-    :title="t('title')"
-    :icon="module.icon"
-    closable
-    minimizable
-    compact
-    @close="
-      close();
-      $modules.close(module_id);
-    "
-    @minimize="$modules.minimize(module_id)"
+  <ModuleContainer
+    ref="moduleContainer"
+    :manifest="manifest"
+    @show="show"
+    @close="close"
   >
     <template v-slot:header>
       <v-toolbar color="transparent" v-if="compact">
@@ -94,7 +87,7 @@
     <div class="d-flex flex-wrap justify-center">
       <v-card
         :style="
-          this.$vuetify.display.width > 350
+          $vuetify.display.width > 350
             ? 'min-width: 300px; max-width: 300px'
             : 'width:100%'
         "
@@ -111,7 +104,7 @@
           <v-avatar
             v-if="album.url_image"
             class="ma-3"
-            :size="this.$vuetify.display.width > 350 ? 125 : 75"
+            :size="$vuetify.display.width > 350 ? 125 : 75"
             tile
             rounded="0"
           >
@@ -125,19 +118,12 @@
         </div>
       </v-card>
     </div>
-  </l-window>
+  </ModuleContainer>
 </template>
 
 <script>
-import manifest from "../manifest.json";
-import LWindow from "@/components/Window.vue";
-
 export default {
-  name: "CollectionsModule",
-  components: {
-    LWindow,
-  },
-
+  name: manifest.id,
   data: () => ({
     categories: [],
     lang: null,
@@ -146,19 +132,10 @@ export default {
     error: null,
   }),
   computed: {
-    /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
-    /* NÃO MODIFICAR */
-    module_id() {
-      return manifest.id;
-    },
-    module() {
-      return this.$modules.get(this.module_id);
-    },
-    /* COMPUTEDS OBRIGATÓRIAS - FIM */
-
-    show() {
-      return this.module.show;
-    },
+    /*show() {
+      let module = this.$modules.get(manifest.id);
+      return module.show;
+    },*/
     albums() {
       if (!this.categories) {
         return [];
@@ -181,27 +158,7 @@ export default {
       return this.$vuetify.display.width <= 600;
     },
   },
-  watch: {
-    async show() {
-      if (this.show && this.lang != this.$i18n.locale) {
-        await this.loadData();
-      } else if (
-        this.show &&
-        this.categories.length > 0 &&
-        this.id_category == null
-      ) {
-        this.id_category = this.categories[0].id_category;
-      }
-    },
-  },
   methods: {
-    /* METHODS OBRIGATÓRIOS - INÍCIO */
-    /* NÃO MODIFICAR */
-    t(text) {
-      return this.$t(`modules.${this.module_id}.${text}`);
-    },
-    /* METHODS OBRIGATÓRIOS - FIM */
-
     async loadData() {
       this.id_category = null;
       this.categories = [];
@@ -232,6 +189,17 @@ export default {
     openAlbum(id_album) {
       this.$media.openAlbum(id_album);
     },
+    async show(value) {
+      if (value && this.lang != this.$i18n.locale) {
+        await this.loadData();
+      } else if (
+        value &&
+        this.categories.length > 0 &&
+        this.id_category == null
+      ) {
+        this.id_category = this.categories[0].id_category;
+      }
+    },
     close() {
       //Se fechar a janela, não manter o histórico.
       this.id_category = null;
@@ -242,3 +210,19 @@ export default {
   },
 };
 </script>
+
+<!-- ########################################################### -->
+<!-- ####### SETUP OBRIGATÓRIA PARA INSTALAÇÃO DO MODULO ####### -->
+<!-- ########################################################### -->
+<script setup>
+import manifest from "../manifest.json";
+import ModuleContainer from "@/layout/ModuleContainer.vue";
+import { ref } from "vue";
+const moduleContainer = ref(null);
+const t = (key) => {
+  return moduleContainer.value?.t(key) || key;
+};
+</script>
+<!-- ########################################################### -->
+<!-- ########################################################### -->
+<!-- ########################################################### -->

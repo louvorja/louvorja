@@ -1,5 +1,5 @@
 <template>
-  <l-window
+  <Window
     v-model="module.show"
     :title="module?.data?.name"
     :image="module?.data?.url_image ? $path.file(module.data.url_image) : ''"
@@ -53,7 +53,7 @@
             <td class="text-right">{{ $datetime.shortTime(item.duration) }}</td>
             <td>
               <div class="d-flex justify-end">
-                <l-music-menu-table
+                <MusicMenuTable
                   color="#FFF"
                   :id_music="item.id_music"
                   :has_instrumental_music="item.has_instrumental_music"
@@ -66,20 +66,20 @@
 
       <v-progress-linear v-if="loading" color="white" indeterminate />
     </template>
-  </l-window>
+  </Window>
 </template>
 
 <script>
 import manifest from "../manifest.json";
 
-import LWindow from "@/components/Window.vue";
-import LMusicMenuTable from "@/components/MusicMenuTable.vue";
+import Window from "@/components/Window.vue";
+import MusicMenuTable from "@/components/MusicMenuTable.vue";
 
 export default {
   name: "AlbumModule",
   components: {
-    LWindow,
-    LMusicMenuTable,
+    Window,
+    MusicMenuTable,
   },
   computed: {
     /* COMPUTEDS OBRIGATÓRIAS - INÍCIO */
