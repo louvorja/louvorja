@@ -1,5 +1,6 @@
 {
   "active": true,
+  "development": true,
   "id": "counter",
   "name": "Counter Module",
   "version": "1.0.0",

@@ -84,6 +84,12 @@
   </ModuleContainer>
 </template>
 
+<script>
+export default {
+  name: "CounterModule",
+};
+</script>
+
 <script setup>
 import { ref } from "vue";
 import ModuleContainer from "@/layout/ModuleContainer.vue";
@@ -102,8 +108,8 @@ let step = ref(1);
 let history = ref([]);
 
 function increment() {
-      count.value++;
-      history.value.unshift(1);
+  count.value++;
+  history.value.unshift(1);
 }
 
 function decrement() {

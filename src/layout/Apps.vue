@@ -22,7 +22,13 @@
                       : !module.development || (is_dev && module.development)
                   "
                   hover
-                  :color="module.invalid ? 'error' : $theme.primary()"
+                  :color="
+                    module.invalid
+                      ? 'error'
+                      : module.development
+                      ? 'warning'
+                      : $theme.primary()
+                  "
                   @click="$modules.open(module_key)"
                   class="ma-2"
                   :width="130"

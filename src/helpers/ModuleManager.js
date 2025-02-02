@@ -87,7 +87,13 @@ export default {
       }
 
       // Log installation
-      $dev.write("module_install", manifest.id);
+      $dev.write(
+        "module_install",
+        manifest.id,
+        manifest.development
+          ? "(modo DESENVOLVIMENTO | não será exibido em produção)"
+          : ""
+      );
 
       return true;
     } catch (error) {
