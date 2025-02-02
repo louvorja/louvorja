@@ -5,10 +5,13 @@
         v-for="(group, group_key) in module_group"
         :key="group_key"
       >
-        <v-expansion-panel-title class="my-0 py-0">
+        <v-expansion-panel-title
+          v-if="countModules(group.modules) != 0"
+          class="my-0 py-0"
+        >
           {{ $t(group.title) }}
         </v-expansion-panel-title>
-        <v-expansion-panel-text>
+        <v-expansion-panel-text v-if="countModules(group.modules) != 0">
           <v-container fluid class="my-0 py-0">
             <v-row class="my-0 py-0">
               <template
@@ -106,6 +109,13 @@ export default {
     sortModules(modules) {
       //Ordena pelo idioma selecionado
       return this.$modules.sort(modules, this.$t);
+    },
+    countModules(modules) {
+      return Object.keys(modules).filter((key) =>
+        !this.is_dev
+          ? !modules[key].development || modules[key].development === false
+          : true
+      ).length;
     },
   },
 };
