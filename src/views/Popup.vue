@@ -21,14 +21,21 @@ export default {
     loadModuleComponent() {
       return defineAsyncComponent(() => {
         // Try to load from modules interface directory
-        return import(`@/modules/${this.module}/interface/Popup.vue`).catch(
-          (e) => {
-            this.$alert.error({
-              text: "messages.error_import_module",
-              error: e,
-            });
-          }
-        );
+        return import(
+          `@/modules/core/${this.module}/interface/Popup.vue`
+        ).catch(() => {
+          // Try to load from CUSTOM module interface directory
+          return import(`@/modules/${this.module}/interface/Popup.vue`).catch(
+            (e) => {
+              this.$alert.error({
+                text: "messages.error_import_module",
+                error: e,
+              });
+
+              return null;
+            }
+          );
+        });
       });
     },
   },
