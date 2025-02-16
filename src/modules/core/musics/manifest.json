@@ -3,7 +3,7 @@
   "name": "Músicas",
   "version": "1.0.0",
   "description": "Lista todas as músicas do programa, com filtros de busca.",
-  "author": "MaycoRolbuche",
+  "author": "maycorolbuche",
   "category": "musics",
   "icon": "mdi-music",
   "minAppVersion": "1.0.0",
