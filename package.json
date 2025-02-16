@@ -20,10 +20,10 @@
     "git:publish": "git pull origin main && git checkout main && git merge develop && git push -u origin main && git checkout develop"
   },
   "dependencies": {
-    "@mdi/font": "5.9.55",
+    "@mdi/font": "^5.9.55",
     "archiver": "^7.0.1",
     "basic-ftp": "^5.0.5",
-    "core-js": "^3.8.3",
+    "core-js": "^3.40.0",
     "dotenv": "^16.4.5",
     "fs-extra": "^11.2.0",
     "roboto-fontface": "*",
