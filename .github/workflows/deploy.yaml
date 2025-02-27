@@ -26,11 +26,15 @@ jobs:
       - name: install dependencies
         run: npm install
       - name: build project
-        run: NODE_ENV=production npm run build
+        run: npm run build
+        env:
+          NODE_ENV: production
       - name: deploy to dist
         run: |
           cd dist
           git init
+          git checkout -b dist  # Cria a branch dist se não existir
           git add -A
           git commit -m "🚀 Deploy id ${GITHUB_RUN_ID}"
-          git push -f "https://github.com/${GITHUB_REPOSITORY}.git" main:dist
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git push -f origin dist  # Faz push forçado para a branch dist
