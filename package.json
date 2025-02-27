@@ -1,6 +1,6 @@
 {
   "name": "louvorja",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "private": true,
   "scripts": {
     "version:major": "npm version major",
@@ -11,7 +11,6 @@
     "version:bug": "npm version patch",
     "serve": "vite preview",
     "build": "vite build",
-    "build:web": "vite build && node node/zip_dist.js && node node/send_ftp.js && node node/publish_ftp.js",
     "lint": "vue-cli-service lint",
     "dev": "vite",
     "host": "vite --host",
@@ -21,7 +20,6 @@
   },
   "dependencies": {
     "@mdi/font": "^5.9.55",
-    "archiver": "^7.0.1",
     "basic-ftp": "^5.0.5",
     "core-js": "^3.40.0",
     "dotenv": "^16.4.5",
