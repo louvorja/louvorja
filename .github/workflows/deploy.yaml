@@ -29,6 +29,7 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          VITE_BASE_URL: /louvorja/
       - name: deploy to dist
         run: |
           cd dist
