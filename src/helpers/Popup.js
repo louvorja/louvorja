@@ -1,4 +1,5 @@
 import $appdata from "@/helpers/AppData";
+import $window from "@/helpers/Window";
 
 export default {
   async open(params) {
@@ -10,7 +11,7 @@ export default {
     if (popup && !popup.closed) {
       popup.focus();
     } else {
-      popup = window.open("/popup", "PopupWindow", "width=800,height=600");
+      popup = $window.open("/popup", "PopupWindow", "width=800,height=600");
     }
     $appdata.set("popup_module", params.module);
     $appdata.set("popup", popup);
