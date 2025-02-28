@@ -30,7 +30,7 @@ export default ({ mode }) => {
           name: "LouvorJA",
           short_name: "LouvorJA",
           description: "Software de músicas para Louvor e Adoração",
-          start_url: "/",
+          start_url: process.env.VITE_BASE_URL ?? "/",
           display: "standalone",
           background_color: "#000000",
           theme_color: "#000000",
