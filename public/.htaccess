@@ -17,3 +17,7 @@
     </FilesMatch>
 </IfModule>
 
+# Adiciona ErrorDocuments
+ErrorDocument 403 /403.shtml
+ErrorDocument 404 /404.shtml
+ErrorDocument 500 /500.shtml
