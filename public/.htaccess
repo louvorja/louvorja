@@ -1,5 +1,8 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
+    RewriteRule ^\.git - [F,L]
 
     # Redireciona tudo para o index.html, exceto se for um arquivo ou diretório existente
     RewriteCond %{REQUEST_FILENAME} !-f
@@ -13,3 +16,4 @@
         Header set Cache-Control "max-age=31536000, public"
     </FilesMatch>
 </IfModule>
+
